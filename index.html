@@ -991,7 +991,6 @@
       { id: "cliente", label: "Cliente", entities: ["cuentaCliente", "presupuestos", "pedidos"] },
       { id: "vendedor", label: "Vendedor", entities: ["presupuestos", "pedidos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"] },
       { id: "produccion", label: "Encargado de producción", entities: ["ordenesProduccion", "recetas", "mantenimiento"] },
-      { id: "administracion", label: "Administración", entities: ["materias", "productos", "recetas", "maquinas", "mantenimiento", "repuestos", "proveedores", "clientes", "presupuestosProv", "ordenesCompra", "remitosProv", "comprobantesProv", "ordenesPago", "comprobantesPago", "comprobantesVenta"] },
     ];
 
     const DASHBOARDS = {
@@ -1012,12 +1011,6 @@
         description: "Órdenes de producción, recetas y mantenimiento de equipos.",
         stats: [["Órdenes en curso", "2", "Plan de producción", "v"], ["Recetas", "2", "Disponibles", "p"], ["Mantenimientos", "2", "Revisar estado de máquinas", "a"]],
         links: ["ordenesProduccion", "recetas", "mantenimiento"],
-      },
-      administracion: {
-        heading: "Panel de administración",
-        description: "Control de inventario, compras, proveedores, clientes y comprobantes.",
-        stats: [["Clientes", "3", "Cuentas activas", "v"], ["Compras pendientes", "2", "Órdenes a proveedores", "p"], ["Stock bajo", "3", "Insumos a revisar", "a"]],
-        links: ["materias", "productos", "proveedores", "ordenesCompra", "comprobantesPago", "comprobantesVenta"],
       },
     };
 
@@ -1381,6 +1374,7 @@
     /* ============ RENDER SCREENS ============ */
     function entityScreen(e) {
       const rows = visibleRows(e);
+      const customerViewOnly = currentRole === "cliente" && ["cuentaCliente", "presupuestos", "pedidos"].includes(e.id);
       return `<div id="screen-${e.id}" class="screen">
     <div class="card">
       <div class="card-header">
@@ -1397,8 +1391,8 @@
         <thead><tr>${e.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead>
         <tbody>${rows.length ? rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}<td class="td-actions">
           <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
-          <button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>
+          ${customerViewOnly ? "" : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>`}
         </td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
       </table>
     </div>
@@ -1474,7 +1468,9 @@
 
     function visibleRows(entity) {
       if (!entity) return [];
-      if (currentRole !== "cliente" || !["presupuestos", "pedidos"].includes(entity.id)) return entity.rows;
+      if (currentRole !== "cliente") return entity.rows;
+      if (entity.id === "cuentaCliente") return entity.rows.filter(row => row[1] === currentCustomerDocument);
+      if (!["presupuestos", "pedidos"].includes(entity.id)) return entity.rows;
       return entity.rows.filter(row => row.customerDocument === currentCustomerDocument);
     }
 
@@ -1501,11 +1497,12 @@
 
     function fieldHtml(f) {
       const span = f.span === 2 ? " span2" : "";
+      const required = f.required ? " required" : "";
       let input;
       if (f.ref) input = `<select class="form-select">${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "select") input = `<select class="form-select">${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "textarea") input = `<textarea class="form-textarea"></textarea>`;
-      else input = `<input class="form-input" type="${f.t}">`;
+      else input = `<input class="form-input" type="${f.t}"${required}>`;
       return `<div class="form-group${span}"><label class="form-label">${f.l}</label>${input}</div>`;
     }
 
