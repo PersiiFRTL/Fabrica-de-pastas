@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Fabrica de Pastas — Sistema de Gestión</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
@@ -178,6 +179,39 @@
       margin-top: 2px;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+
+    .topbar-controls {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .role-switch {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    .role-switch[hidden] {
+      display: none;
+    }
+
+    .role-switch strong {
+      color: var(--brown);
+      font-weight: 600;
+    }
+
+    .role-switch select {
+      max-width: 230px;
+      padding: 8px 30px 8px 10px;
+      border: 1px solid var(--cream-dark);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      color: var(--brown);
+      font: 500 12px 'DM Sans', sans-serif;
     }
 
     .btn {
@@ -835,6 +869,26 @@
         margin-left: 0;
       }
 
+      .topbar {
+        padding: 14px 16px;
+        gap: 12px;
+      }
+
+      .topbar-controls {
+        gap: 8px;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+      }
+
+      .role-switch span {
+        display: none;
+      }
+
+      .role-switch select {
+        max-width: 180px;
+        font-size: 11px;
+      }
+
       .stats-row {
         grid-template-columns: 1fr 1fr;
       }
@@ -861,7 +915,13 @@
         <div class="topbar-title" id="topbar-title">Dashboard</div>
         <div class="topbar-crumb" id="topbar-crumb">Principal</div>
       </div>
-      <span style="font-size:12.5px;color:var(--text-muted)">Hoy: <strong id="today-date"></strong></span>
+      <div class="topbar-controls">
+        <label class="role-switch"><span>Vista de perfil</span>
+          <select id="role-select" aria-label="Seleccionar perfil" onchange="setRole(this.value)"></select>
+        </label>
+        <label class="role-switch" id="customer-account" hidden><span>Cuenta</span><strong id="customer-name"></strong></label>
+        <span style="font-size:12.5px;color:var(--text-muted)">Hoy: <strong id="today-date"></strong></span>
+      </div>
     </div>
     <div class="content" id="content"></div>
   </div>
@@ -926,12 +986,66 @@
       { id: "compras", label: "Compras a Proveedores", icon: "🏭" },
     ];
 
+    const ROLES = [
+      { id: "dueno", label: "Administrador / dueño", entities: null },
+      { id: "cliente", label: "Cliente", entities: ["cuentaCliente", "presupuestos", "pedidos"] },
+      { id: "vendedor", label: "Vendedor", entities: ["presupuestos", "pedidos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"] },
+      { id: "produccion", label: "Encargado de producción", entities: ["ordenesProduccion", "recetas", "mantenimiento"] },
+      { id: "administracion", label: "Administración", entities: ["materias", "productos", "recetas", "maquinas", "mantenimiento", "repuestos", "proveedores", "clientes", "presupuestosProv", "ordenesCompra", "remitosProv", "comprobantesProv", "ordenesPago", "comprobantesPago", "comprobantesVenta"] },
+    ];
+
+    const DASHBOARDS = {
+      cliente: {
+        heading: "Tu espacio de cliente",
+        description: "Gestioná tus datos y seguí tus pedidos y presupuestos.",
+        stats: [["Mis presupuestos", "1", "1 pendiente de respuesta", "v"], ["Pedidos", "1", "1 en preparación", "p"], ["Cuenta", "Activa", "Datos de contacto", "c"]],
+        links: ["cuentaCliente", "presupuestos", "pedidos"],
+      },
+      vendedor: {
+        heading: "Panel de ventas",
+        description: "Pedidos, presupuestos, comprobantes y seguimiento de clientes.",
+        stats: [["Presupuestos", "3", "1 pendiente", "v"], ["Pedidos", "3", "1 en preparación", "p"], ["Devoluciones", "1", "Pendiente de gestión", "a"]],
+        links: ["pedidos", "presupuestos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"],
+      },
+      produccion: {
+        heading: "Panel de producción",
+        description: "Órdenes de producción, recetas y mantenimiento de equipos.",
+        stats: [["Órdenes en curso", "2", "Plan de producción", "v"], ["Recetas", "2", "Disponibles", "p"], ["Mantenimientos", "2", "Revisar estado de máquinas", "a"]],
+        links: ["ordenesProduccion", "recetas", "mantenimiento"],
+      },
+      administracion: {
+        heading: "Panel de administración",
+        description: "Control de inventario, compras, proveedores, clientes y comprobantes.",
+        stats: [["Clientes", "3", "Cuentas activas", "v"], ["Compras pendientes", "2", "Órdenes a proveedores", "p"], ["Stock bajo", "3", "Insumos a revisar", "a"]],
+        links: ["materias", "productos", "proveedores", "ordenesCompra", "comprobantesPago", "comprobantesVenta"],
+      },
+    };
+
+    let currentRole = "dueno";
+    let currentCustomer = "María González";
+    let currentCustomerDocument = "30.221.884";
+
+    function roleCanAccess(entityId) {
+      const role = ROLES.find(item => item.id === currentRole);
+      return !role || role.entities === null || role.entities.includes(entityId);
+    }
+
     /* ============ ENTIDADES ============
        Cada entidad corresponde 1 a 1 con una clase del Diagrama de Clases.
        La propiedad "cls" muestra el nombre exacto de la clase del diagrama
        y "fields" usa los atributos reales de esa clase (más las asociaciones
        necesarias, resueltas con "ref" hacia otra entidad). */
     const E = [
+      {
+        id: "cuentaCliente", section: "ventas", icon: "🪪", label: "Crear cuenta", singular: "cuenta de cliente", cls: "CuentaCliente",
+        cols: ["Nombre y apellido", "Documento", "Email", "Teléfono", "Tipo de cliente"],
+        rows: [],
+        fields: [
+          { l: "Nombre y apellido", t: "text", required: true }, { l: "Documento", t: "text", required: true },
+          { l: "Email", t: "email", required: true }, { l: "Teléfono", t: "tel", required: true },
+          { l: "Tipo de cliente", t: "select", o: ["Particular", "Restaurante", "Hotel", "Comercio"] },
+        ]
+      },
       // ============ VENTAS ============
       {
         id: "clientes", section: "ventas", icon: "👥", label: "Clientes", singular: "cliente", cls: "Cliente ⊳ Persona",
@@ -1226,17 +1340,31 @@
       },
     ];
 
+    function initializeCustomerOwnership() {
+      const clients = E.find(entity => entity.id === "clientes");
+      ["presupuestos", "pedidos"].forEach(id => {
+        const entity = E.find(item => item.id === id);
+        entity.rows.forEach(row => {
+          const client = clients.rows.find(item => normalizeLabel(item[0]) === normalizeLabel(row[1] || ""));
+          if (client) row.customerDocument = client[1];
+        });
+      });
+    }
+
     /* ============ RENDER SIDEBAR ============ */
     function renderSidebar() {
       const el = document.getElementById("sidebar");
+      const role = ROLES.find(item => item.id === currentRole);
       let h = `<div class="sidebar-logo"><h1>Fabrica de Pastas</h1><span>Sistema de Gestión</span></div>
   <div class="sidebar-section">
     <div class="sidebar-section-title">Principal</div>
-    <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'Principal')"><span class="icon">🏠</span> Dashboard</button>
+    <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')"><span class="icon">🏠</span> Dashboard</button>
   </div>`;
       SECTIONS.forEach(s => {
+        const sectionEntities = E.filter(e => e.section === s.id && roleCanAccess(e.id));
+        if (!sectionEntities.length) return;
         h += `<div class="sidebar-section"><div class="sidebar-section-title">${s.icon} ${s.label}</div>`;
-        E.filter(e => e.section === s.id).forEach(e => {
+        sectionEntities.forEach(e => {
           h += `<button class="nav-item" data-screen="${e.id}" onclick="showScreen('${e.id}',this,'${s.label}')"><span class="icon">${e.icon}</span> ${e.label}</button>`;
         });
         h += `</div>`;
@@ -1244,8 +1372,15 @@
       el.innerHTML = h;
     }
 
+    function renderRoleSelector() {
+      const select = document.getElementById("role-select");
+      select.innerHTML = ROLES.map(role => `<option value="${role.id}">${role.label}</option>`).join("");
+      select.value = currentRole;
+    }
+
     /* ============ RENDER SCREENS ============ */
     function entityScreen(e) {
+      const rows = visibleRows(e);
       return `<div id="screen-${e.id}" class="screen">
     <div class="card">
       <div class="card-header">
@@ -1260,17 +1395,36 @@
       </div>
       <table>
         <thead><tr>${e.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead>
-        <tbody>${e.rows.map((r, idx) => `<tr>${r.map(c => `<td>${c}</td>`).join("")}<td class="td-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${idx})">Ver</button>
-          <button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${idx})">Editar</button>
+        <tbody>${rows.length ? rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}<td class="td-actions">
+          <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
+          <button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>
-        </td></tr>`).join("")}</tbody>
+        </td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
       </table>
     </div>
   </div>`;
     }
 
     function dashboardScreen() {
+      const role = ROLES.find(item => item.id === currentRole);
+      const dashboard = DASHBOARDS[currentRole];
+      if (dashboard) {
+        let stats = dashboard.stats;
+        if (currentRole === "cliente") {
+          const budgets = visibleRows(E.find(entity => entity.id === "presupuestos"));
+          const orders = visibleRows(E.find(entity => entity.id === "pedidos"));
+          stats = [["Mis presupuestos", budgets.length, "Historial de esta cuenta", "v"], ["Mis pedidos", orders.length, "Historial de esta cuenta", "p"], ["Cuenta", currentCustomer ? "Activa" : "Sin cuenta", currentCustomer || "Registrá tus datos", "c"]];
+        }
+        const cards = stats.map(([label, value, sub, color]) => `<div class="stat-card ${color}"><div class="label">${label}</div><div class="value">${value}</div><div class="sub">${sub}</div></div>`).join("");
+        const links = dashboard.links.map(id => E.find(entity => entity.id === id)).filter(Boolean);
+        return `<div id="screen-dashboard" class="screen active">
+          <div class="welcome-banner"><h2>${dashboard.heading}</h2><p>${dashboard.description}</p></div>
+          <div class="stats-row">${cards}</div>
+          <div class="dash-grid"><div class="dash-card"><div class="dash-card-title">Accesos de ${role.label.toLowerCase()}</div>
+            ${links.map(entity => `<div class="activity-item"><div class="activity-dot" style="background:var(--wheat)"></div><button class="nav-item" style="color:var(--text);padding:4px 0;width:auto" onclick="showScreen('${entity.id}',document.querySelector('[data-screen=\"${entity.id}\"]'),'${SECTIONS.find(section => section.id === entity.section)?.label || role.label}')"><span class="icon">${entity.icon}</span>${entity.label}</button></div>`).join("")}
+          </div><div class="dash-card"><div class="dash-card-title">Perfil activo</div><div class="activity-item"><div><div class="activity-text"><strong>${role.label}</strong></div><div class="activity-time">La navegación muestra las herramientas asignadas a este perfil.</div></div></div></div></div>
+        </div>`;
+      }
       return `<div id="screen-dashboard" class="screen active">
     <div class="welcome-banner"><h2>¡Bienvenido de nuevo!</h2><p>Resumen de la fábrica — 23 de septiembre de 2026</p></div>
     <div class="stats-row">
@@ -1298,22 +1452,50 @@
     }
 
     function renderContent() {
-      document.getElementById("content").innerHTML = dashboardScreen() + E.map(entityScreen).join("");
+      document.getElementById("content").innerHTML = dashboardScreen() + E.filter(e => roleCanAccess(e.id)).map(entityScreen).join("");
+    }
+
+    function renderCustomerIndicator() {
+      const indicator = document.getElementById("customer-account");
+      indicator.hidden = currentRole !== "cliente";
+      document.getElementById("customer-name").textContent = currentCustomer || "Sin cuenta";
+    }
+
+    function setRole(roleId) {
+      if (!ROLES.some(role => role.id === roleId)) return;
+      currentRole = roleId;
+      localStorage.setItem("pastas-role", roleId);
+      renderSidebar();
+      renderContent();
+      renderCustomerIndicator();
+      document.getElementById("topbar-title").textContent = "Dashboard";
+      document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === roleId).label;
+    }
+
+    function visibleRows(entity) {
+      if (!entity) return [];
+      if (currentRole !== "cliente" || !["presupuestos", "pedidos"].includes(entity.id)) return entity.rows;
+      return entity.rows.filter(row => row.customerDocument === currentCustomerDocument);
     }
 
     /* ============ NAV / MODALES ============ */
     function showScreen(id, btn, crumb) {
+      if (id !== "dashboard" && !roleCanAccess(id)) return;
       document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
       document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-      document.getElementById("screen-" + id).classList.add("active");
+      const screen = document.getElementById("screen-" + id);
+      if (!screen) return;
+      screen.classList.add("active");
       const e = E.find(x => x.id === id);
       document.getElementById("topbar-title").textContent = e ? e.label : "Dashboard";
       document.getElementById("topbar-crumb").textContent = crumb;
-      btn.classList.add("active");
+      if (btn) btn.classList.add("active");
     }
 
     function refOptions(id) {
       const e = E.find(x => x.id === id);
+      if (currentRole === "cliente" && id === "clientes") return currentCustomer ? [currentCustomer] : [];
+      if (currentRole === "cliente" && id === "presupuestos") return visibleRows(e).map(row => row[0].replace(/<[^>]+>/g, ""));
       return e ? e.rows.map(r => r[0].replace(/<[^>]+>/g, "")) : [];
     }
 
@@ -1414,6 +1596,10 @@
         });
       }
       document.getElementById("mf-save").onclick = () => {
+        const requiredFields = document.querySelectorAll("#mf-fields [required]");
+        for (const field of requiredFields) {
+          if (!field.reportValidity()) return;
+        }
         const n = (e.details || []).reduce((s, g) => s + formState[g.key].length, 0);
         const updatedRow = editing ? [...e.rows[rowIndex]] : Array(e.cols.length).fill("—");
         document.querySelectorAll("#mf-fields .form-grid .form-group").forEach((group, index) => {
@@ -1424,6 +1610,26 @@
           const control = group.querySelector("input, select, textarea");
           updatedRow[colIndex] = escapeHTML(control.value.trim() || "—");
         });
+        if (currentRole === "cliente" && ["presupuestos", "pedidos"].includes(entityId)) {
+          if (!editing) {
+            const prefix = entityId === "presupuestos" ? "PR" : "OP";
+            const baseNumber = entityId === "presupuestos" ? 208 : 891;
+            updatedRow[0] = `#${prefix}-${String(baseNumber + e.rows.length).padStart(4, "0")}`;
+            updatedRow[1] = escapeHTML(currentCustomer);
+          }
+          updatedRow.customerDocument = currentCustomerDocument;
+        }
+        if (!editing && entityId === "cuentaCliente") {
+          const clients = E.find(entity => entity.id === "clientes");
+          const duplicateDocument = clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(updatedRow[1]));
+          if (duplicateDocument) {
+            showNotify("Ya existe una cuenta con ese documento.");
+            return;
+          }
+          clients.rows.push([updatedRow[0], updatedRow[1], updatedRow[4], "No", "<span class='badge badge-green'>Activo</span>"]);
+          currentCustomer = updatedRow[0];
+          currentCustomerDocument = updatedRow[1];
+        }
         if (editing) e.rows[rowIndex] = updatedRow;
         else e.rows.push(updatedRow);
         renderContent();
@@ -1434,7 +1640,7 @@
     }
 
     function normalizeLabel(value) {
-      return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
     }
 
     function escapeHTML(value) {
@@ -1476,9 +1682,14 @@
     }
 
     function init() {
+      const savedRole = localStorage.getItem("pastas-role");
+      if (ROLES.some(role => role.id === savedRole)) currentRole = savedRole;
+      initializeCustomerOwnership();
+      renderRoleSelector();
       renderSidebar();
       renderContent();
       document.getElementById("today-date").textContent = new Date().toLocaleDateString("es-AR");
+      document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === currentRole).label;
       document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", event => {
           if (event.target === overlay) closeModal(overlay.id);
