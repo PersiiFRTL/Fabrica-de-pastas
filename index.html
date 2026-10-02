@@ -835,6 +835,107 @@
       display: flex;
     }
 
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(44, 24, 16, 0.72);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(2px);
+    }
+
+    .login-overlay.hidden {
+      display: none;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 28px 24px 24px;
+    }
+
+    .login-brand {
+      font-family: 'Playfair Display', serif;
+      color: var(--brown);
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-card h2 {
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .login-card form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .login-card label {
+      display: grid;
+      gap: 6px;
+      font-size: 12px;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .login-card input {
+      padding: 10px 12px;
+      border: 1.5px solid var(--cream-dark);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--cream);
+    }
+
+    .login-card input:focus {
+      outline: none;
+      border-color: var(--wheat);
+      background: var(--white);
+    }
+
+    .login-card .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .login-toggle {
+      width: 100%;
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--cream-dark);
+      color: var(--brown);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .register-panel {
+      display: none;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid var(--cream-dark);
+    }
+
+    .register-panel.show {
+      display: block;
+    }
+
     @media (max-width:900px) {
       body {
         flex-direction: column;
@@ -916,11 +1017,10 @@
         <div class="topbar-crumb" id="topbar-crumb">Principal</div>
       </div>
       <div class="topbar-controls">
-        <label class="role-switch"><span>Vista de perfil</span>
-          <select id="role-select" aria-label="Seleccionar perfil" onchange="setRole(this.value)"></select>
-        </label>
+        <label class="role-switch" id="logged-user-indicator" hidden><span>Usuario</span><strong id="logged-user-name"></strong></label>
         <label class="role-switch" id="customer-account" hidden><span>Cuenta</span><strong id="customer-name"></strong></label>
         <span style="font-size:12.5px;color:var(--text-muted)">Hoy: <strong id="today-date"></strong></span>
+        <button class="btn btn-ghost btn-sm" id="logout-btn" type="button" onclick="logout()">Cerrar sesión</button>
       </div>
     </div>
     <div class="content" id="content"></div>
@@ -978,6 +1078,42 @@
 
   <div class="notify" id="notify"></div>
 
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-card">
+      <div class="login-brand">Fábrica de Pastas</div>
+      <h2>Ingresá al sistema</h2>
+      <form id="login-form">
+        <label>
+          Usuario
+          <input type="text" id="login-username" placeholder="usuario" autocomplete="username" required>
+        </label>
+        <label>
+          Contraseña
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+        </label>
+        <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%">Ingresar</button>
+        <div class="hint">Usuarios de prueba: dueno / cliente / vendedor / produccion<br>Contraseñas: dueno123 / cliente123 / vendedor123 / produccion123</div>
+      </form>
+
+      <button type="button" class="login-toggle" id="toggle-register-btn">Crear nuevo usuario</button>
+
+      <div class="register-panel" id="register-panel">
+        <h2 style="margin-bottom:12px; font-size:18px;">Nuevo usuario</h2>
+        <form id="register-form">
+          <label>
+            Usuario
+            <input type="text" id="register-username" placeholder="nuevo usuario" required>
+          </label>
+          <label>
+            Contraseña
+            <input type="password" id="register-password" placeholder="••••••••" required>
+          </label>
+          <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%">Crear usuario</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
   <script>
     /* ============ SECCIONES ============ */
     const SECTIONS = [
@@ -988,17 +1124,54 @@
 
     const ROLES = [
       { id: "dueno", label: "Administrador / dueño", entities: null },
-      { id: "cliente", label: "Cliente", entities: ["cuentaCliente", "presupuestos", "pedidos"] },
+      { id: "cliente", label: "Cliente", entities: ["presupuestos", "pedidos"] },
       { id: "vendedor", label: "Vendedor", entities: ["presupuestos", "pedidos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"] },
       { id: "produccion", label: "Encargado de producción", entities: ["ordenesProduccion", "recetas", "mantenimiento"] },
     ];
+
+    const DEFAULT_LOGIN_USERS = [
+      { username: "dueno", password: "dueno123", role: "dueno" },
+      { username: "cliente", password: "cliente123", role: "cliente" },
+      { username: "vendedor", password: "vendedor123", role: "vendedor" },
+      { username: "produccion", password: "produccion123", role: "produccion" },
+    ];
+
+    function getLoginUsers() {
+      try {
+        const saved = JSON.parse(localStorage.getItem("pastas-users") || "null");
+        if (Array.isArray(saved) && saved.length) return saved;
+      } catch (error) {
+        // ignore malformed storage and fall back to defaults
+      }
+      localStorage.setItem("pastas-users", JSON.stringify(DEFAULT_LOGIN_USERS));
+      return DEFAULT_LOGIN_USERS.slice();
+    }
+
+    function persistLoginUsers(users) {
+      localStorage.setItem("pastas-users", JSON.stringify(users));
+    }
+
+    const RECIPE_DEFINITIONS = {
+      "Tallarines frescos 500g": {
+        yield: 20,
+        materials: [{ name: "Harina 000", qty: 8, unit: "kg" }, { name: "Huevo", qty: 2, unit: "docena" }]
+      },
+      "Sorrentinos jamón y queso": {
+        yield: 15,
+        materials: [{ name: "Harina 000", qty: 3, unit: "kg" }, { name: "Huevo", qty: 1, unit: "docena" }, { name: "Jamón", qty: 1.5, unit: "kg" }, { name: "Queso", qty: 2, unit: "kg" }]
+      },
+      "Salsa bolognesa (pote)": {
+        yield: 12,
+        materials: [{ name: "Tomate", qty: 8, unit: "kg" }, { name: "Cebolla", qty: 1.5, unit: "kg" }, { name: "Aceite", qty: 0.5, unit: "litro" }]
+      }
+    };
 
     const DASHBOARDS = {
       cliente: {
         heading: "Tu espacio de cliente",
         description: "Gestioná tus datos y seguí tus pedidos y presupuestos.",
         stats: [["Mis presupuestos", "1", "1 pendiente de respuesta", "v"], ["Pedidos", "1", "1 en preparación", "p"], ["Cuenta", "Activa", "Datos de contacto", "c"]],
-        links: ["cuentaCliente", "presupuestos", "pedidos"],
+        links: ["presupuestos", "pedidos"],
       },
       vendedor: {
         heading: "Panel de ventas",
@@ -1017,6 +1190,7 @@
     let currentRole = "dueno";
     let currentCustomer = "María González";
     let currentCustomerDocument = "30.221.884";
+    let currentUser = null;
 
     function roleCanAccess(entityId) {
       const role = ROLES.find(item => item.id === currentRole);
@@ -1169,11 +1343,11 @@
       // ============ PRODUCCIÓN Y MANTENIMIENTO ============
       {
         id: "productos", section: "produccion", icon: "🍝", label: "Productos", singular: "producto", cls: "Producto",
-        cols: ["nombre", "idTipoProducto", "PrecioBase", "stockActual", "Congelado"],
+        cols: ["nombre", "idTipoProducto", "idReceta", "PrecioBase", "stockActual", "Congelado"],
         rows: [
-          ["Tallarines frescos 500g", "Pasta fresca", "$1.200", "42", "<span class='badge badge-gray'>No</span>"],
-          ["Sorrentinos jamón y queso", "Pasta fresca", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>"],
-          ["Salsa bolognesa (pote)", "Salsa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>"],
+          ["Tallarines frescos 500g", "Pasta fresca", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>"],
+          ["Sorrentinos jamón y queso", "Pasta fresca", "Receta Sorrentino J. y Q.", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>"],
+          ["Salsa bolognesa (pote)", "Salsa", "Receta Salsa Bolognesa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>"],
         ],
         fields: [
           { l: "nombre", t: "text", span: 2 },
@@ -1193,6 +1367,11 @@
           ["Harina 000", "kg", "480", "150", "$890"],
           ["Huevo", "docena", "64", "20", "$3.100"],
           ["Levadura", "kg", "12", "5", "$4.200"],
+          ["Tomate", "kg", "80", "30", "$2.150"],
+          ["Cebolla", "kg", "60", "20", "$1.350"],
+          ["Jamón", "kg", "35", "10", "$6.800"],
+          ["Queso", "kg", "42", "12", "$7.200"],
+          ["Aceite", "litro", "24", "8", "$4.900"],
         ],
         fields: [
           { l: "nombre", t: "text", span: 2 },
@@ -1202,23 +1381,30 @@
       },
       {
         id: "recetas", section: "produccion", icon: "📖", label: "Recetas", singular: "receta", cls: "Receta",
-        cols: ["nombre", "rendimiento", "Materia prima (Detalle_Receta)"],
-        rows: [["Receta Tallarín clásico", "20 u.", "Harina 000"], ["Receta Sorrentino J. y Q.", "15 u.", "Harina 000"]],
+        cols: ["nombre", "idProducto", "rendimiento", "Materia prima (Detalle_Receta)"],
+        rows: [
+          ["Receta Tallarín clásico", "Tallarines frescos 500g", "20 u.", "Harina 000"],
+          ["Receta Sorrentino J. y Q.", "Sorrentinos jamón y queso", "15 u.", "Harina 000"],
+          ["Receta Salsa Bolognesa", "Salsa bolognesa (pote)", "12 u.", "Tomate"]
+        ],
         fields: [
-          { l: "nombre", t: "text", span: 2 }, { l: "Pasos", t: "textarea", span: 2 }, { l: "rendimiento", t: "number" },
+          { l: "nombre", t: "text", span: 2 },
+          { l: "idProducto", t: "select", ref: "productos" },
+          { l: "rendimiento", t: "number" },
+          { l: "Pasos", t: "textarea", span: 2 },
         ],
         details: [{ key: "detReceta", cls: "Detalle_Receta", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }] }]
       },
       {
         id: "ordenesProduccion", section: "produccion", icon: "🏗️", label: "Órdenes de Producción", singular: "orden de producción", cls: "OrdenProduccion",
-        cols: ["N°", "fechaCreacion", "responsable", "cantidadProduccion", "estado"],
+        cols: ["N°", "fechaCreacion", "responsable", "Producto a producir", "estado"],
         rows: [
-          ["#OPR-330", "23/09/2026", "Carlos Bernal", "120", "<span class='badge badge-amber'>En curso</span>"],
-          ["#OPR-329", "22/09/2026", "Carlos Bernal", "95", "<span class='badge badge-green'>Finalizada</span>"],
+          ["#OPR-330", "23/09/2026", "Carlos Bernal", "Tallarines frescos 500g", "<span class='badge badge-amber'>En curso</span>"],
+          ["#OPR-329", "22/09/2026", "Carlos Bernal", "Sorrentinos jamón y queso", "<span class='badge badge-green'>Finalizada</span>"],
         ],
         fields: [
           { l: "fechaCreacion", t: "date" }, { l: "fechaExpedicion", t: "date" }, { l: "responsable", t: "text" },
-          { l: "cantidadProduccion", t: "number" }, { l: "estado", t: "select", o: ["En curso", "Finalizada"] },
+          { l: "estado", t: "select", o: ["En curso", "Finalizada"] },
         ],
         details: [
           { key: "detOPprod", cls: "Detalle_OrdenProduccion", ref: "productos", refLabel: "Producto a producir", extra: [{ l: "cantidadPlanificada", t: "number" }, { l: "merma", t: "text" }] },
@@ -1365,16 +1551,10 @@
       el.innerHTML = h;
     }
 
-    function renderRoleSelector() {
-      const select = document.getElementById("role-select");
-      select.innerHTML = ROLES.map(role => `<option value="${role.id}">${role.label}</option>`).join("");
-      select.value = currentRole;
-    }
-
     /* ============ RENDER SCREENS ============ */
     function entityScreen(e) {
       const rows = visibleRows(e);
-      const customerViewOnly = currentRole === "cliente" && ["cuentaCliente", "presupuestos", "pedidos"].includes(e.id);
+      const customerViewOnly = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(e.id);
       return `<div id="screen-${e.id}" class="screen">
     <div class="card">
       <div class="card-header">
@@ -1420,7 +1600,7 @@
         </div>`;
       }
       return `<div id="screen-dashboard" class="screen active">
-    <div class="welcome-banner"><h2>¡Bienvenido de nuevo!</h2><p>Resumen de la fábrica — 23 de septiembre de 2026</p></div>
+    <div class="welcome-banner"><h2>¡Bienvenido de nuevo!</h2></div>
     <div class="stats-row">
       <div class="stat-card v"><div class="label">Ventas hoy</div><div class="value">$43.800</div><div class="sub">8 pedidos despachados</div></div>
       <div class="stat-card p"><div class="label">Producción del día</div><div class="value">215 kg</div><div class="sub">2 órdenes en curso</div></div>
@@ -1449,10 +1629,101 @@
       document.getElementById("content").innerHTML = dashboardScreen() + E.filter(e => roleCanAccess(e.id)).map(entityScreen).join("");
     }
 
+    function getRecipeMaterialPlan(productName, plannedQty = 1) {
+      const product = E.find(entity => entity.id === "productos").rows.find(row => row[0] === productName);
+      const recipe = E.find(entity => entity.id === "recetas").rows.find(row => row[0] === product?.[2] && row[1] === productName);
+      const definition = RECIPE_DEFINITIONS[productName];
+      const materials = recipe?.recipeMaterials || definition?.materials || [];
+      const recipeYield = Number(recipe?.recipeYield || recipe?.[2]) || definition?.yield || 1;
+      return materials.map(item => ({
+        name: item.name,
+        qty: Number((item.qty * plannedQty / recipeYield).toFixed(2))
+      }));
+    }
+
+    function syncProductionMaterials(productSelect) {
+      const totals = new Map();
+      document.querySelectorAll('.detail-block[data-group="detOPprod"] .detail-row').forEach(row => {
+        const select = row.querySelector(".form-select");
+        if (!select?.value) return;
+        const qtyInput = row.querySelectorAll(".form-input")[0];
+        const plannedQty = qtyInput?.value ? Number(qtyInput.value) || 1 : 1;
+        getRecipeMaterialPlan(select.value, plannedQty).forEach(item => {
+          totals.set(item.name, (totals.get(item.name) || 0) + item.qty);
+        });
+      });
+      const materials = [...totals].map(([name, qty]) => ({ name, qty: Number(qty.toFixed(2)) }));
+
+      formState.detOPmp = materials.map((_, index) => Date.now() + index);
+      rerenderGroup("detOPmp");
+
+      const renderedRows = document.querySelectorAll('.detail-block[data-group="detOPmp"] .detail-row');
+      renderedRows.forEach((row, index) => {
+        const select = row.querySelector(".form-select");
+        const input = row.querySelector(".form-input");
+        if (select) select.value = materials[index].name;
+        if (input) input.value = materials[index].qty;
+      });
+    }
+
+    function syncRecipeMaterials(productSelect, resetYield = false) {
+      if (!productSelect || productSelect.value === "") return;
+      const groups = [...document.querySelectorAll("#mf-fields .form-group")];
+      const yieldGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento");
+      const yieldInput = yieldGroup?.querySelector(".form-input");
+      const recipe = RECIPE_DEFINITIONS[productSelect.value];
+      if (!recipe || !yieldInput) return;
+      if (resetYield || !yieldInput.value) yieldInput.value = recipe.yield;
+
+      const requestedYield = Number(yieldInput.value) || 0;
+      const materials = recipe.materials.map(item => ({
+        ...item,
+        qty: Number((item.qty * requestedYield / recipe.yield).toFixed(2))
+      }));
+      formState.detReceta = materials.map((_, index) => Date.now() + index);
+      rerenderGroup("detReceta");
+
+      document.querySelectorAll('.detail-block[data-group="detReceta"] .detail-row').forEach((row, index) => {
+        const select = row.querySelector(".form-select");
+        const input = row.querySelector(".form-input");
+        if (select) select.value = materials[index].name;
+        if (input) input.value = materials[index].qty;
+      });
+    }
+
     function renderCustomerIndicator() {
+      const userIndicator = document.getElementById("logged-user-indicator");
+      userIndicator.hidden = !currentUser;
+      document.getElementById("logged-user-name").textContent = currentUser?.username || "";
       const indicator = document.getElementById("customer-account");
       indicator.hidden = currentRole !== "cliente";
       document.getElementById("customer-name").textContent = currentCustomer || "Sin cuenta";
+    }
+
+    function hideLogin() {
+      const loginOverlay = document.getElementById("login-overlay");
+      if (loginOverlay) loginOverlay.classList.add("hidden");
+    }
+
+    function showLogin() {
+      const loginOverlay = document.getElementById("login-overlay");
+      if (loginOverlay) loginOverlay.classList.remove("hidden");
+    }
+
+    function logout() {
+      currentUser = null;
+      currentRole = "dueno";
+      localStorage.removeItem("pastas-user");
+      localStorage.removeItem("pastas-role");
+      document.getElementById("login-username").value = "";
+      document.getElementById("login-password").value = "";
+      showLogin();
+      renderSidebar();
+      renderContent();
+      renderCustomerIndicator();
+      document.getElementById("topbar-title").textContent = "Dashboard";
+      document.getElementById("topbar-crumb").textContent = "Principal";
+      showNotify("Sesión cerrada.");
     }
 
     function setRole(roleId) {
@@ -1512,9 +1783,9 @@
 
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
-    <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${refOptions(g.ref).map(o => `<option>${o}</option>`).join("")}</select></div>
-    ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "number"
-        ? `<input class="form-input" type="number" min="1" value="1">`
+    <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${g.key === "detOPprod" ? '<option value="">Seleccionar producto</option>' : ""}${refOptions(g.ref).map(o => `<option>${o}</option>`).join("")}</select></div>
+      ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "number"
+        ? `<input class="form-input" type="number" min="0.01" step="0.01" value="1">`
         : `<input class="form-input" type="text">`}</div>`).join("")}
     <button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
   </div>`;
@@ -1536,14 +1807,39 @@
       if (block) block.outerHTML = detailGroupHtml(g);
     }
 
+    function readDetailRows(key) {
+      return [...document.querySelectorAll(`.detail-block[data-group="${key}"] .detail-row`)].map(row => ({
+        selected: row.querySelector(".form-select")?.value,
+        inputs: [...row.querySelectorAll(".form-input")].map(input => input.value)
+      }));
+    }
+
+    function restoreDetailRows(key, values) {
+      document.querySelectorAll(`.detail-block[data-group="${key}"] .detail-row`).forEach((row, index) => {
+        if (!values[index]) return;
+        const select = row.querySelector(".form-select");
+        if (select) select.value = values[index].selected;
+        row.querySelectorAll(".form-input").forEach((input, inputIndex) => {
+          input.value = values[index].inputs[inputIndex] ?? input.value;
+        });
+      });
+    }
+
     function addDetailRow(key) {
+      const values = readDetailRows(key);
       formState[key].push(Date.now() + Math.random());
       rerenderGroup(key);
+      restoreDetailRows(key, values);
+      if (key === "detOPprod") syncProductionMaterials();
     }
     function removeDetailRow(key, idx) {
       if (formState[key].length <= 1) { showNotify("Debe quedar al menos un ítem cargado."); return; }
+      const values = readDetailRows(key);
       formState[key].splice(idx, 1);
+      values.splice(idx, 1);
       rerenderGroup(key);
+      restoreDetailRows(key, values);
+      if (key === "detOPprod") syncProductionMaterials();
     }
 
     function openView(entityId, rowIdx) {
@@ -1616,6 +1912,42 @@
           }
           updatedRow.customerDocument = currentCustomerDocument;
         }
+        if (entityId === "ordenesProduccion") {
+          const rows = document.querySelectorAll('.detail-block[data-group="detOPprod"] .detail-row');
+          syncProductionMaterials();
+          const products = [...rows].map(row => {
+            const product = row.querySelector(".form-select")?.value;
+            const quantity = row.querySelectorAll(".form-input")[0]?.value;
+            return product ? `${product} (${quantity || 1})` : null;
+          }).filter(Boolean);
+          if (products.length) updatedRow[3] = escapeHTML(products.join(", "));
+        }
+        if (entityId === "recetas") {
+          const productSelect = [...document.querySelectorAll("#mf-fields .form-group")]
+            .find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "idproducto")
+            ?.querySelector(".form-select");
+          const materialRows = [...document.querySelectorAll('.detail-block[data-group="detReceta"] .detail-row')];
+          const recipe = RECIPE_DEFINITIONS[productSelect?.value];
+          const materialSummary = materialRows.map(row => {
+            const name = row.querySelector(".form-select")?.value;
+            const quantity = Number(row.querySelector(".form-input")?.value);
+            const unit = recipe?.materials.find(item => item.name === name)?.unit || "unidades";
+            return name && quantity > 0 ? `${name}: ${quantity} ${unit}` : null;
+          }).filter(Boolean).join("; ");
+          const materialColumn = e.cols.findIndex(col => col.includes("Detalle_Receta"));
+          if (materialColumn >= 0 && materialSummary) updatedRow[materialColumn] = escapeHTML(materialSummary);
+          const yieldInput = [...document.querySelectorAll("#mf-fields .form-group")]
+            .find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento")
+            ?.querySelector(".form-input");
+          updatedRow.recipeYield = Number(yieldInput?.value) || 1;
+          updatedRow.recipeMaterials = materialRows.map(row => {
+            const name = row.querySelector(".form-select")?.value;
+            const quantity = Number(row.querySelector(".form-input")?.value);
+            const material = recipe?.materials.find(item => item.name === name);
+            const materialRow = E.find(entity => entity.id === "materias").rows.find(item => item[0] === name);
+            return name && quantity > 0 ? { name, qty: quantity, unit: material?.unit || materialRow?.[1] || "unidades" } : null;
+          }).filter(Boolean);
+        }
         if (!editing && entityId === "cuentaCliente") {
           const clients = E.find(entity => entity.id === "clientes");
           const duplicateDocument = clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(updatedRow[1]));
@@ -1633,6 +1965,31 @@
         closeModal("modal-form");
         showNotify(editing ? "Registro actualizado." : "Registro agregado.");
       };
+      if (entityId === "ordenesProduccion") {
+        setTimeout(() => {
+          const fields = document.getElementById("mf-fields");
+          fields.onchange = event => {
+            if (event.target.closest('.detail-block[data-group="detOPprod"]')) syncProductionMaterials();
+          };
+          fields.oninput = event => {
+            const detailRow = event.target.closest('.detail-block[data-group="detOPprod"] .detail-row');
+            if (detailRow && event.target === detailRow.querySelectorAll(".form-input")[0]) syncProductionMaterials();
+          };
+          syncProductionMaterials();
+        }, 0);
+      }
+      if (entityId === "recetas") {
+        setTimeout(() => {
+          const groups = [...document.querySelectorAll("#mf-fields .form-group")];
+          const productGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "idproducto");
+          const yieldGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento");
+          const productSelect = productGroup?.querySelector(".form-select");
+          const yieldInput = yieldGroup?.querySelector(".form-input");
+          if (productSelect) productSelect.addEventListener("change", () => syncRecipeMaterials(productSelect, true));
+          if (yieldInput) yieldInput.addEventListener("input", () => syncRecipeMaterials(productSelect));
+          if (productSelect && productSelect.value) syncRecipeMaterials(productSelect);
+        }, 0);
+      }
       openModal("modal-form");
     }
 
@@ -1680,11 +2037,90 @@
 
     function init() {
       const savedRole = localStorage.getItem("pastas-role");
-      if (ROLES.some(role => role.id === savedRole)) currentRole = savedRole;
+      const savedUser = localStorage.getItem("pastas-user");
+      const matchedUser = getLoginUsers().find(user => user.username === savedUser);
+
+      if (matchedUser && ROLES.some(role => role.id === matchedUser.role)) {
+        currentUser = matchedUser;
+        currentRole = matchedUser.role;
+        hideLogin();
+      } else if (ROLES.some(role => role.id === savedRole)) {
+        currentRole = savedRole;
+        hideLogin();
+      } else {
+        showLogin();
+      }
+
+      document.getElementById("login-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const username = document.getElementById("login-username").value.trim().toLowerCase();
+        const password = document.getElementById("login-password").value.trim();
+        const user = getLoginUsers().find(item => item.username === username && item.password === password);
+
+        if (!user) {
+          showNotify("Usuario o contraseña incorrectos.");
+          return;
+        }
+
+        currentUser = user;
+        currentRole = user.role;
+        localStorage.setItem("pastas-user", user.username);
+        localStorage.setItem("pastas-role", user.role);
+        hideLogin();
+        renderSidebar();
+        renderContent();
+        renderCustomerIndicator();
+        document.getElementById("topbar-title").textContent = "Dashboard";
+        document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === currentRole).label;
+        showNotify(`Bienvenido, ${user.username}.`);
+      });
+
+      document.getElementById("toggle-register-btn").addEventListener("click", () => {
+        const panel = document.getElementById("register-panel");
+        panel.classList.toggle("show");
+      });
+
+      document.getElementById("register-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const username = document.getElementById("register-username").value.trim().toLowerCase();
+        const password = document.getElementById("register-password").value.trim();
+        const role = "cliente";
+
+        if (!username || !password) {
+          showNotify("Completa usuario y contraseña.");
+          return;
+        }
+
+        const users = getLoginUsers();
+        if (users.some(user => user.username === username)) {
+          showNotify("Ese usuario ya existe.");
+          return;
+        }
+
+        users.push({ username, password, role });
+        persistLoginUsers(users);
+
+        document.getElementById("register-form").reset();
+        document.getElementById("register-panel").classList.remove("show");
+
+        const createdUser = { username, password, role };
+        currentUser = createdUser;
+        currentRole = role;
+        localStorage.setItem("pastas-user", username);
+        localStorage.setItem("pastas-role", role);
+        hideLogin();
+        renderSidebar();
+        renderContent();
+        renderCustomerIndicator();
+        document.getElementById("topbar-title").textContent = "Dashboard";
+        document.getElementById("topbar-crumb").textContent = ROLES.find(item => item.id === role).label;
+        showNotify(`Usuario creado: ${username}.`);
+      });
+
       initializeCustomerOwnership();
-      renderRoleSelector();
       renderSidebar();
       renderContent();
+      renderCustomerIndicator();
       document.getElementById("today-date").textContent = new Date().toLocaleDateString("es-AR");
       document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === currentRole).label;
       document.querySelectorAll(".modal-overlay").forEach(overlay => {

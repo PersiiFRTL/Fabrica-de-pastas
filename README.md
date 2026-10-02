@@ -2,21 +2,32 @@
 
 Prototipo de dashboard en un único archivo HTML, con vistas y navegación según el perfil seleccionado.
 
-## Cómo ver las vistas
+## Cómo iniciar sesión
 
 1. Abrí `index.html` en un navegador. No hace falta instalar dependencias ni iniciar un servidor.
-2. Usá el selector **Vista de perfil**, arriba a la derecha, para cambiar entre **Administrador / dueño**, **Cliente**, **Vendedor**, **Encargado de producción** y **Administración**.
-3. Elegí una sección en el menú lateral para abrir sus pantallas. El dashboard también ofrece accesos directos a los módulos del perfil activo.
-4. El perfil elegido se guarda en el navegador. Al volver a abrir el archivo en ese mismo navegador, se mantiene la última vista seleccionada.
+2. La primera pantalla es un login con usuarios de prueba y contraseñas fijas.
+3. Usá alguno de estos usuarios:
+
+- `dueno` / `dueno123` -> Administrador / dueño
+- `cliente` / `cliente123` -> Cliente
+- `vendedor` / `vendedor123` -> Vendedor
+- `produccion` / `produccion123` -> Encargado de producción
+
+4. Luego podés usar el selector de perfil o la navegación según corresponda.
 
 ## Vistas por perfil
 
 - **Administrador / dueño:** acceso a todos los módulos y datos de ejemplo: ventas, clientes, empleados, producción, mantenimiento y compras a proveedores.
-- **Cliente:** puede crear una cuenta y acceder únicamente a los presupuestos y pedidos asociados al documento de su cuenta activa. Las opciones para vincular un pedido también se limitan a esa cuenta y a sus propios presupuestos.
+- **Cliente:** accede únicamente a sus presupuestos y pedidos. En esta vista se quitó la opción de crear usuario desde el módulo del cliente; la cuenta se gestiona con el login y la cuenta activa del cliente.
 - **Vendedor:** puede gestionar presupuestos, pedidos, remitos, comprobantes de venta, comprobantes de pago y devoluciones.
 - **Encargado de producción:** puede gestionar órdenes de producción, recetas y órdenes de mantenimiento.
-- **Administración:** puede gestionar materias primas, productos, recetas, máquinas, mantenimiento, repuestos, proveedores, clientes, presupuestos de proveedores, órdenes de compra, remitos y comprobantes de proveedores, órdenes de pago y comprobantes de venta y pago.
+
+## Reglas de negocio del prototipo
+
+- **Receta vinculada al producto:** cada receta indica qué producto se fabrica y la receta queda asociada al producto correspondiente.
+- **Producción automática:** en la orden de producción, la cantidad de producción ya no se ingresa como dato independiente; se calcula la materia prima requerida automáticamente según el producto y la receta asociada.
+- **Los datos creados desde los formularios viven en la memoria de la página y se pierden al recargar.**
 
 ## Alcance del prototipo
 
-La vista Cliente inicia con la cuenta de ejemplo María González. Si se crea otra cuenta, pasa a ser la cuenta activa durante esa sesión y sus pedidos y presupuestos se asocian a su documento. El selector de perfiles y el filtro de cuenta son solo una simulación local: no reemplazan inicio de sesión ni autorización. Los registros creados desde los formularios viven en la memoria de la página y se pierden al recargar. Para usarlo con clientes reales se necesita persistencia en una API/base de datos, autenticación y validación de permisos en el servidor.
+La vista Cliente inicia con la cuenta de ejemplo María González. El selector de perfiles y la cuenta activa son simulaciones locales del frontend, no un sistema real de autenticación ni autorización. Para uso real se necesita persistencia en base de datos, validación del lado del servidor y gestión de sesiones.
