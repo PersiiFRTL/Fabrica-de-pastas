@@ -52,6 +52,11 @@
       display: flex;
     }
 
+    body.logged-out .sidebar,
+    body.logged-out .main {
+      visibility: hidden;
+    }
+
     .sidebar {
       width: 264px;
       min-height: 100vh;
@@ -548,6 +553,23 @@
       gap: 5px;
     }
 
+    .form-group[hidden] {
+      display: none;
+    }
+
+    .budget-client-fields {
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .budget-client-fields:not([hidden]) {
+      display: grid;
+    }
+
+    .budget-client-fields[hidden] {
+      display: none;
+    }
+
     .form-group.span2 {
       grid-column: 1 / -1;
     }
@@ -838,13 +860,12 @@
     .login-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(44, 24, 16, 0.72);
+      background: var(--cream);
       z-index: 300;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      backdrop-filter: blur(2px);
     }
 
     .login-overlay.hidden {
@@ -1006,7 +1027,7 @@
   </style>
 </head>
 
-<body>
+<body class="logged-out">
 
   <aside class="sidebar" id="sidebar"></aside>
 
@@ -1216,19 +1237,19 @@
       // ============ VENTAS ============
       {
         id: "clientes", section: "ventas", icon: "👥", label: "Clientes", singular: "cliente", cls: "Cliente ⊳ Persona",
-        cols: ["Cliente", "Documento", "Tipo", "Cta. corriente", "Estado"],
+        cols: ["Cliente", "Documento", "Tipo", "Límite de deuda", "Cta. corriente", "Estado"],
         rows: [
-          ["María González", "30.221.884", "Mostrador", "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"],
-          ["Restó La Nonna", "30-71234567-9", "Restaurante", "<span class='badge badge-green'>Sí</span>", "<span class='badge badge-green'>Activo</span>"],
-          ["Hotel Belgrano", "30-70998821-4", "Hotel", "<span class='badge badge-green'>Sí</span>", "<span class='badge badge-green'>Activo</span>"],
+          ["María González", "30.221.884", "Consumidor final", "$0", "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"],
+          ["Restó La Nonna", "30-71234567-9", "Restaurante", "$100.000", "<span class='badge badge-green'>Sí</span>", "<span class='badge badge-green'>Activo</span>"],
+          ["Hotel Belgrano", "30-70998821-4", "Hotel", "$150.000", "<span class='badge badge-green'>Sí</span>", "<span class='badge badge-green'>Activo</span>"],
         ],
         fields: [
-          { l: "Nombre", t: "text" }, { l: "Apellido", t: "text" },
-          { l: "NroDocumento", t: "text" }, { l: "tipoDocumento", t: "select", o: ["DNI", "CUIT", "CUIL"] },
+          { l: "Nombre", t: "text", required: true }, { l: "Apellido", t: "text" },
+          { l: "NroDocumento", t: "text", required: true }, { l: "tipoDocumento", t: "select", o: ["DNI", "CUIT", "CUIL"] },
           { l: "Telefono", t: "text" }, { l: "Email", t: "text" },
           { l: "IdIva (Tipo_IVA)", t: "select", o: ["Responsable Inscripto", "Monotributo", "Consumidor Final", "Exento"] },
-          { l: "TipoCliente", t: "select", o: ["Mostrador", "Restaurante", "Hotel", "Supermercado", "Comercio de barrio"] },
-          { l: "CuentaCorriente", t: "select", o: ["No", "Sí"] }, { l: "SaldoDeuda", t: "number" },
+          { l: "TipoCliente", t: "select", o: ["Consumidor final", "Restaurante", "Hotel", "Supermercado", "Comercio de barrio"] },
+          { l: "CuentaCorriente", t: "select", o: ["No", "Sí"] }, { l: "LimiteDeuda", t: "number" },
           { l: "Estado", t: "select", o: ["Activo", "Inactivo"] },
         ]
       },
@@ -1236,8 +1257,8 @@
         id: "empleados", section: "ventas", icon: "🧑🍳", label: "Empleados", singular: "empleado", cls: "Empleado ⊳ Persona",
         cols: ["Empleado", "Cargo", "Turno", "Fecha ingreso", "Estado"],
         rows: [
-          ["Carlos Bernal", "Producción", "Mañana", "03/2019", "<span class='badge badge-green'>Activo</span>"],
-          ["Lucía Persani", "Vendedor", "Tarde", "06/2022", "<span class='badge badge-green'>Activo</span>"],
+          ["Carlos Bernal", "Producción", "Mañana", "01/03/2019", "<span class='badge badge-green'>Activo</span>"],
+          ["Lucía Persani", "Vendedor", "Tarde", "01/06/2022", "<span class='badge badge-green'>Activo</span>"],
         ],
         fields: [
           { l: "Nombre", t: "text" }, { l: "Apellido", t: "text" }, { l: "NroDocumento", t: "text" }, { l: "Telefono", t: "text" },
@@ -1274,8 +1295,9 @@
         fields: [
           { l: "Id_Cliente", t: "select", ref: "clientes" },
           { l: "id_Presupuesto", t: "select", ref: "presupuestos" },
-          { l: "FechaEntrega", t: "date" }, { l: "AnticipoPagado", t: "text" },
-          { l: "TipoPedido", t: "select", o: ["Fijo semanal", "Mostrador", "Evento / fiesta", "Donación (sin costo)"] },
+          { l: "FechaEntrega", t: "date" }, { l: "FechaInicio", t: "date" }, { l: "FechaFin", t: "date" },
+          { l: "DiasDeEntrega", t: "multiselect", o: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] },
+          { l: "FechaEvento", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "En preparación", "Entregado", "Cancelado"] },
         ],
         details: [{ key: "detPedido", cls: "Detalle_OrdenPedido", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
@@ -1298,20 +1320,19 @@
       },
       {
         id: "comprobantesPago", section: "ventas", icon: "💳", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
-        cols: ["N°", "nroPedido", "Cliente", "FormaDePago", "montoTotal", "responsable"],
+        cols: ["N°", "nroPedido", "Cliente", "Fecha", "FormaDePago", "montoTotal", "responsable"],
         rows: [
-          ["#CP-0410", "#OP-0886", "Restó La Nonna", "Transferencia", "$38.400", "Lucía Persani"],
-          ["#CP-0405", "#OP-0892", "María González", "Mercado Pago", "$5.400", "Lucía Persani"],
+          ["#CP-0410", "#OP-0886", "Restó La Nonna", "22/09/2026", "Transferencia", "$38.400", "Lucía Persani"],
+          ["#CP-0405", "#OP-0892", "María González", "19/09/2026", "Mercado Pago", "$5.400", "Lucía Persani"],
         ],
         fields: [
           { l: "Id_Cliente (heredado)", t: "select", ref: "clientes" },
           { l: "Id_Empleado (heredado)", t: "select", ref: "empleados" },
           { l: "fechaEmision", t: "date" },
-          { l: "id_FormaDePago", t: "select", o: ["Efectivo", "Débito", "Mercado Pago", "Cuenta DNI", "Transferencia"] },
-          { l: "montoTotal", t: "text" }, { l: "responsable", t: "text" },
+          { l: "responsable", t: "text" },
           { l: "estado (heredado)", t: "select", o: ["Confirmado", "Anulado"] },
         ],
-        details: [{ key: "detCP", cls: "Detalle_ComprobantePago", ref: "pedidos", refLabel: "Pedido cubierto", extra: [{ l: "Monto", t: "text" }] }]
+        details: [{ key: "detCP", cls: "Detalle_ComprobantePago", ref: "pedidos", refLabel: "Pedido cubierto", extra: [{ l: "Monto", t: "number" }, { l: "Forma de pago", t: "select", o: ["Efectivo", "Débito", "Mercado Pago", "Cuenta DNI", "Transferencia"] }] }]
       },
       {
         id: "remitos", section: "ventas", icon: "🚚", label: "Remitos", singular: "remito", cls: "Remito",
@@ -1509,8 +1530,8 @@
       },
       {
         id: "ordenesPago", section: "compras", icon: "💵", label: "Órdenes de Pago", singular: "orden de pago", cls: "OrdenPago",
-        cols: ["N°", "idOrdenCompraProv (Detalle_OrdenPago)", "idFormaPago", "montoPagado", "estado"],
-        rows: [["#PGP-070", "#OC-0211", "Transferencia", "$68.200", "<span class='badge badge-green'>Pagada</span>"]],
+        cols: ["N°", "idOrdenCompraProv (Detalle_OrdenPago)", "idFormaPago", "Fecha", "montoPagado", "estado"],
+        rows: [["#PGP-070", "#OC-0211", "Transferencia", "20/09/2026", "$68.200", "<span class='badge badge-green'>Pagada</span>"]],
         fields: [
           { l: "idFormaPago", t: "select", o: ["Efectivo", "Transferencia", "Cheque"] },
           { l: "fecha", t: "date" }, { l: "estado", t: "select", o: ["Pendiente", "Pagada"] },
@@ -1518,6 +1539,12 @@
         details: [{ key: "detOPpago", cls: "Detalle_OrdenPago", ref: "ordenesCompra", refLabel: "Orden de compra cancelada", extra: [{ l: "MontoPagado", t: "text" }] }]
       },
     ];
+
+    const DATE_COLUMN_INDICES = {
+      empleados: [3], presupuestos: [2], pedidos: [3], comprobantesVenta: [3], comprobantesPago: [3],
+      devoluciones: [1], ordenesProduccion: [1], maquinas: [4], mantenimiento: [2],
+      presupuestosProv: [2, 3], ordenesCompra: [2, 3], remitosProv: [3], comprobantesProv: [2], ordenesPago: [3],
+    };
 
     function initializeCustomerOwnership() {
       const clients = E.find(entity => entity.id === "clientes");
@@ -1540,7 +1567,7 @@
     <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')"><span class="icon">🏠</span> Dashboard</button>
   </div>`;
       SECTIONS.forEach(s => {
-        const sectionEntities = E.filter(e => e.section === s.id && roleCanAccess(e.id));
+        const sectionEntities = E.filter(e => e.section === s.id && e.id !== "cuentaCliente" && roleCanAccess(e.id));
         if (!sectionEntities.length) return;
         h += `<div class="sidebar-section"><div class="sidebar-section-title">${s.icon} ${s.label}</div>`;
         sectionEntities.forEach(e => {
@@ -1569,9 +1596,14 @@
       </div>
       <table>
         <thead><tr>${e.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead>
-        <tbody>${rows.length ? rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}<td class="td-actions">
+        <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}<td class="td-actions">
           <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
-          ${customerViewOnly ? "" : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
+          ${customerViewOnly ? "" : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleClientStatus(${e.rows.indexOf(r)})">${normalizeLabel((r[5] || "Activo").replace(/<[^>]+>/g, "")) === "activo" ? "Deshabilitar" : "Habilitar"}</button>` : e.id === "pedidos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('pedidos',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button>
+          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "presupuestos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('presupuestos',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${e.rows.indexOf(r)})">Generar orden</button>
+          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>`}
         </td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
       </table>
@@ -1626,7 +1658,74 @@
     }
 
     function renderContent() {
-      document.getElementById("content").innerHTML = dashboardScreen() + E.filter(e => roleCanAccess(e.id)).map(entityScreen).join("");
+      const content = document.getElementById("content");
+      const activeScreen = content.querySelector(".screen.active")?.id?.replace("screen-", "");
+      content.innerHTML = dashboardScreen() + E.filter(e => e.id !== "cuentaCliente" && roleCanAccess(e.id)).map(entityScreen).join("");
+      if (activeScreen && activeScreen !== "dashboard") {
+        content.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+        document.getElementById(`screen-${activeScreen}`)?.classList.add("active");
+      }
+    }
+
+    function formatDateForDisplay(value) {
+      if (typeof value !== "string") return value ?? "—";
+      const isoDate = value.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (isoDate) return `${isoDate[3].padStart(2, "0")}/${isoDate[2].padStart(2, "0")}/${isoDate[1]}`;
+      const localDate = value.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+      if (localDate) return `${localDate[1].padStart(2, "0")}/${localDate[2].padStart(2, "0")}/${localDate[3]}`;
+      return value;
+    }
+
+    function formatCellValue(entity, row, columnIndex) {
+      if (entity.id === "pedidos" && columnIndex === 3 && row.schedule) {
+        const schedule = row.schedule;
+        if (schedule.type === "Fijo semanal") {
+          return `Fijo semanal · ${schedule.days.join(", ")} (${formatDateForDisplay(schedule.startDate)} a ${formatDateForDisplay(schedule.endDate)})`;
+        }
+        if (schedule.type === "Evento especial") return `Evento especial · ${formatDateForDisplay(schedule.eventDate)}`;
+        if (schedule.type === "Mostrador") return `Mostrador · ${formatDateForDisplay(schedule.deliveryDate)}`;
+      }
+      return DATE_COLUMN_INDICES[entity.id]?.includes(columnIndex)
+        ? formatDateForDisplay(row[columnIndex])
+        : row[columnIndex] ?? "—";
+    }
+
+    function normalizeOrderScheduleType(value) {
+      const type = normalizeLabel(value || "");
+      if (type.includes("semanal")) return "Fijo semanal";
+      if (type.includes("evento")) return "Evento especial";
+      return "Mostrador";
+    }
+
+    function initializeBudgetTypes() {
+      const budgets = E.find(entity => entity.id === "presupuestos");
+      const sampleTypes = { "#PR-0208": "Fijo semanal", "#PR-0207": "Evento / fiesta", "#PR-0203": "Mostrador" };
+      budgets.rows.forEach(row => { row.orderType ||= sampleTypes[row[0]] || "Mostrador"; });
+    }
+
+    function syncOrderScheduleFields() {
+      const groups = [...document.querySelectorAll("#mf-fields .form-grid .form-group")];
+      const budgetGroup = groups.find(group => group.querySelector(".form-label").textContent === "id_Presupuesto");
+      const budget = E.find(entity => entity.id === "presupuestos").rows.find(row => row[0] === budgetGroup?.querySelector("select")?.value);
+      const type = normalizeOrderScheduleType(budget?.orderType);
+      const visibility = {
+        FechaEntrega: type === "Mostrador",
+        FechaInicio: type === "Fijo semanal",
+        FechaFin: type === "Fijo semanal",
+        DiasDeEntrega: type === "Fijo semanal",
+        FechaEvento: type === "Evento especial",
+      };
+      groups.forEach(group => {
+        const label = group.querySelector(".form-label").textContent;
+        if (!(label in visibility)) return;
+        const control = group.querySelector("input,select,textarea");
+        group.hidden = !visibility[label];
+        control.required = visibility[label];
+        if (!visibility[label]) {
+          if (control.multiple) [...control.options].forEach(option => { option.selected = false; });
+          else control.value = "";
+        }
+      });
     }
 
     function getRecipeMaterialPlan(productName, plannedQty = 1) {
@@ -1703,11 +1802,13 @@
     function hideLogin() {
       const loginOverlay = document.getElementById("login-overlay");
       if (loginOverlay) loginOverlay.classList.add("hidden");
+      document.body.classList.remove("logged-out");
     }
 
     function showLogin() {
       const loginOverlay = document.getElementById("login-overlay");
       if (loginOverlay) loginOverlay.classList.remove("hidden");
+      document.body.classList.add("logged-out");
     }
 
     function logout() {
@@ -1770,10 +1871,12 @@
       const span = f.span === 2 ? " span2" : "";
       const required = f.required ? " required" : "";
       let input;
-      if (f.ref) input = `<select class="form-select">${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
+      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="toggleBudgetClientForm()">+ Crear cliente</button><div id="budget-client-form" class="budget-client-fields" hidden><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido"><input class="form-input" id="budget-client-document" placeholder="Documento" aria-label="Documento"><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div>`;
+      else if (f.ref) input = `<select class="form-select"${required}>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
+      else if (f.t === "multiselect") input = `<select class="form-select" multiple size="${f.o.length}"${required}>${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "select") input = `<select class="form-select">${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
-      else if (f.t === "textarea") input = `<textarea class="form-textarea"></textarea>`;
-      else input = `<input class="form-input" type="${f.t}"${required}>`;
+      else if (f.t === "textarea") input = `<textarea class="form-textarea"${required}></textarea>`;
+      else input = `<input class="form-input" type="${f.t}"${f.t === "date" ? ' lang="es-AR"' : ""}${required}>`;
       return `<div class="form-group${span}"><label class="form-label">${f.l}</label>${input}</div>`;
     }
 
@@ -1784,9 +1887,10 @@
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
     <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${g.key === "detOPprod" ? '<option value="">Seleccionar producto</option>' : ""}${refOptions(g.ref).map(o => `<option>${o}</option>`).join("")}</select></div>
-      ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "number"
-        ? `<input class="form-input" type="number" min="0.01" step="0.01" value="1">`
-        : `<input class="form-input" type="text">`}</div>`).join("")}
+      ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "select"
+        ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
+        : x.t === "number" ? `<input class="form-input" type="number" min="0.01" step="0.01" value="1">`
+          : `<input class="form-input" type="text">`}</div>`).join("")}
     <button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
   </div>`;
     }
@@ -1808,10 +1912,14 @@
     }
 
     function readDetailRows(key) {
-      return [...document.querySelectorAll(`.detail-block[data-group="${key}"] .detail-row`)].map(row => ({
-        selected: row.querySelector(".form-select")?.value,
-        inputs: [...row.querySelectorAll(".form-input")].map(input => input.value)
-      }));
+      return [...document.querySelectorAll(`.detail-block[data-group="${key}"] .detail-row`)].map(row => {
+        const selects = [...row.querySelectorAll(".form-select")];
+        return {
+          selected: selects[0]?.value,
+          extraSelects: selects.slice(1).map(select => select.value),
+          inputs: [...row.querySelectorAll(".form-input")].map(input => input.value)
+        };
+      });
     }
 
     function restoreDetailRows(key, values) {
@@ -1819,6 +1927,9 @@
         if (!values[index]) return;
         const select = row.querySelector(".form-select");
         if (select) select.value = values[index].selected;
+        row.querySelectorAll(".form-select").forEach((control, controlIndex) => {
+          if (controlIndex > 0) control.value = values[index].extraSelects?.[controlIndex - 1] ?? control.value;
+        });
         row.querySelectorAll(".form-input").forEach((input, inputIndex) => {
           input.value = values[index].inputs[inputIndex] ?? input.value;
         });
@@ -1849,18 +1960,22 @@
       document.getElementById("mv-class").textContent = "clase: " + e.cls;
       let h = `<div class="view-grid">`;
       e.cols.forEach((c, i) => {
-        h += `<div class="view-field"><div class="view-label">${c}</div><div class="view-value">${row[i] ?? "—"}</div></div>`;
+        h += `<div class="view-field"><div class="view-label">${c}</div><div class="view-value">${formatCellValue(e, row, i)}</div></div>`;
       });
       h += `</div>`;
       if (e.details && e.details.length) {
         e.details.forEach(g => {
           const opts = refOptions(g.ref);
-          const sample = opts.slice(0, Math.min(2, opts.length));
+          const savedDetails = row.detailData?.[g.key] || [];
+          const displayRows = savedDetails.length ? savedDetails.map(item => ({
+            selected: item.selected,
+            values: [...item.inputs, ...(item.extraSelects || [])]
+          })) : opts.slice(0, Math.min(2, opts.length)).map(selected => ({ selected, values: [] }));
           h += `<div class="detail-block">
         <div class="detail-label">${g.refLabel}s <span class="class-tag">clase: ${g.cls}</span></div>
         <table><thead><tr><th>${g.refLabel}</th>${g.extra.map(x => `<th>${x.l}</th>`).join("")}</tr></thead>
-        <tbody>${sample.map(o => `<tr><td>${o}</td>${g.extra.map(() => `<td>—</td>`).join("")}</tr>`).join("")}</tbody></table>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Vista de ejemplo — el detalle real se completa al cargar el comprobante.</div>
+        <tbody>${displayRows.map(item => `<tr><td>${escapeHTML(item.selected || "—")}</td>${g.extra.map((_, index) => `<td>${escapeHTML(item.values[index] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table>
+        ${savedDetails.length ? "" : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Sin detalle cargado.</div>`}
       </div>`;
         });
       }
@@ -1874,10 +1989,15 @@
       formState = {};
       (e.details || []).forEach(g => { formState[g.key] = [1]; }); // arranca con 1 fila, se pueden agregar todas las que hagan falta
       const editing = rowIndex !== null && e.rows[rowIndex];
+      if (editing) (e.details || []).forEach(group => {
+        const savedDetails = editing.detailData?.[group.key];
+        if (savedDetails?.length) formState[group.key] = savedDetails.map((_, index) => index);
+      });
       document.getElementById("mf-title").innerHTML = `${editing ? "Editar " : "Nuevo "}${e.singular} <span class="class-tag" style="margin-left:6px">clase: ${e.cls}</span>`;
       let body = `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>`;
       (e.details || []).forEach(g => { body += detailGroupHtml(g); });
       document.getElementById("mf-fields").innerHTML = body;
+      if (editing) (e.details || []).forEach(group => restoreDetailRows(group.key, editing.detailData?.[group.key] || []));
       if (editing) {
         document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
           const label = group.querySelector(".form-label").textContent;
@@ -1887,6 +2007,47 @@
           cell.innerHTML = e.rows[rowIndex][colIndex] || "";
           group.querySelector("input, select, textarea").value = cell.textContent.trim();
         });
+        if (entityId === "clientes") {
+          const row = e.rows[rowIndex];
+          const values = {
+            Nombre: (row[0] || "").split(" ")[0],
+            Apellido: (row[0] || "").split(" ").slice(1).join(" "),
+            NroDocumento: row[1] || "",
+            TipoCliente: row[2] || "Consumidor final",
+            CuentaCorriente: row[4]?.replace(/<[^>]+>/g, "") || "No",
+            LimiteDeuda: (row[3] || "").replace(/[^\d.,-]/g, ""),
+            Estado: row[5]?.replace(/<[^>]+>/g, "") || "Activo",
+          };
+          document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
+            const label = group.querySelector(".form-label").textContent;
+            if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
+          });
+        }
+        if (entityId === "pedidos") {
+          const row = e.rows[rowIndex];
+          const values = {
+            Id_Cliente: row?.[1] || "",
+            id_Presupuesto: row?.[2] === "—" ? "" : row?.[2] || "",
+            FechaEntrega: row?.schedule?.deliveryDate || "",
+            FechaInicio: row?.schedule?.startDate || "",
+            FechaFin: row?.schedule?.endDate || "",
+            FechaEvento: row?.schedule?.eventDate || "",
+            estado: row?.[5]?.replace(/<[^>]+>/g, "") || "Pendiente",
+          };
+          document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
+            const label = group.querySelector(".form-label").textContent;
+            if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
+            if (label === "DiasDeEntrega") [...group.querySelector("select").options].forEach(option => {
+              option.selected = row?.schedule?.days?.includes(option.value) || false;
+            });
+          });
+        }
+      }
+      if (entityId === "pedidos") {
+        const budgetSelect = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+          .find(group => group.querySelector(".form-label").textContent === "id_Presupuesto")?.querySelector("select");
+        budgetSelect?.addEventListener("change", syncOrderScheduleFields);
+        syncOrderScheduleFields();
       }
       document.getElementById("mf-save").onclick = () => {
         const requiredFields = document.querySelectorAll("#mf-fields [required]");
@@ -1894,7 +2055,7 @@
           if (!field.reportValidity()) return;
         }
         const n = (e.details || []).reduce((s, g) => s + formState[g.key].length, 0);
-        const updatedRow = editing ? [...e.rows[rowIndex]] : Array(e.cols.length).fill("—");
+        let updatedRow = editing ? [...e.rows[rowIndex]] : Array(e.cols.length).fill("—");
         document.querySelectorAll("#mf-fields .form-grid .form-group").forEach((group, index) => {
           const label = group.querySelector(".form-label").textContent;
           let colIndex = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel(label));
@@ -1903,6 +2064,25 @@
           const control = group.querySelector("input, select, textarea");
           updatedRow[colIndex] = escapeHTML(control.value.trim() || "—");
         });
+        const detailData = Object.fromEntries((e.details || []).map(group => [group.key, readDetailRows(group.key)]));
+        if (Object.keys(detailData).length) updatedRow.detailData = detailData;
+        const getValue = label => [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+          .find(group => group.querySelector(".form-label").textContent === label)?.querySelector("input,select,textarea")?.value.trim() || "";
+        const getSelected = label => [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+          .find(group => group.querySelector(".form-label").textContent === label)?.querySelector("select")?.selectedOptions;
+        const formatBadge = (value, tone = "amber") => `<span class='badge badge-${tone}'>${escapeHTML(value)}</span>`;
+        const nextCode = (prefix, rows, first = 1) => {
+          const max = rows.reduce((highest, row) => Math.max(highest, Number(row[0]?.match(/(\d+)$/)?.[1]) || 0), first - 1);
+          return `#${prefix}-${String(max + 1).padStart(4, "0")}`;
+        };
+        const parseAmount = value => {
+          let normalized = String(value || "").replace(/[^\d,.-]/g, "");
+          if (normalized.includes(",")) normalized = normalized.replace(/\./g, "").replace(",", ".");
+          else if (/\.\d{3}(\D|$)/.test(normalized)) normalized = normalized.replace(/\./g, "");
+          const amount = Number(normalized);
+          return Number.isFinite(amount) ? amount : 0;
+        };
+        const formatAmount = amount => `$${Number(amount).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
         if (currentRole === "cliente" && ["presupuestos", "pedidos"].includes(entityId)) {
           if (!editing) {
             const prefix = entityId === "presupuestos" ? "PR" : "OP";
@@ -1948,19 +2128,131 @@
             return name && quantity > 0 ? { name, qty: quantity, unit: material?.unit || materialRow?.[1] || "unidades" } : null;
           }).filter(Boolean);
         }
-        if (!editing && entityId === "cuentaCliente") {
-          const clients = E.find(entity => entity.id === "clientes");
-          const duplicateDocument = clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(updatedRow[1]));
+        if (entityId === "clientes") {
+          const controls = [...document.querySelectorAll("#mf-fields .form-grid .form-group")];
+          const getValue = label => controls.find(group => group.querySelector(".form-label").textContent === label)?.querySelector("input,select,textarea")?.value.trim() || "";
+          const clientName = [getValue("Nombre"), getValue("Apellido")].filter(Boolean).join(" ");
+          const documentNumber = getValue("NroDocumento");
+          const duplicateDocument = e.rows.some((row, index) => index !== rowIndex && normalizeLabel(row[1]) === normalizeLabel(documentNumber));
           if (duplicateDocument) {
-            showNotify("Ya existe una cuenta con ese documento.");
+            showNotify("Ya existe un cliente con ese documento.");
             return;
           }
-          clients.rows.push([updatedRow[0], updatedRow[1], updatedRow[4], "No", "<span class='badge badge-green'>Activo</span>"]);
-          currentCustomer = updatedRow[0];
-          currentCustomerDocument = updatedRow[1];
+          const status = getValue("Estado") || "Activo";
+          const formatBadge = (value, positive) => `<span class='badge badge-${positive ? "green" : "gray"}'>${escapeHTML(value)}</span>`;
+          updatedRow = [
+            escapeHTML(clientName || getValue("Nombre") || "Cliente"),
+            escapeHTML(documentNumber || "—"),
+            escapeHTML(getValue("TipoCliente") || "Consumidor final"),
+            escapeHTML(getValue("LimiteDeuda") ? `$${getValue("LimiteDeuda")}` : "$0"),
+            formatBadge(getValue("CuentaCorriente") || "No", getValue("CuentaCorriente") === "Sí"),
+            formatBadge(status, status === "Activo"),
+          ];
         }
+        if (entityId === "presupuestos") {
+          const clientName = getValue("Id_Cliente");
+          const validity = getValue("validohasta");
+          const discount = getValue("descuento");
+          const status = getValue("estado") || "Pendiente";
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("PR", e.rows),
+            escapeHTML(clientName || "—"), escapeHTML(validity || "—"),
+            escapeHTML(discount ? `${discount}%` : "0%"), formatBadge(status, status === "Aprobado" ? "green" : "amber")
+          ];
+          const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientName));
+          if (client) updatedRow.customerDocument = client[1];
+          updatedRow.orderType = getValue("tipoPedido");
+        }
+        if (entityId === "pedidos") {
+          const budgetId = getValue("id_Presupuesto");
+          const budgetRecord = E.find(entity => entity.id === "presupuestos").rows.find(row => row[0] === budgetId);
+          if (!budgetRecord) {
+            showNotify("Seleccioná el presupuesto asociado a la orden.");
+            return;
+          }
+          const type = normalizeOrderScheduleType(budgetRecord.orderType);
+          const deliveryDate = getValue("FechaEntrega");
+          const startDate = getValue("FechaInicio");
+          const endDate = getValue("FechaFin");
+          const days = [...(getSelected("DiasDeEntrega") || [])].map(option => option.value);
+          if (type === "Fijo semanal" && (!startDate || !endDate || !days.length || startDate > endDate)) {
+            showNotify("Para un pedido fijo semanal indicá un período válido y al menos un día de entrega.");
+            return;
+          }
+          const eventDate = getValue("FechaEvento");
+          if (type === "Evento especial" && !eventDate) {
+            showNotify("Indicá la fecha del evento especial.");
+            return;
+          }
+          if (type === "Mostrador" && !deliveryDate) {
+            showNotify("Indicá la fecha de entrega del pedido.");
+            return;
+          }
+          const clientName = getValue("Id_Cliente");
+          const budget = getValue("id_Presupuesto");
+          const status = getValue("estado") || "Pendiente";
+          const deliveryLabel = type === "Fijo semanal" ? `Fijo semanal · ${days.join(", ")} (${formatDateForDisplay(startDate)} a ${formatDateForDisplay(endDate)})`
+            : type === "Evento especial" ? `Evento especial · ${formatDateForDisplay(eventDate)}` : `Mostrador · ${formatDateForDisplay(deliveryDate)}`;
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("OP", e.rows), escapeHTML(clientName || "—"),
+            escapeHTML(budget || "—"), escapeHTML(deliveryLabel || "—"), editing ? e.rows[rowIndex][4] : "$0",
+            formatBadge(status, status === "Entregado" ? "green" : "amber")
+          ];
+          updatedRow.schedule = { type, deliveryDate, startDate, endDate, days, eventDate };
+          const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientName));
+          if (client) updatedRow.customerDocument = client[1];
+        }
+        if (entityId === "comprobantesVenta") {
+          const orderId = getValue("nroPedido");
+          const order = E.find(entity => entity.id === "pedidos").rows.find(row => row[0] === orderId);
+          const total = (detailData.detCV || []).reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * parseAmount(line.inputs[1]), 0);
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("CV", e.rows), orderId || "—", order?.[1] || "—",
+            escapeHTML(getValue("FechaEmision") || "—"), escapeHTML(getValue("TipoVenta") || "Minorista"), formatAmount(total)
+          ];
+          updatedRow.orderId = orderId;
+          updatedRow.invoiceStatus = getValue("estado (heredado)") || "Emitido";
+          if (order?.customerDocument) updatedRow.customerDocument = order.customerDocument;
+        }
+        if (entityId === "comprobantesPago") {
+          const allocations = (detailData.detCP || []).map(line => ({
+            orderId: line.selected,
+            amount: parseAmount(line.inputs[0]),
+            method: line.extraSelects?.[0] || "Efectivo"
+          })).filter(line => line.orderId && line.amount > 0);
+          if (!allocations.length) {
+            showNotify("Agregá al menos un pago con pedido, importe y forma de pago.");
+            return;
+          }
+          const orders = E.find(entity => entity.id === "pedidos").rows;
+          const linkedOrders = [...new Set(allocations.map(line => line.orderId))];
+          const clientNames = [...new Set(linkedOrders.map(orderId => orders.find(order => order[0] === orderId)?.[1]).filter(Boolean))];
+          const methods = [...new Set(allocations.map(line => line.method))];
+          const total = allocations.reduce((sum, line) => sum + line.amount, 0);
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("CP", e.rows), linkedOrders.join(", "), clientNames.join(", "),
+            escapeHTML(getValue("fechaEmision") || "—"), methods.join(" + "), formatAmount(total), escapeHTML(getValue("responsable") || "—")
+          ];
+          updatedRow.paymentLines = allocations;
+          updatedRow.paymentStatus = getValue("estado (heredado)") || "Confirmado";
+          const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientNames[0] || ""));
+          if (client) updatedRow.customerDocument = client[1];
+        }
+        if (entityId === "ordenesPago") {
+          const status = getValue("estado") || "Pendiente";
+          const total = (detailData.detOPpago || []).reduce((sum, line) => sum + parseAmount(line.inputs[0]), 0);
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("PGP", e.rows),
+            (detailData.detOPpago || []).map(line => line.selected).filter(Boolean).join(", ") || "—",
+            escapeHTML(getValue("idFormaPago") || "—"), escapeHTML(getValue("fecha") || "—"), formatAmount(total),
+            formatBadge(status, status === "Pagada" ? "green" : "amber")
+          ];
+        }
+        if (Object.keys(detailData).length) updatedRow.detailData = detailData;
         if (editing) e.rows[rowIndex] = updatedRow;
         else e.rows.push(updatedRow);
+        updateOrderPaidTotals();
+        persistBusinessData();
         renderContent();
         closeModal("modal-form");
         showNotify(editing ? "Registro actualizado." : "Registro agregado.");
@@ -2028,11 +2320,148 @@
       document.getElementById("md-name").textContent = name;
       document.getElementById("md-confirm").onclick = () => {
         match.entity.rows.splice(match.rowIndex, 1);
+        updateOrderPaidTotals();
+        persistBusinessData();
         renderContent();
         closeModal("modal-delete");
         showNotify("Registro eliminado.");
       };
       openModal("modal-delete");
+    }
+
+    function toggleClientStatus(rowIndex) {
+      const clients = E.find(entity => entity.id === "clientes");
+      const row = clients?.rows[rowIndex];
+      if (!row) return;
+      const isActive = normalizeLabel((row[5] || "Activo").replace(/<[^>]+>/g, "")) === "activo";
+      const nextStatus = isActive ? "Inactivo" : "Activo";
+      row[5] = `<span class='badge badge-${isActive ? "gray" : "green"}'>${nextStatus}</span>`;
+      persistBusinessData();
+      renderContent();
+      showNotify(`Cliente ${nextStatus.toLowerCase()}.`);
+    }
+
+    function prefillInvoiceFromOrder(rowIndex) {
+      const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
+      if (!order) return;
+      openForm("comprobantesVenta");
+      setFormSelect("nroPedido", order[0]);
+      setFormSelect("Id_Cliente (heredado)", order[1]);
+      const orderDetails = order.detailData?.detPedido || [];
+      if (orderDetails.length) {
+        formState.detCV = orderDetails.map((_, index) => index);
+        rerenderGroup("detCV");
+        restoreDetailRows("detCV", orderDetails);
+      }
+      showNotify(`Factura preparada desde la orden ${order[0]}.`);
+    }
+
+    function generateOrderFromBudget(rowIndex) {
+      const budget = E.find(entity => entity.id === "presupuestos")?.rows[rowIndex];
+      if (!budget) return;
+      openForm("pedidos");
+      setFormSelect("Id_Cliente", budget[1]);
+      setFormSelect("id_Presupuesto", budget[0]);
+      syncOrderScheduleFields();
+      const budgetDetails = budget.detailData?.detPresupuesto || [];
+      if (budgetDetails.length) {
+        formState.detPedido = budgetDetails.map((_, index) => index);
+        rerenderGroup("detPedido");
+        restoreDetailRows("detPedido", budgetDetails);
+      }
+      showNotify(`Orden preparada desde el presupuesto ${budget[0]}.`);
+    }
+
+    function prefillPaymentFromOrder(rowIndex) {
+      const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
+      if (!order) return;
+      openForm("comprobantesPago");
+      setFormSelect("Id_Cliente (heredado)", order[1]);
+      formState.detCP = [1];
+      rerenderGroup("detCP");
+      const row = document.querySelector('.detail-block[data-group="detCP"] .detail-row');
+      if (row) {
+        row.querySelector(".form-select").value = order[0];
+        row.querySelectorAll(".form-input")[0].value = "";
+      }
+      showNotify(`Pago preparado para la orden ${order[0]}.`);
+    }
+
+    function setFormSelect(label, value) {
+      const group = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+        .find(item => item.querySelector(".form-label").textContent === label);
+      const select = group?.querySelector("select");
+      if (select && [...select.options].some(option => option.value === value)) select.value = value;
+    }
+
+    function toggleBudgetClientForm() {
+      const panel = document.getElementById("budget-client-form");
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) document.getElementById("budget-client-name").focus();
+    }
+
+    function createBudgetClient() {
+      const name = document.getElementById("budget-client-name").value.trim();
+      const documentNumber = document.getElementById("budget-client-document").value.trim();
+      const type = document.getElementById("budget-client-type").value;
+      const clients = E.find(entity => entity.id === "clientes");
+      if (!name || !documentNumber) {
+        showNotify("Ingresá el nombre y documento del cliente.");
+        return;
+      }
+      if (clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(documentNumber))) {
+        showNotify("Ya existe un cliente con ese documento.");
+        return;
+      }
+      clients.rows.push([
+        escapeHTML(name), escapeHTML(documentNumber), escapeHTML(type), "$0",
+        "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"
+      ]);
+      const select = document.getElementById("budget-client-select");
+      select.add(new Option(name, name, true, true));
+      document.getElementById("budget-client-form").hidden = true;
+      persistBusinessData();
+      showNotify("Cliente creado y asociado al presupuesto.");
+    }
+
+    function persistBusinessData() {
+      const data = Object.fromEntries(E.map(entity => [entity.id, entity.rows.map(row => ({
+        values: [...row],
+        metadata: Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key)))
+      }))]));
+      localStorage.setItem("pastas-data-v1", JSON.stringify(data));
+    }
+
+    function updateOrderPaidTotals() {
+      const orders = E.find(entity => entity.id === "pedidos").rows;
+      const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
+      orders.forEach(order => {
+        const linkedLines = receipts.filter(receipt => receipt.paymentStatus !== "Anulado")
+          .flatMap(receipt => receipt.paymentLines || []).filter(line => line.orderId === order[0]);
+        if (!linkedLines.length) {
+          if (order.paymentTracked) order[4] = "$0";
+          return;
+        }
+        order.paymentTracked = true;
+        const paid = linkedLines.reduce((sum, line) => sum + (Number(line.amount) || 0), 0);
+        order[4] = `$${paid.toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+      });
+    }
+
+    function restoreBusinessData() {
+      try {
+        const data = JSON.parse(localStorage.getItem("pastas-data-v1") || "null");
+        if (!data || typeof data !== "object") return;
+        E.forEach(entity => {
+          if (Array.isArray(data[entity.id])) entity.rows = data[entity.id].map(record => {
+            if (Array.isArray(record)) return record;
+            if (Array.isArray(record?.values)) return Object.assign(record.values, record.metadata || {});
+            return record;
+          });
+        });
+      } catch (error) {
+        localStorage.removeItem("pastas-data-v1");
+      }
     }
 
     function init() {
@@ -2117,11 +2546,14 @@
         showNotify(`Usuario creado: ${username}.`);
       });
 
+      restoreBusinessData();
+      initializeBudgetTypes();
+      updateOrderPaidTotals();
       initializeCustomerOwnership();
       renderSidebar();
       renderContent();
       renderCustomerIndicator();
-      document.getElementById("today-date").textContent = new Date().toLocaleDateString("es-AR");
+      document.getElementById("today-date").textContent = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
       document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === currentRole).label;
       document.querySelectorAll(".modal-overlay").forEach(overlay => {
         overlay.addEventListener("click", event => {
