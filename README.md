@@ -17,10 +17,10 @@ Prototipo de dashboard en un único archivo HTML, con vistas y navegación segú
 
 ## Vistas por perfil
 
-- **Administrador / dueño:** acceso a todos los módulos y datos de ejemplo: ventas, clientes, empleados, producción, mantenimiento y compras a proveedores.
+- **Administrador / dueño:** acceso a todos los módulos y datos de ejemplo: ventas, clientes, producción, empleados, mantenimiento y compras a proveedores.
 - **Cliente:** accede únicamente a sus presupuestos y pedidos. En esta vista se quitó la opción de crear usuario desde el módulo del cliente; la cuenta se gestiona con el login y la cuenta activa del cliente.
 - **Vendedor:** puede gestionar presupuestos, pedidos, remitos, comprobantes de venta, comprobantes de pago y devoluciones.
-- **Encargado de producción:** puede gestionar órdenes de producción, recetas y órdenes de mantenimiento.
+- **Encargado de producción:** puede gestionar empleados, órdenes de producción, recetas y órdenes de mantenimiento.
 
 ## Reglas de negocio del prototipo
 
@@ -28,6 +28,7 @@ Prototipo de dashboard en un único archivo HTML, con vistas y navegación segú
 - **Producción automática:** en la orden de producción, la cantidad de producción ya no se ingresa como dato independiente; se calcula la materia prima requerida automáticamente según el producto y la receta asociada.
 - **Clientes:** se deshabilitan y se pueden volver a habilitar; no se eliminan para conservar su historial. El límite de deuda es distinto del saldo pendiente.
 - **Pedidos:** cada pedido se registra como una Orden de Pedido con número propio. Desde un presupuesto se puede generar la orden asociada copiando cliente e ítems; hereda el tipo del presupuesto y muestra solo los campos de agenda correspondientes: mostrador usa fecha de entrega, fijo semanal usa fechas de inicio/fin y días, y evento/fiesta usa fecha del evento.
+- **Remitos:** desde una orden se puede generar un remito asociado, con número propio y sus productos, cantidades y precios copiados.
 - **Pagos y facturación:** una orden permite preparar su comprobante de venta. Los anticipos se registran como comprobantes de pago asociados a una o más órdenes; cada comprobante admite varias líneas con distintos medios de pago.
 - **Fechas:** se muestran en formato `DD/MM/AAAA` en las tablas y detalles; los formularios conservan el formato ISO necesario para los controles de calendario.
 - **Persistencia local:** clientes, presupuestos, pedidos, detalles y comprobantes se guardan en `localStorage` del navegador y se mantienen al recargar en ese mismo navegador. No se sincronizan entre dispositivos ni reemplazan una base de datos o un sistema de facturación fiscal.

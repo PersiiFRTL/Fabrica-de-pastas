@@ -1147,7 +1147,7 @@
       { id: "dueno", label: "Administrador / dueño", entities: null },
       { id: "cliente", label: "Cliente", entities: ["presupuestos", "pedidos"] },
       { id: "vendedor", label: "Vendedor", entities: ["presupuestos", "pedidos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"] },
-      { id: "produccion", label: "Encargado de producción", entities: ["ordenesProduccion", "recetas", "mantenimiento"] },
+      { id: "produccion", label: "Encargado de producción", entities: ["empleados", "ordenesProduccion", "recetas", "mantenimiento"] },
     ];
 
     const DEFAULT_LOGIN_USERS = [
@@ -1204,7 +1204,7 @@
         heading: "Panel de producción",
         description: "Órdenes de producción, recetas y mantenimiento de equipos.",
         stats: [["Órdenes en curso", "2", "Plan de producción", "v"], ["Recetas", "2", "Disponibles", "p"], ["Mantenimientos", "2", "Revisar estado de máquinas", "a"]],
-        links: ["ordenesProduccion", "recetas", "mantenimiento"],
+        links: ["empleados", "ordenesProduccion", "recetas", "mantenimiento"],
       },
     };
 
@@ -1254,7 +1254,7 @@
         ]
       },
       {
-        id: "empleados", section: "ventas", icon: "🧑🍳", label: "Empleados", singular: "empleado", cls: "Empleado ⊳ Persona",
+        id: "empleados", section: "produccion", icon: "🧑🍳", label: "Empleados", singular: "empleado", cls: "Empleado ⊳ Persona",
         cols: ["Empleado", "Cargo", "Turno", "Fecha ingreso", "Estado"],
         rows: [
           ["Carlos Bernal", "Producción", "Mañana", "01/03/2019", "<span class='badge badge-green'>Activo</span>"],
@@ -1320,7 +1320,7 @@
       },
       {
         id: "comprobantesPago", section: "ventas", icon: "💳", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
-        cols: ["N°", "nroPedido", "Cliente", "Fecha", "FormaDePago", "montoTotal", "responsable"],
+        cols: ["N°", "Orden asociada", "Cliente", "Fecha de emisión", "Medios de pago", "Monto total", "Responsable"],
         rows: [
           ["#CP-0410", "#OP-0886", "Restó La Nonna", "22/09/2026", "Transferencia", "$38.400", "Lucía Persani"],
           ["#CP-0405", "#OP-0892", "María González", "19/09/2026", "Mercado Pago", "$5.400", "Lucía Persani"],
@@ -1600,7 +1600,7 @@
           <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
           ${customerViewOnly ? "" : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-ghost btn-sm" onclick="toggleClientStatus(${e.rows.indexOf(r)})">${normalizeLabel((r[5] || "Activo").replace(/<[^>]+>/g, "")) === "activo" ? "Deshabilitar" : "Habilitar"}</button>` : e.id === "pedidos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('pedidos',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button>
+          <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button><button class="btn btn-primary btn-sm" onclick="prefillRemitoFromOrder(${e.rows.indexOf(r)})">Generar remito</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "presupuestos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('presupuestos',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${e.rows.indexOf(r)})">Generar orden</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
@@ -2023,6 +2023,20 @@
             if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
           });
         }
+        if (entityId === "comprobantesPago") {
+          const row = e.rows[rowIndex];
+          const values = {
+            fechaEmision: dateValueForInput(row[3]),
+            responsable: row[6] || "",
+            "estado (heredado)": row.paymentStatus || "Confirmado",
+          };
+          document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
+            const label = group.querySelector(".form-label").textContent;
+            if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
+            if (label === "Id_Cliente (heredado)") setFormSelect(label, row[2]);
+            if (label === "Id_Empleado (heredado)") setFormSelect(label, row[6]);
+          });
+        }
         if (entityId === "pedidos") {
           const row = e.rows[rowIndex];
           const values = {
@@ -2238,6 +2252,21 @@
           const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientNames[0] || ""));
           if (client) updatedRow.customerDocument = client[1];
         }
+        if (entityId === "remitos") {
+          const orderId = getValue("NroPedido");
+          const order = E.find(entity => entity.id === "pedidos").rows.find(row => row[0] === orderId);
+          if (!order) {
+            showNotify("Seleccioná la orden de pedido asociada al remito.");
+            return;
+          }
+          const status = getValue("estado") || "Pendiente";
+          updatedRow = [
+            editing ? e.rows[rowIndex][0] : nextCode("R", e.rows), orderId,
+            formatBadge(status, status === "Entregado" ? "green" : "amber"), escapeHTML(getValue("Observaciones") || "—")
+          ];
+          updatedRow.orderId = orderId;
+          if (order.customerDocument) updatedRow.customerDocument = order.customerDocument;
+        }
         if (entityId === "ordenesPago") {
           const status = getValue("estado") || "Pendiente";
           const total = (detailData.detOPpago || []).reduce((sum, line) => sum + parseAmount(line.inputs[0]), 0);
@@ -2379,12 +2408,29 @@
       setFormSelect("Id_Cliente (heredado)", order[1]);
       formState.detCP = [1];
       rerenderGroup("detCP");
+      const dateGroup = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+        .find(group => group.querySelector(".form-label").textContent === "fechaEmision");
+      if (dateGroup) dateGroup.querySelector("input").value = new Date().toISOString().slice(0, 10);
       const row = document.querySelector('.detail-block[data-group="detCP"] .detail-row');
       if (row) {
         row.querySelector(".form-select").value = order[0];
         row.querySelectorAll(".form-input")[0].value = "";
       }
       showNotify(`Pago preparado para la orden ${order[0]}.`);
+    }
+
+    function prefillRemitoFromOrder(rowIndex) {
+      const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
+      if (!order) return;
+      openForm("remitos");
+      setFormSelect("NroPedido", order[0]);
+      const orderDetails = order.detailData?.detPedido || [];
+      if (orderDetails.length) {
+        formState.detRemito = orderDetails.map((_, index) => index);
+        rerenderGroup("detRemito");
+        restoreDetailRows("detRemito", orderDetails);
+      }
+      showNotify(`Remito preparado desde la orden ${order[0]}.`);
     }
 
     function setFormSelect(label, value) {
@@ -2448,6 +2494,29 @@
       });
     }
 
+    function dateValueForInput(value) {
+      if (!value) return "";
+      const isoDate = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (isoDate) return value;
+      const localDate = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      return localDate ? `${localDate[3]}-${localDate[2].padStart(2, "0")}-${localDate[1].padStart(2, "0")}` : "";
+    }
+
+    function currencyValueForInput(value) {
+      return String(value || "").replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+    }
+
+    function initializePaymentReceiptDetails() {
+      const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
+      receipts.forEach(row => {
+        if (row.detailData?.detCP?.length) return;
+        row.detailData = {
+          ...(row.detailData || {}),
+          detCP: [{ selected: row[1], inputs: [currencyValueForInput(row[5])], extraSelects: [row[4]] }]
+        };
+      });
+    }
+
     function restoreBusinessData() {
       try {
         const data = JSON.parse(localStorage.getItem("pastas-data-v1") || "null");
@@ -2462,6 +2531,21 @@
       } catch (error) {
         localStorage.removeItem("pastas-data-v1");
       }
+    }
+
+    function migratePaymentReceiptRows() {
+      const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
+      let migrated = false;
+      receipts.forEach((row, index) => {
+        if (!Array.isArray(row) || row.length !== 6) return;
+        const metadata = Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key)));
+        const legacyDate = metadata.fechaEmision || metadata.FechaEmision || metadata.paymentDate || "—";
+        receipts[index] = Object.assign([
+          row[0], row[1], row[2], legacyDate, row[3], row[4], row[5]
+        ], metadata);
+        migrated = true;
+      });
+      return migrated;
     }
 
     function init() {
@@ -2547,7 +2631,9 @@
       });
 
       restoreBusinessData();
+      if (migratePaymentReceiptRows()) persistBusinessData();
       initializeBudgetTypes();
+      initializePaymentReceiptDetails();
       updateOrderPaidTotals();
       initializeCustomerOwnership();
       renderSidebar();
