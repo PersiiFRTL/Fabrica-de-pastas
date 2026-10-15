@@ -29,7 +29,7 @@ Prototipo de dashboard en un único archivo HTML, con vistas y navegación segú
 - **Clientes:** se deshabilitan y se pueden volver a habilitar; no se eliminan para conservar su historial. El límite de deuda es distinto del saldo pendiente.
 - **Pedidos:** cada pedido se registra como una Orden de Pedido con número propio. Desde un presupuesto se puede generar la orden asociada copiando cliente e ítems; hereda el tipo del presupuesto y muestra solo los campos de agenda correspondientes: mostrador usa fecha de entrega, fijo semanal usa fechas de inicio/fin y días, y evento/fiesta usa fecha del evento.
 - **Remitos:** desde una orden se puede generar un remito asociado, con número propio y sus productos, cantidades y precios copiados.
-- **Pagos y facturación:** una orden permite preparar su comprobante de venta. Los anticipos se registran como comprobantes de pago asociados a una o más órdenes; cada comprobante admite varias líneas con distintos medios de pago.
+- **Pagos y facturación:** una orden permite preparar su comprobante de venta y registrar pagos con distintos medios. Cada pago ingresado desde la orden genera automáticamente su comprobante; los pagos y sus comprobantes se consultan desde el detalle de la orden.
 - **Fechas:** se muestran en formato `DD/MM/AAAA` en las tablas y detalles; los formularios conservan el formato ISO necesario para los controles de calendario.
 - **Persistencia local:** clientes, presupuestos, pedidos, detalles y comprobantes se guardan en `localStorage` del navegador y se mantienen al recargar en ese mismo navegador. No se sincronizan entre dispositivos ni reemplazan una base de datos o un sistema de facturación fiscal.
 

@@ -1294,13 +1294,16 @@
         ],
         fields: [
           { l: "Id_Cliente", t: "select", ref: "clientes" },
-          { l: "id_Presupuesto", t: "select", ref: "presupuestos" },
+          { l: "id_Presupuesto", t: "select", ref: "presupuestos", optional: true },
           { l: "FechaEntrega", t: "date" }, { l: "FechaInicio", t: "date" }, { l: "FechaFin", t: "date" },
           { l: "DiasDeEntrega", t: "multiselect", o: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] },
           { l: "FechaEvento", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "En preparación", "Entregado", "Cancelado"] },
         ],
-        details: [{ key: "detPedido", cls: "Detalle_OrdenPedido", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [
+          { key: "detPedido", cls: "Detalle_OrdenPedido", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] },
+          { key: "detOPpago", cls: "Detalle_ComprobantePago", label: "Registrar pago", refLabel: "Forma de pago", options: ["Efectivo", "Débito", "Mercado Pago", "Cuenta DNI", "Transferencia"], extra: [{ l: "Monto", t: "number", defaultValue: "" }], transient: true }
+        ]
       },
       {
         id: "comprobantesVenta", section: "ventas", icon: "🧾", label: "Comprobantes de Venta", singular: "comprobante de venta", cls: "ComprobanteVenta ⊳ Comprobante",
@@ -1320,10 +1323,10 @@
       },
       {
         id: "comprobantesPago", section: "ventas", icon: "💳", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
-        cols: ["N°", "Orden asociada", "Cliente", "Fecha de emisión", "Medios de pago", "Monto total", "Responsable"],
+        cols: ["N°", "Orden asociada", "Cliente", "Fecha de emisión", "Monto total", "Responsable"],
         rows: [
-          ["#CP-0410", "#OP-0886", "Restó La Nonna", "22/09/2026", "Transferencia", "$38.400", "Lucía Persani"],
-          ["#CP-0405", "#OP-0892", "María González", "19/09/2026", "Mercado Pago", "$5.400", "Lucía Persani"],
+          Object.assign(["#CP-0410", "#OP-0886", "Restó La Nonna", "22/09/2026", "$38.400", "Lucía Persani"], { paymentLines: [{ orderId: "#OP-0886", amount: 38400, method: "Transferencia" }] }),
+          Object.assign(["#CP-0405", "#OP-0892", "María González", "19/09/2026", "$5.400", "Lucía Persani"], { paymentLines: [{ orderId: "#OP-0892", amount: 5400, method: "Mercado Pago" }] }),
         ],
         fields: [
           { l: "Id_Cliente (heredado)", t: "select", ref: "clientes" },
@@ -1332,7 +1335,7 @@
           { l: "responsable", t: "text" },
           { l: "estado (heredado)", t: "select", o: ["Confirmado", "Anulado"] },
         ],
-        details: [{ key: "detCP", cls: "Detalle_ComprobantePago", ref: "pedidos", refLabel: "Pedido cubierto", extra: [{ l: "Monto", t: "number" }, { l: "Forma de pago", t: "select", o: ["Efectivo", "Débito", "Mercado Pago", "Cuenta DNI", "Transferencia"] }] }]
+        details: []
       },
       {
         id: "remitos", section: "ventas", icon: "🚚", label: "Remitos", singular: "remito", cls: "Remito",
@@ -1582,6 +1585,7 @@
     function entityScreen(e) {
       const rows = visibleRows(e);
       const customerViewOnly = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(e.id);
+      const paymentReceiptViewOnly = e.id === "comprobantesPago";
       return `<div id="screen-${e.id}" class="screen">
     <div class="card">
       <div class="card-header">
@@ -1591,7 +1595,7 @@
         </div>
         <div class="card-actions">
           <input class="search-input" placeholder="Buscar...">
-          <button class="btn btn-primary" onclick="openForm('${e.id}')">+ Nuevo</button>
+          ${paymentReceiptViewOnly ? "" : `<button class="btn btn-primary" onclick="openForm('${e.id}')">+ Nuevo</button>`}
         </div>
       </div>
       <table>
@@ -1603,7 +1607,7 @@
           <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button><button class="btn btn-primary btn-sm" onclick="prefillRemitoFromOrder(${e.rows.indexOf(r)})">Generar remito</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "presupuestos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('presupuestos',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${e.rows.indexOf(r)})">Generar orden</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : paymentReceiptViewOnly ? `<button class="btn btn-ghost btn-sm" onclick="togglePaymentReceiptStatus(${e.rows.indexOf(r)})">${r.paymentStatus === "Anulado" ? "Reactivar" : "Anular"}</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>`}
         </td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
       </table>
@@ -1707,7 +1711,7 @@
       const groups = [...document.querySelectorAll("#mf-fields .form-grid .form-group")];
       const budgetGroup = groups.find(group => group.querySelector(".form-label").textContent === "id_Presupuesto");
       const budget = E.find(entity => entity.id === "presupuestos").rows.find(row => row[0] === budgetGroup?.querySelector("select")?.value);
-      const type = normalizeOrderScheduleType(budget?.orderType);
+      const type = budget ? normalizeOrderScheduleType(budget.orderType) : null;
       const visibility = {
         FechaEntrega: type === "Mostrador",
         FechaInicio: type === "Fijo semanal",
@@ -1872,7 +1876,7 @@
       const required = f.required ? " required" : "";
       let input;
       if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="toggleBudgetClientForm()">+ Crear cliente</button><div id="budget-client-form" class="budget-client-fields" hidden><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido"><input class="form-input" id="budget-client-document" placeholder="Documento" aria-label="Documento"><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div>`;
-      else if (f.ref) input = `<select class="form-select"${required}>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
+      else if (f.ref) input = `<select class="form-select"${required}>${f.optional ? '<option value="">Sin presupuesto</option>' : ""}${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "multiselect") input = `<select class="form-select" multiple size="${f.o.length}"${required}>${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "select") input = `<select class="form-select">${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "textarea") input = `<textarea class="form-textarea"${required}></textarea>`;
@@ -1886,10 +1890,10 @@
 
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
-    <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${g.key === "detOPprod" ? '<option value="">Seleccionar producto</option>' : ""}${refOptions(g.ref).map(o => `<option>${o}</option>`).join("")}</select></div>
+    <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${g.key === "detOPprod" ? '<option value="">Seleccionar producto</option>' : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${o}</option>`).join("")}</select></div>
       ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "select"
         ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
-        : x.t === "number" ? `<input class="form-input" type="number" min="0.01" step="0.01" value="1">`
+        : x.t === "number" ? `<input class="form-input" type="number" min="0.01" step="0.01" value="${x.defaultValue ?? "1"}">`
           : `<input class="form-input" type="text">`}</div>`).join("")}
     <button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
   </div>`;
@@ -1898,7 +1902,7 @@
     function detailGroupHtml(g) {
       const rows = formState[g.key] || [];
       return `<div class="detail-block" data-group="${g.key}">
-    <div class="detail-label">${g.refLabel}s <span class="class-tag">clase: ${g.cls}</span></div>
+    <div class="detail-label">${g.label || `${g.refLabel}s`} <span class="class-tag">clase: ${g.cls}</span></div>
     <div class="detail-rows">${rows.map((_, i) => detailRowHtml(g, i)).join("")}</div>
     <button type="button" class="add-detail-btn" onclick="addDetailRow('${g.key}')">+ Agregar ${g.refLabel.toLowerCase()}</button>
   </div>`;
@@ -1964,7 +1968,7 @@
       });
       h += `</div>`;
       if (e.details && e.details.length) {
-        e.details.forEach(g => {
+        e.details.filter(group => !group.transient).forEach(g => {
           const opts = refOptions(g.ref);
           const savedDetails = row.detailData?.[g.key] || [];
           const displayRows = savedDetails.length ? savedDetails.map(item => ({
@@ -1979,6 +1983,19 @@
       </div>`;
         });
       }
+      if (entityId === "pedidos") {
+        const payments = E.find(entity => entity.id === "comprobantesPago").rows
+          .filter(receipt => receipt.paymentStatus !== "Anulado")
+          .flatMap(receipt => (receipt.paymentLines || [])
+            .filter(line => line.orderId === row[0])
+            .map(line => ({ receipt, line })));
+        h += `<div class="detail-block">
+          <div class="detail-label">Pagos registrados <span class="class-tag">clase: Detalle_ComprobantePago</span></div>
+          ${payments.length ? `<table><thead><tr><th>Comprobante</th><th>Fecha</th><th>Forma de pago</th><th>Monto</th></tr></thead>
+            <tbody>${payments.map(({ receipt, line }) => `<tr><td>${escapeHTML(receipt[0])}</td><td>${escapeHTML(receipt[3] || "—")}</td><td>${escapeHTML(line.method || "—")}</td><td>${escapeHTML(formatAmountDisplay(line.amount))}</td></tr>`).join("")}</tbody></table>`
+            : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Todavía no hay pagos registrados.</div>`}
+        </div>`;
+      }
       document.getElementById("mv-body").innerHTML = h;
       openModal("modal-view");
     }
@@ -1990,6 +2007,7 @@
       (e.details || []).forEach(g => { formState[g.key] = [1]; }); // arranca con 1 fila, se pueden agregar todas las que hagan falta
       const editing = rowIndex !== null && e.rows[rowIndex];
       if (editing) (e.details || []).forEach(group => {
+        if (group.transient) return;
         const savedDetails = editing.detailData?.[group.key];
         if (savedDetails?.length) formState[group.key] = savedDetails.map((_, index) => index);
       });
@@ -1997,7 +2015,9 @@
       let body = `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>`;
       (e.details || []).forEach(g => { body += detailGroupHtml(g); });
       document.getElementById("mf-fields").innerHTML = body;
-      if (editing) (e.details || []).forEach(group => restoreDetailRows(group.key, editing.detailData?.[group.key] || []));
+      if (editing) (e.details || []).forEach(group => {
+        if (!group.transient) restoreDetailRows(group.key, editing.detailData?.[group.key] || []);
+      });
       if (editing) {
         document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
           const label = group.querySelector(".form-label").textContent;
@@ -2078,7 +2098,7 @@
           const control = group.querySelector("input, select, textarea");
           updatedRow[colIndex] = escapeHTML(control.value.trim() || "—");
         });
-        const detailData = Object.fromEntries((e.details || []).map(group => [group.key, readDetailRows(group.key)]));
+        const detailData = Object.fromEntries((e.details || []).filter(group => !group.transient).map(group => [group.key, readDetailRows(group.key)]));
         if (Object.keys(detailData).length) updatedRow.detailData = detailData;
         const getValue = label => [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
           .find(group => group.querySelector(".form-label").textContent === label)?.querySelector("input,select,textarea")?.value.trim() || "";
@@ -2097,6 +2117,7 @@
           return Number.isFinite(amount) ? amount : 0;
         };
         const formatAmount = amount => `$${Number(amount).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+        let newOrderPayments = [];
         if (currentRole === "cliente" && ["presupuestos", "pedidos"].includes(entityId)) {
           if (!editing) {
             const prefix = entityId === "presupuestos" ? "PR" : "OP";
@@ -2178,41 +2199,53 @@
           updatedRow.orderType = getValue("tipoPedido");
         }
         if (entityId === "pedidos") {
+          newOrderPayments = readDetailRows("detOPpago").map(line => ({
+            method: line.selected,
+            amount: parseAmount(line.inputs[0])
+          })).filter(line => line.method && line.amount > 0);
           const budgetId = getValue("id_Presupuesto");
           const budgetRecord = E.find(entity => entity.id === "presupuestos").rows.find(row => row[0] === budgetId);
-          if (!budgetRecord) {
+          const existingOrder = editing ? e.rows[rowIndex] : null;
+          if (!budgetRecord && !existingOrder) {
             showNotify("Seleccioná el presupuesto asociado a la orden.");
             return;
           }
-          const type = normalizeOrderScheduleType(budgetRecord.orderType);
-          const deliveryDate = getValue("FechaEntrega");
-          const startDate = getValue("FechaInicio");
-          const endDate = getValue("FechaFin");
-          const days = [...(getSelected("DiasDeEntrega") || [])].map(option => option.value);
-          if (type === "Fijo semanal" && (!startDate || !endDate || !days.length || startDate > endDate)) {
-            showNotify("Para un pedido fijo semanal indicá un período válido y al menos un día de entrega.");
-            return;
-          }
-          const eventDate = getValue("FechaEvento");
-          if (type === "Evento especial" && !eventDate) {
-            showNotify("Indicá la fecha del evento especial.");
-            return;
-          }
-          if (type === "Mostrador" && !deliveryDate) {
-            showNotify("Indicá la fecha de entrega del pedido.");
-            return;
-          }
           const clientName = getValue("Id_Cliente");
-          const budget = getValue("id_Presupuesto");
           const status = getValue("estado") || "Pendiente";
-          const deliveryLabel = type === "Fijo semanal" ? `Fijo semanal · ${days.join(", ")} (${formatDateForDisplay(startDate)} a ${formatDateForDisplay(endDate)})`
-            : type === "Evento especial" ? `Evento especial · ${formatDateForDisplay(eventDate)}` : `Mostrador · ${formatDateForDisplay(deliveryDate)}`;
-          updatedRow = [
-            editing ? e.rows[rowIndex][0] : nextCode("OP", e.rows), escapeHTML(clientName || "—"),
-            escapeHTML(budget || "—"), escapeHTML(deliveryLabel || "—"), editing ? e.rows[rowIndex][4] : "$0",
-            formatBadge(status, status === "Entregado" ? "green" : "amber")
-          ];
-          updatedRow.schedule = { type, deliveryDate, startDate, endDate, days, eventDate };
+          if (budgetRecord) {
+            const type = normalizeOrderScheduleType(budgetRecord.orderType);
+            const deliveryDate = getValue("FechaEntrega");
+            const startDate = getValue("FechaInicio");
+            const endDate = getValue("FechaFin");
+            const days = [...(getSelected("DiasDeEntrega") || [])].map(option => option.value);
+            if (type === "Fijo semanal" && (!startDate || !endDate || !days.length || startDate > endDate)) {
+              showNotify("Para un pedido fijo semanal indicá un período válido y al menos un día de entrega.");
+              return;
+            }
+            const eventDate = getValue("FechaEvento");
+            if (type === "Evento especial" && !eventDate) {
+              showNotify("Indicá la fecha del evento especial.");
+              return;
+            }
+            if (type === "Mostrador" && !deliveryDate) {
+              showNotify("Indicá la fecha de entrega del pedido.");
+              return;
+            }
+            const deliveryLabel = type === "Fijo semanal" ? `Fijo semanal · ${days.join(", ")} (${formatDateForDisplay(startDate)} a ${formatDateForDisplay(endDate)})`
+              : type === "Evento especial" ? `Evento especial · ${formatDateForDisplay(eventDate)}` : `Mostrador · ${formatDateForDisplay(deliveryDate)}`;
+            updatedRow = [
+              editing ? existingOrder[0] : nextCode("OP", e.rows), escapeHTML(clientName || "—"),
+              escapeHTML(budgetId || "—"), escapeHTML(deliveryLabel || "—"), editing ? existingOrder[4] : "$0",
+              formatBadge(status, status === "Entregado" ? "green" : "amber")
+            ];
+            updatedRow.schedule = { type, deliveryDate, startDate, endDate, days, eventDate };
+          } else {
+            updatedRow = [
+              existingOrder[0], escapeHTML(clientName || "—"), existingOrder[2], existingOrder[3], existingOrder[4],
+              formatBadge(status, status === "Entregado" ? "green" : "amber")
+            ];
+            updatedRow.schedule = existingOrder.schedule;
+          }
           const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientName));
           if (client) updatedRow.customerDocument = client[1];
         }
@@ -2227,30 +2260,6 @@
           updatedRow.orderId = orderId;
           updatedRow.invoiceStatus = getValue("estado (heredado)") || "Emitido";
           if (order?.customerDocument) updatedRow.customerDocument = order.customerDocument;
-        }
-        if (entityId === "comprobantesPago") {
-          const allocations = (detailData.detCP || []).map(line => ({
-            orderId: line.selected,
-            amount: parseAmount(line.inputs[0]),
-            method: line.extraSelects?.[0] || "Efectivo"
-          })).filter(line => line.orderId && line.amount > 0);
-          if (!allocations.length) {
-            showNotify("Agregá al menos un pago con pedido, importe y forma de pago.");
-            return;
-          }
-          const orders = E.find(entity => entity.id === "pedidos").rows;
-          const linkedOrders = [...new Set(allocations.map(line => line.orderId))];
-          const clientNames = [...new Set(linkedOrders.map(orderId => orders.find(order => order[0] === orderId)?.[1]).filter(Boolean))];
-          const methods = [...new Set(allocations.map(line => line.method))];
-          const total = allocations.reduce((sum, line) => sum + line.amount, 0);
-          updatedRow = [
-            editing ? e.rows[rowIndex][0] : nextCode("CP", e.rows), linkedOrders.join(", "), clientNames.join(", "),
-            escapeHTML(getValue("fechaEmision") || "—"), methods.join(" + "), formatAmount(total), escapeHTML(getValue("responsable") || "—")
-          ];
-          updatedRow.paymentLines = allocations;
-          updatedRow.paymentStatus = getValue("estado (heredado)") || "Confirmado";
-          const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientNames[0] || ""));
-          if (client) updatedRow.customerDocument = client[1];
         }
         if (entityId === "remitos") {
           const orderId = getValue("NroPedido");
@@ -2280,11 +2289,16 @@
         if (Object.keys(detailData).length) updatedRow.detailData = detailData;
         if (editing) e.rows[rowIndex] = updatedRow;
         else e.rows.push(updatedRow);
+        if (entityId === "pedidos" && newOrderPayments.length) {
+          createPaymentReceiptForOrder(updatedRow, newOrderPayments);
+        }
         updateOrderPaidTotals();
         persistBusinessData();
         renderContent();
         closeModal("modal-form");
-        showNotify(editing ? "Registro actualizado." : "Registro agregado.");
+        showNotify(entityId === "pedidos" && newOrderPayments.length
+          ? `Orden guardada y comprobante de pago generado.`
+          : editing ? "Registro actualizado." : "Registro agregado.");
       };
       if (entityId === "ordenesProduccion") {
         setTimeout(() => {
@@ -2358,6 +2372,16 @@
       openModal("modal-delete");
     }
 
+    function togglePaymentReceiptStatus(rowIndex) {
+      const receipt = E.find(entity => entity.id === "comprobantesPago")?.rows[rowIndex];
+      if (!receipt) return;
+      receipt.paymentStatus = receipt.paymentStatus === "Anulado" ? "Confirmado" : "Anulado";
+      updateOrderPaidTotals();
+      persistBusinessData();
+      renderContent();
+      showNotify(`Comprobante ${receipt.paymentStatus.toLowerCase()}.`);
+    }
+
     function toggleClientStatus(rowIndex) {
       const clients = E.find(entity => entity.id === "clientes");
       const row = clients?.rows[rowIndex];
@@ -2404,19 +2428,9 @@
     function prefillPaymentFromOrder(rowIndex) {
       const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
       if (!order) return;
-      openForm("comprobantesPago");
-      setFormSelect("Id_Cliente (heredado)", order[1]);
-      formState.detCP = [1];
-      rerenderGroup("detCP");
-      const dateGroup = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
-        .find(group => group.querySelector(".form-label").textContent === "fechaEmision");
-      if (dateGroup) dateGroup.querySelector("input").value = new Date().toISOString().slice(0, 10);
-      const row = document.querySelector('.detail-block[data-group="detCP"] .detail-row');
-      if (row) {
-        row.querySelector(".form-select").value = order[0];
-        row.querySelectorAll(".form-input")[0].value = "";
-      }
-      showNotify(`Pago preparado para la orden ${order[0]}.`);
+      openForm("pedidos", rowIndex);
+      document.querySelector('.detail-block[data-group="detOPpago"] .form-input')?.focus();
+      showNotify(`Registrá el pago de la orden ${order[0]}; se generará su comprobante.`);
     }
 
     function prefillRemitoFromOrder(rowIndex) {
@@ -2506,15 +2520,30 @@
       return String(value || "").replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
     }
 
-    function initializePaymentReceiptDetails() {
+    function formatAmountDisplay(value) {
+      return `$${Number(value || 0).toLocaleString("es-AR", { maximumFractionDigits: 2 })}`;
+    }
+
+    function createPaymentReceiptForOrder(order, allocations) {
+      if (!allocations.length) return;
       const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
-      receipts.forEach(row => {
-        if (row.detailData?.detCP?.length) return;
-        row.detailData = {
-          ...(row.detailData || {}),
-          detCP: [{ selected: row[1], inputs: [currencyValueForInput(row[5])], extraSelects: [row[4]] }]
-        };
-      });
+      const total = allocations.reduce((sum, line) => sum + line.amount, 0);
+      const today = new Date();
+      const paymentDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      const nextNumber = receipts.reduce((highest, row) => Math.max(highest, Number(row[0]?.match(/(\d+)$/)?.[1]) || 0), 0) + 1;
+      const receipt = [
+        `#CP-${String(nextNumber).padStart(4, "0")}`,
+        order[0],
+        order[1],
+        formatDateForDisplay(paymentDate),
+        formatAmountDisplay(total),
+        currentUser?.username || "—"
+      ];
+      receipt.paymentLines = allocations.map(line => ({ ...line, orderId: order[0] }));
+      receipt.paymentStatus = "Confirmado";
+      receipt.generatedFromOrder = order[0];
+      if (order.customerDocument) receipt.customerDocument = order.customerDocument;
+      receipts.push(receipt);
     }
 
     function restoreBusinessData() {
@@ -2537,13 +2566,55 @@
       const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
       let migrated = false;
       receipts.forEach((row, index) => {
-        if (!Array.isArray(row) || row.length !== 6) return;
+        if (!Array.isArray(row)) return;
         const metadata = Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key)));
+        if (row.length === 7) {
+          receipts[index] = Object.assign([row[0], row[1], row[2], row[3], row[5], row[6]], metadata);
+          migrated = true;
+          return;
+        }
+        if (row.length !== 6 || dateValueForInput(row[3]) || row[3] === "—") return;
         const legacyDate = metadata.fechaEmision || metadata.FechaEmision || metadata.paymentDate || "—";
-        receipts[index] = Object.assign([
-          row[0], row[1], row[2], legacyDate, row[3], row[4], row[5]
-        ], metadata);
+        receipts[index] = Object.assign([row[0], row[1], row[2], legacyDate, row[4], row[5]], metadata);
         migrated = true;
+      });
+      return migrated;
+    }
+
+    function migrateLegacyPaymentLines() {
+      const receipts = E.find(entity => entity.id === "comprobantesPago").rows;
+      let migrated = false;
+      receipts.forEach(receipt => {
+        let receiptMigrated = false;
+        if (!receipt.paymentLines?.length) {
+          const oldLines = receipt.detailData?.detCP || [];
+          const paymentLines = oldLines.map(line => ({
+            orderId: line.selected,
+            amount: Number(currencyValueForInput(line.inputs?.[0])) || 0,
+            method: line.extraSelects?.[0] || "Efectivo"
+          })).filter(line => line.orderId && line.amount > 0);
+          if (!paymentLines.length) {
+            const orderId = receipt[1];
+            const hasPaymentDate = dateValueForInput(receipt[3]) || receipt[3] === "—";
+            const amount = Number(currencyValueForInput(receipt[receipt.length === 7 ? 5 : 4]));
+            const method = receipt.length === 7 ? receipt[4] : hasPaymentDate ? "Efectivo" : receipt[3];
+            if (E.find(entity => entity.id === "pedidos").rows.some(order => order[0] === orderId) && amount > 0) {
+              paymentLines.push({ orderId, amount, method: method || "Efectivo" });
+            }
+          }
+          if (paymentLines.length) {
+            receipt.paymentLines = paymentLines;
+            receiptMigrated = true;
+          }
+        }
+        if (receipt.detailData?.detCP) {
+          const { detCP, ...remainingDetails } = receipt.detailData;
+          receipt.detailData = remainingDetails;
+          receiptMigrated = true;
+        }
+        if (receiptMigrated) {
+          migrated = true;
+        }
       });
       return migrated;
     }
@@ -2631,9 +2702,10 @@
       });
 
       restoreBusinessData();
-      if (migratePaymentReceiptRows()) persistBusinessData();
+      const migratedPaymentLines = migrateLegacyPaymentLines();
+      const migratedReceiptRows = migratePaymentReceiptRows();
+      if (migratedReceiptRows || migratedPaymentLines) persistBusinessData();
       initializeBudgetTypes();
-      initializePaymentReceiptDetails();
       updateOrderPaidTotals();
       initializeCustomerOwnership();
       renderSidebar();
