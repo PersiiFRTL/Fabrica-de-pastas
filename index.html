@@ -11,23 +11,24 @@
     rel="stylesheet">
   <style>
     :root {
-      --cream: #F5F0E8;
-      --cream-dark: #EDE6D6;
-      --wheat: #C8A96E;
-      --wheat-light: #E8D5A8;
-      --wheat-dark: #9B7A3E;
-      --brown: #5C3D1E;
-      --brown-light: #7A5230;
+      --cream: #F8F9F5;
+      --cream-dark: #E2E6DE;
+      --wheat: #9AA88B;
+      --wheat-light: #F6E79C;
+      --butter: #F6E79C;
+      --wheat-dark: #2D3A2F;
+      --brown: #2D3A2F;
+      --brown-light: #9AA88B;
       --red: #C0392B;
-      --green: #27AE60;
+      --green: #9AA88B;
       --blue: #3498DB;
-      --text: #2C1810;
-      --text-muted: #7A6050;
+      --text: #2D3A2F;
+      --text-muted: #657064;
       --white: #FFFFFF;
-      --shadow: 0 4px 24px rgba(92, 61, 30, 0.12);
-      --shadow-lg: 0 8px 40px rgba(92, 61, 30, 0.18);
-      --radius: 12px;
-      --radius-sm: 8px;
+      --shadow: 0 3px 14px rgba(45, 58, 47, .08);
+      --shadow-lg: 0 14px 44px rgba(45, 58, 47, .18);
+      --radius: 14px;
+      --radius-sm: 9px;
       box-sizing: border-box;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -58,7 +59,7 @@
     }
 
     .sidebar {
-      width: 264px;
+      width: 236px;
       min-height: 100vh;
       background: var(--brown);
       display: flex;
@@ -70,25 +71,26 @@
       bottom: 0;
       z-index: 100;
       overflow-y: auto;
+      overscroll-behavior: contain;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .sidebar-logo {
       padding: 26px 24px 18px;
-      border-bottom: 1px solid rgba(200, 169, 110, 0.2);
+      border-bottom: 1px solid rgba(226, 230, 222, 0.2);
     }
 
     .sidebar-logo h1 {
       font-family: 'Playfair Display', serif;
-      color: var(--wheat);
+      color: var(--wheat-light);
       font-size: 19px;
       font-weight: 700;
       line-height: 1.2;
     }
 
     .sidebar-logo span {
-      color: rgba(200, 169, 110, 0.6);
+      color: rgba(226, 230, 222, 0.72);
       font-size: 10.5px;
       font-weight: 300;
       letter-spacing: 2px;
@@ -98,7 +100,31 @@
     }
 
     .sidebar-section {
-      padding: 16px 14px 4px;
+      padding: 9px 12px 3px;
+    }
+
+    .sidebar-section[open] {
+      padding-bottom: 8px;
+    }
+
+    .sidebar-section summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .sidebar-section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .sidebar-section summary::after {
+      content: "⌄";
+      margin-left: auto;
+      transition: transform .16s ease;
+    }
+
+    .sidebar-section[open] summary::after {
+      transform: rotate(180deg);
     }
 
     .sidebar-section-title {
@@ -107,7 +133,7 @@
       letter-spacing: 1.8px;
       text-transform: uppercase;
       color: var(--wheat);
-      opacity: .75;
+      opacity: .8;
       padding: 0 10px;
       margin-bottom: 6px;
       display: flex;
@@ -119,10 +145,10 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 9px 12px;
+      padding: 8px 11px;
       border-radius: var(--radius-sm);
       cursor: pointer;
-      color: rgba(245, 240, 232, 0.72);
+      color: rgba(248, 249, 245, 0.82);
       font-size: 13.5px;
       font-weight: 400;
       transition: all .16s;
@@ -134,12 +160,12 @@
     }
 
     .nav-item:hover {
-      background: rgba(200, 169, 110, 0.12);
+      background: rgba(154, 168, 139, 0.18);
       color: var(--cream);
     }
 
     .nav-item.active {
-      background: var(--wheat);
+      background: var(--wheat-light);
       color: var(--brown);
       font-weight: 600;
     }
@@ -152,8 +178,9 @@
     }
 
     .main {
-      margin-left: 264px;
+      margin-left: 236px;
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
@@ -162,7 +189,7 @@
     .topbar {
       background: var(--white);
       border-bottom: 1px solid var(--cream-dark);
-      padding: 16px 32px;
+      padding: 13px 30px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -270,9 +297,11 @@
     }
 
     .content {
-      padding: 26px 32px 60px;
+      padding: 22px 30px 36px;
       flex: 1;
-      max-width: 1180px;
+      min-width: 0;
+      width: 100%;
+      max-width: none;
     }
 
     .screen {
@@ -343,10 +372,12 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       margin-bottom: 22px;
+      border: 1px solid rgba(41, 71, 62, .06);
     }
 
     .card-header {
-      padding: 16px 22px;
+      padding: 14px 20px;
+      background: var(--wheat-light);
       border-bottom: 1px solid var(--cream-dark);
       display: flex;
       align-items: center;
@@ -386,7 +417,7 @@
       color: var(--text);
       background: var(--cream);
       outline: none;
-      width: 200px;
+      width: min(240px, 32vw);
     }
 
     .search-input:focus {
@@ -403,6 +434,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
     }
 
     thead th {
@@ -415,6 +447,7 @@
       text-transform: uppercase;
       color: var(--text-muted);
       border-bottom: 1px solid var(--cream-dark);
+      overflow-wrap: anywhere;
     }
 
     tbody tr {
@@ -430,16 +463,26 @@
     }
 
     tbody td {
-      padding: 12px 16px;
+      padding: 10px 14px;
       font-size: 13px;
       color: var(--text);
       vertical-align: middle;
+      overflow-wrap: anywhere;
     }
 
     .td-actions {
       display: flex;
       gap: 6px;
+      flex-wrap: wrap;
     }
+
+    .td-actions .btn {
+      white-space: nowrap;
+      padding: 5px 8px;
+      font-size: 10.5px;
+    }
+
+    #screen-pedidos th:last-child, #screen-pedidos td.td-actions { width:270px; }
 
     .badge {
       display: inline-block;
@@ -450,8 +493,8 @@
     }
 
     .badge-green {
-      background: rgba(39, 174, 96, 0.12);
-      color: #1a8a47;
+      background: rgba(154, 168, 139, 0.2);
+      color: var(--brown);
     }
 
     .badge-red {
@@ -460,8 +503,8 @@
     }
 
     .badge-amber {
-      background: rgba(200, 169, 110, 0.2);
-      color: var(--wheat-dark);
+      background: var(--butter);
+      color: var(--brown);
     }
 
     .badge-blue {
@@ -470,7 +513,7 @@
     }
 
     .badge-gray {
-      background: rgba(120, 100, 80, 0.12);
+      background: rgba(101, 112, 100, 0.12);
       color: var(--text-muted);
     }
 
@@ -490,14 +533,24 @@
       display: flex;
     }
 
+    .contextual-overlay {
+      z-index: 220;
+    }
+
+    .contextual-modal {
+      width: min(720px, 95vw);
+    }
+
     .modal {
       background: var(--white);
       border-radius: var(--radius);
-      width: 520px;
+      width: min(1120px, 95vw);
       max-width: 95vw;
       box-shadow: var(--shadow-lg);
-      max-height: 88vh;
-      overflow-y: auto;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
 
     .modal-header {
@@ -531,6 +584,7 @@
 
     .modal-body {
       padding: 20px 24px;
+      overflow-y: auto;
     }
 
     .modal-footer {
@@ -543,14 +597,60 @@
 
     .form-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 12px 16px;
     }
 
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 5px;
+      min-width: 0;
+    }
+
+    .form-group:has(input[type="date"]),
+    .form-group:has(input[type="number"]),
+    .form-group:has(.form-label[data-field-key^="id" i]),
+    .form-group:has(.form-label[data-field-key*="estado" i]) { max-width: 280px; }
+
+    .field-control-row {
+      display: flex;
+      align-items: stretch;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .field-control-row .form-select {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .field-icon-btn {
+      width: 38px;
+      min-width: 38px;
+      padding: 0;
+      justify-content: center;
+      font-size: 17px;
+    }
+
+    .context-help {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+
+    .context-material-list {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0 10px;
+    }
+
+    .context-material-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(110px, 160px) 38px;
+      gap: 8px;
+      align-items: center;
     }
 
     .form-group[hidden] {
@@ -601,6 +701,8 @@
       background: var(--white);
     }
 
+    .form-input:user-invalid, .form-select:user-invalid { border-color:var(--red); box-shadow:0 0 0 2px rgba(190,80,63,.1); }
+
     .form-textarea {
       resize: vertical;
       min-height: 64px;
@@ -620,9 +722,10 @@
 
     .detail-row {
       display: grid;
-      grid-template-columns: minmax(0, 1fr);
+      grid-template-columns: minmax(190px, 1.35fr) repeat(3, minmax(125px, 1fr)) auto;
+      align-items: end;
       gap: 10px;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--cream-dark);
       border-radius: var(--radius-sm);
       background: var(--cream);
@@ -677,6 +780,35 @@
       font-size: 12.5px;
     }
 
+    .invoice-paper { padding: 22px; border: 1px solid var(--border); border-radius: var(--radius); background: #fff; box-shadow: 0 8px 24px rgba(45,58,47,.07); }
+    .invoice-head { display:flex; justify-content:space-between; align-items:center; gap:18px; padding-bottom:16px; border-bottom:2px solid var(--green-dark); }
+    .invoice-head > div:first-child { display:grid; gap:3px; color:var(--text-muted); font-size:12px; }
+    .invoice-kicker { color:var(--green-dark); font-size:18px; font-weight:800; }
+    .invoice-title { display:grid; gap:5px; justify-items:end; color:var(--green-dark); font-weight:800; letter-spacing:.08em; }
+    .invoice-title small { padding:3px 9px; border:1px solid var(--border); border-radius:5px; font-size:10px; letter-spacing:normal; }
+    .invoice-parties { display:grid; grid-template-columns:minmax(180px,.7fr) minmax(0,2fr); gap:18px; padding:16px 0 8px; }
+    .invoice-parties section:first-child { display:flex; flex-direction:column; gap:7px; padding:12px; border-radius:var(--radius-sm); background:var(--cream); }
+    .invoice-parties section > span { color:var(--green-dark); font-size:10px; font-weight:800; letter-spacing:.08em; }
+    .invoice-parties section > small { color:var(--text-muted); font-size:11px; }
+    .invoice-client-summary { display:grid; gap:4px; margin-top:12px; padding:10px 12px; border-left:3px solid var(--wheat); border-radius:4px; background:var(--cream); font-size:12px; }
+    .invoice-client-summary span { color:var(--text-muted); }
+    .address-verify-tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:7px; }
+    .address-suggestions { display:grid; flex:1 0 100%; gap:6px; margin-top:4px; }
+    .address-suggestion { width:100%; padding:8px 10px; border:1px solid var(--cream-dark); border-radius:8px; background:var(--white); color:var(--text); text-align:left; cursor:pointer; }
+    .address-suggestion:hover { border-color:var(--green-dark); background:var(--cream); }
+    .address-suggestion small { display:block; margin-top:2px; color:var(--text-muted); }
+    .address-verify-status { color:var(--text-muted); font-size:11px; }
+    .address-verify-tools small { color:var(--text-muted); font-size:10px; }
+    .address-verify-tools a { color:var(--green-dark); }
+    .address-verify-status[data-state="verified"] { color:var(--green-dark); font-weight:700; }
+    .address-verify-status[data-state="error"] { color:var(--red); }
+    .invoice-totals { width:min(340px,100%); margin:16px 0 0 auto; }
+    .invoice-items-heading { display:grid; grid-template-columns:minmax(190px,1.35fr) repeat(3,minmax(125px,1fr)) 28px; gap:10px; align-items:center; margin:18px 0 -14px; padding:9px 10px; border-radius:var(--radius-sm); background:var(--green-dark); color:#fff; font-size:10px; font-weight:700; }
+    .invoice-line-total { padding:8px 4px; color:var(--green-dark); font-size:12px; font-weight:700; white-space:nowrap; }
+    .invoice-totals > div { display:flex; justify-content:space-between; gap:20px; padding:7px 10px; border-bottom:1px solid var(--border); }
+    .invoice-grand-total { margin-top:5px; border:0 !important; border-radius:var(--radius-sm); background:var(--green-dark); color:#fff; font-size:16px; }
+    .stock-readonly { display:inline-flex; align-items:center; gap:5px; color:var(--text-muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
     .rm-detail-btn {
       background: none;
       border: none;
@@ -718,6 +850,8 @@
       padding: 10px 12px;
     }
 
+    .view-field.span2 { grid-column:1 / -1; }
+
     .view-label {
       font-size: 10.5px;
       font-weight: 600;
@@ -745,6 +879,13 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 20px 22px;
+    }
+
+    @media (max-width: 1200px) {
+      .content { padding-left: 22px; padding-right: 22px; }
+      .form-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+      .detail-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .detail-row .detail-field:first-child { grid-column: 1 / -1; }
     }
 
     .dash-card-title {
@@ -963,12 +1104,16 @@
       }
 
       .sidebar {
-        position: static;
+        position: sticky;
+        top: 0;
         width: 100%;
-        min-height: auto;
-        flex-direction: row;
-        overflow-x: auto;
-        padding: 10px;
+        min-height: 0;
+        max-height: 34vh;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-content: start;
+        overflow-x: hidden;
+        padding: 8px;
       }
 
       .sidebar-logo,
@@ -977,14 +1122,36 @@
       }
 
       .sidebar-section {
-        padding: 0 4px;
+        padding: 2px 4px;
+        min-width: 0;
+      }
+
+      .sidebar-home {
+        grid-column: 1 / -1;
+      }
+
+      .sidebar-section[open] {
+        grid-column: 1 / -1;
+        display: block;
+        padding: 4px;
+      }
+
+      .sidebar-section:not([open]) .sidebar-section-title {
         display: flex;
-        gap: 4px;
+        padding: 7px 10px;
+        margin-bottom: 0;
+      }
+
+      .sidebar-section[open] .sidebar-section-title {
+        display: flex;
+        padding: 7px 10px;
+        margin-bottom: 2px;
       }
 
       .nav-item {
         white-space: nowrap;
-        width: auto;
+        width: 100%;
+        margin: 1px 0;
       }
 
       .main {
@@ -992,14 +1159,16 @@
       }
 
       .topbar {
-        padding: 14px 16px;
+        padding: 11px 16px;
         gap: 12px;
       }
 
       .topbar-controls {
         gap: 8px;
-        flex-direction: column-reverse;
+        flex-direction: row;
         align-items: flex-end;
+        flex-wrap: wrap;
+        justify-content: flex-end;
       }
 
       .role-switch span {
@@ -1015,13 +1184,82 @@
         grid-template-columns: 1fr 1fr;
       }
 
-      .dash-grid,
-      .form-grid {
-        grid-template-columns: 1fr;
+      .dash-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .content {
-        padding: 18px 16px 50px;
+        padding: 14px 14px 28px;
+      }
+
+      .card-header {
+        padding: 12px 14px;
+      }
+
+      thead th,
+      tbody td {
+        padding: 8px;
+      }
+
+      .td-actions { flex-direction:row; align-items:center; justify-content:flex-start; }
+
+      .modal-body {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .invoice-paper { padding:14px; }
+      .invoice-parties { grid-template-columns:1fr; }
+      .invoice-items-heading { display:none; }
+      .detail-row:has(.invoice-line-total) { grid-template-columns:minmax(0,1fr) auto; }
+      .detail-row:has(.invoice-line-total) .detail-field { grid-column:1 / -1; }
+      .invoice-line-total { grid-column:1; }
+      .detail-row:has(.invoice-line-total) .rm-detail-btn { grid-column:2; grid-row:4; }
+      .form-grid,
+      .detail-row,
+      .dash-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .detail-row .detail-field:first-child,
+      .form-group.span2 {
+        grid-column: auto;
+      }
+
+      .stats-row {
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .stat-card {
+        padding: 13px;
+      }
+
+      .stat-card .value {
+        font-size: 23px;
+      }
+
+      .topbar-title {
+        font-size: 18px;
+      }
+
+      .topbar-controls > span {
+        display: none;
+      }
+
+      .card-actions {
+        width: 100%;
+      }
+
+      .search-input {
+        flex: 1;
+        width: auto;
+        min-width: 0;
+      }
+
+      .td-actions {
+        min-width: 72px;
       }
     }
   </style>
@@ -1070,11 +1308,25 @@
           onclick="closeModal('modal-form')">×</button>
       </div>
       <div class="modal-body">
-        <div class="form-grid" id="mf-fields"></div>
+        <div id="mf-fields"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-ghost" onclick="closeModal('modal-form')">Cancelar</button>
         <button class="btn btn-primary" id="mf-save">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay contextual-overlay" id="modal-context">
+    <div class="modal contextual-modal">
+      <div class="modal-header">
+        <div class="modal-title" id="context-title">Editar información</div>
+        <button class="modal-close" type="button" onclick="closeModal('modal-context')" aria-label="Cerrar">×</button>
+      </div>
+      <div class="modal-body" id="context-body"></div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-context')">Cancelar</button>
+        <button class="btn btn-primary" type="button" id="context-save">Guardar</button>
       </div>
     </div>
   </div>
@@ -1187,6 +1439,11 @@
       }
     };
 
+    const DEFAULT_PRODUCT_TYPES = ["Pasta fresca", "Plato armado", "Salsa", "Seco"];
+    let productTypes = DEFAULT_PRODUCT_TYPES.slice();
+    let contextRecipeMaterials = [];
+    let contextEditingRecipeIndex = null;
+
     const DASHBOARDS = {
       cliente: {
         heading: "Tu espacio de cliente",
@@ -1246,11 +1503,15 @@
         fields: [
           { l: "Nombre", t: "text", required: true }, { l: "Apellido", t: "text" },
           { l: "NroDocumento", t: "text", required: true }, { l: "tipoDocumento", t: "select", o: ["DNI", "CUIT", "CUIL"] },
-          { l: "Telefono", t: "text" }, { l: "Email", t: "text" },
+          { l: "Telefono", t: "tel" }, { l: "Email", t: "email" },
           { l: "IdIva (Tipo_IVA)", t: "select", o: ["Responsable Inscripto", "Monotributo", "Consumidor Final", "Exento"] },
           { l: "TipoCliente", t: "select", o: ["Consumidor final", "Restaurante", "Hotel", "Supermercado", "Comercio de barrio"] },
-          { l: "CuentaCorriente", t: "select", o: ["No", "Sí"] }, { l: "LimiteDeuda", t: "number" },
+          { l: "CuentaCorriente", t: "select", o: ["No", "Sí"] }, { l: "LimiteDeuda", t: "number", min: 0, step: "0.01" },
           { l: "Estado", t: "select", o: ["Activo", "Inactivo"] },
+          { l: "CodigoPostal", t: "text", required: true, maxlength: 8, pattern: "([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})", autocomplete: "postal-code", placeholder: "1234 o B1234ABC" },
+          { l: "Localidad", t: "text", required: true, maxlength: 80, pattern: "[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}", autocomplete: "address-level2" },
+          { l: "Calle", t: "text", required: true, maxlength: 100, pattern: "[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}", autocomplete: "address-line1", placeholder: "Ej.: San Martín" },
+          { l: "Altura", t: "number", required: true, min: 1, max: 99999, step: 1, autocomplete: "address-line2", placeholder: "Número" },
         ]
       },
       {
@@ -1261,10 +1522,10 @@
           ["Lucía Persani", "Vendedor", "Tarde", "01/06/2022", "<span class='badge badge-green'>Activo</span>"],
         ],
         fields: [
-          { l: "Nombre", t: "text" }, { l: "Apellido", t: "text" }, { l: "NroDocumento", t: "text" }, { l: "Telefono", t: "text" },
+          { l: "Nombre", t: "text" }, { l: "Apellido", t: "text" }, { l: "NroDocumento", t: "text" }, { l: "Telefono", t: "tel" },
           { l: "Cargo", t: "select", o: ["Vendedor", "Dueño", "Administrador", "Producción"] },
           { l: "Turno", t: "select", o: ["Mañana", "Tarde", "Noche"] },
-          { l: "FechaIngreso", t: "date" }, { l: "Sueldo", t: "text" },
+          { l: "FechaIngreso", t: "date" }, { l: "Sueldo", t: "number", min: 0, step: "0.01" },
           { l: "Estado", t: "select", o: ["Activo", "Inactivo"] },
         ]
       },
@@ -1282,7 +1543,7 @@
           { l: "validohasta", t: "date" }, { l: "descuento", t: "number" },
           { l: "estado", t: "select", o: ["Pendiente", "Aprobado", "Rechazado", "Vencido"] },
         ],
-        details: [{ key: "detPresupuesto", cls: "Detalle_Presupuesto", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detPresupuesto", cls: "Detalle_Presupuesto", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "pedidos", section: "ventas", icon: "📦", label: "Órdenes de Pedido", singular: "pedido", cls: "OrdenPedido",
@@ -1301,7 +1562,7 @@
           { l: "estado", t: "select", o: ["Pendiente", "En preparación", "Entregado", "Cancelado"] },
         ],
         details: [
-          { key: "detPedido", cls: "Detalle_OrdenPedido", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] },
+          { key: "detPedido", cls: "Detalle_OrdenPedido", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] },
           { key: "detOPpago", cls: "Detalle_ComprobantePago", label: "Registrar pago", refLabel: "Forma de pago", options: ["Efectivo", "Débito", "Mercado Pago", "Cuenta DNI", "Transferencia"], extra: [{ l: "Monto", t: "number", defaultValue: "" }], transient: true }
         ]
       },
@@ -1313,13 +1574,13 @@
           ["#CV-1098", "#OP-0886", "Restó La Nonna", "22/09/2026", "Cuenta corriente", "$38.400"],
         ],
         fields: [
-          { l: "nroPedido", t: "select", ref: "pedidos" },
-          { l: "Id_Cliente (heredado)", t: "select", ref: "clientes" },
-          { l: "Id_Empleado (heredado)", t: "select", ref: "empleados" },
-          { l: "FechaEmision", t: "date" }, { l: "TipoVenta", t: "select", o: ["Minorista", "Cuenta corriente"] },
+          { l: "nroPedido", t: "select", ref: "pedidos", required: true },
+          { l: "Id_Cliente (heredado)", t: "select", ref: "clientes", required: true },
+          { l: "Id_Empleado (heredado)", t: "select", ref: "empleados", required: true },
+          { l: "FechaEmision", t: "date", required: true }, { l: "TipoVenta", t: "select", o: ["Minorista", "Cuenta corriente"], required: true },
           { l: "estado (heredado)", t: "select", o: ["Emitido", "Anulado"] },
         ],
-        details: [{ key: "detCV", cls: "Detalle_ComprobanteVenta", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detCV", cls: "Detalle_ComprobanteVenta", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number", min: 0.01, step: "0.01" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "comprobantesPago", section: "ventas", icon: "💳", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
@@ -1349,7 +1610,7 @@
           { l: "estado", t: "select", o: ["Pendiente", "Entregado"] },
           { l: "Observaciones", t: "textarea", span: 2 },
         ],
-        details: [{ key: "detRemito", cls: "Detalle_Remito", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detRemito", cls: "Detalle_Remito", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "devoluciones", section: "ventas", icon: "↩️", label: "Devoluciones", singular: "devolución", cls: "Devolucion",
@@ -1361,27 +1622,26 @@
           { l: "Fecha_Pedido_Retirado", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "Procesada"] },
         ],
-        details: [{ key: "detDev", cls: "Detalle_Devolucion", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "Precio_Actual", t: "text" }, { l: "Precio_Comercializado", t: "text" }] }]
+        details: [{ key: "detDev", cls: "Detalle_Devolucion", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "Precio_Actual", t: "number", min: 0, step: "0.01" }, { l: "Precio_Comercializado", t: "number", min: 0, step: "0.01" }] }]
       },
 
       // ============ PRODUCCIÓN Y MANTENIMIENTO ============
       {
         id: "productos", section: "produccion", icon: "🍝", label: "Productos", singular: "producto", cls: "Producto",
-        cols: ["nombre", "idTipoProducto", "idReceta", "PrecioBase", "stockActual", "Congelado"],
+        cols: ["Nombre", "Tipo de producto", "Unidad de medida", "Receta", "Precio base", "Stock actual", "¿Congelado?", "Estado"],
         rows: [
-          ["Tallarines frescos 500g", "Pasta fresca", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>"],
-          ["Sorrentinos jamón y queso", "Pasta fresca", "Receta Sorrentino J. y Q.", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>"],
-          ["Salsa bolognesa (pote)", "Salsa", "Receta Salsa Bolognesa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>"],
+          ["Tallarines frescos 500g", "Pasta fresca", "unidad", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>", "Activo"],
+          ["Sorrentinos jamón y queso", "Pasta fresca", "unidad", "Receta Sorrentino J. y Q.", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Salsa bolognesa (pote)", "Salsa", "unidad", "Receta Salsa Bolognesa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>", "Activo"],
         ],
         fields: [
-          { l: "nombre", t: "text", span: 2 },
-          { l: "idTipoProducto", t: "select", o: ["Pasta fresca", "Plato armado", "Salsa", "Seco"] },
-          { l: "idUnidad", t: "select", o: ["kg", "unidad", "litro"] },
-          { l: "idReceta", t: "select", ref: "recetas" },
-          { l: "PrecioBase", t: "text" },
-          { l: "FechaElaboracion", t: "date" }, { l: "FechaVencimiento", t: "date" },
-          { l: "Congelado", t: "select", o: ["No", "Sí"] },
-          { l: "stockActual", t: "number" }, { l: "stockReserva", t: "number" },
+          { l: "Nombre", col: "Nombre", t: "text", span: 2, required: true },
+          { l: "Tipo de producto", col: "Tipo de producto", key: "productType", t: "select", optionsSource: "productTypes", required: true },
+          { l: "Unidad de medida", col: "Unidad de medida", t: "select", o: ["kg", "unidad", "litro"], required: true },
+          { l: "Receta", col: "Receta", key: "productRecipe", t: "select", ref: "recetas" },
+          { l: "Precio base", col: "Precio base", t: "number", min: 0, step: "0.01", required: true },
+          { l: "¿Congelado?", col: "¿Congelado?", t: "select", o: ["No", "Sí"] },
+          { l: "Estado", col: "Estado", t: "select", o: ["Activo", "Inactivo"] },
         ]
       },
       {
@@ -1400,7 +1660,7 @@
         fields: [
           { l: "nombre", t: "text", span: 2 },
           { l: "idUnidad", t: "select", o: ["kg", "litro", "unidad", "docena"] },
-          { l: "stockMinimo", t: "number" }, { l: "costoPromedio", t: "text" },
+          { l: "stockMinimo", t: "number" }, { l: "costoPromedio", t: "number", min: 0, step: "0.01" },
         ]
       },
       {
@@ -1421,17 +1681,17 @@
       },
       {
         id: "ordenesProduccion", section: "produccion", icon: "🏗️", label: "Órdenes de Producción", singular: "orden de producción", cls: "OrdenProduccion",
-        cols: ["N°", "fechaCreacion", "responsable", "Producto a producir", "estado"],
+        cols: ["N°", "Fecha de elaboración", "Responsable", "Producto a producir", "Estado"],
         rows: [
           ["#OPR-330", "23/09/2026", "Carlos Bernal", "Tallarines frescos 500g", "<span class='badge badge-amber'>En curso</span>"],
           ["#OPR-329", "22/09/2026", "Carlos Bernal", "Sorrentinos jamón y queso", "<span class='badge badge-green'>Finalizada</span>"],
         ],
         fields: [
-          { l: "fechaCreacion", t: "date" }, { l: "fechaExpedicion", t: "date" }, { l: "responsable", t: "text" },
-          { l: "estado", t: "select", o: ["En curso", "Finalizada"] },
+          { l: "Fecha de elaboración", col: "Fecha de elaboración", t: "date" }, { l: "Responsable", col: "Responsable", t: "text" },
+          { l: "Estado", col: "Estado", t: "select", o: ["En curso", "Finalizada"] },
         ],
         details: [
-          { key: "detOPprod", cls: "Detalle_OrdenProduccion", ref: "productos", refLabel: "Producto a producir", extra: [{ l: "cantidadPlanificada", t: "number" }, { l: "merma", t: "text" }] },
+          { key: "detOPprod", cls: "Detalle_OrdenProduccion", label: "Productos, cantidades y lotes", ref: "productos", refLabel: "Producto a producir", extra: [{ l: "Cantidad a fabricar", t: "number", min: 0.01, step: "0.01" }, { l: "Identificación del lote", t: "text" }, { l: "Fecha de vencimiento del lote", t: "date" }] },
           { key: "detOPmp", cls: "Detalle_OrdenProduccion_MP", ref: "materias", refLabel: "Materia prima consumida", extra: [{ l: "Cantidad", t: "number" }] },
         ]
       },
@@ -1457,16 +1717,16 @@
         fields: [
           { l: "idMaquina", t: "select", ref: "maquinas" }, { l: "fecha", t: "date" },
           { l: "tipoMantenimiento", t: "select", o: ["Preventivo", "Correctivo"] },
-          { l: "descripcion", t: "textarea", span: 2 }, { l: "costo", t: "text" }, { l: "responsable", t: "text" },
+          { l: "descripcion", t: "textarea", span: 2 }, { l: "costo", t: "number", min: 0, step: "0.01" }, { l: "responsable", t: "text" },
           { l: "estado", t: "select", o: ["Pendiente", "Realizado"] },
         ],
-        details: [{ key: "detMant", cls: "Detalle_OrdenMantenimiento", ref: "repuestos", refLabel: "Repuesto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detMant", cls: "Detalle_OrdenMantenimiento", ref: "repuestos", refLabel: "Repuesto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "repuestos", section: "produccion", icon: "🔩", label: "Repuestos", singular: "repuesto", cls: "Repuesto",
         cols: ["nombre", "precioPromedio", "StockActual"],
         rows: [["Correa transportadora", "$8.900", "2"], ["Rodillo de acero", "$21.400", "1"]],
-        fields: [{ l: "nombre", t: "text", span: 2 }, { l: "precioPromedio", t: "text" }, { l: "StockActual", t: "number" }]
+        fields: [{ l: "nombre", t: "text", span: 2 }, { l: "precioPromedio", t: "number", min: 0, step: "0.01" }]
       },
 
       // ============ COMPRAS A PROVEEDORES ============
@@ -1493,7 +1753,7 @@
           { l: "fecha", t: "date" }, { l: "validohasta", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "Aprobado", "Vencido"] },
         ],
-        details: [{ key: "detPP", cls: "Detalle_PresupuestoProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detPP", cls: "Detalle_PresupuestoProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "ordenesCompra", section: "compras", icon: "📑", label: "Órdenes de Compra", singular: "orden de compra", cls: "OrdenCompraProvedor",
@@ -1507,7 +1767,7 @@
           { l: "fechaOrden", t: "date" }, { l: "fechaEsperada", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "Recibida", "Cancelada"] },
         ],
-        details: [{ key: "detOC", cls: "Detalle_CompraProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detOC", cls: "Detalle_CompraProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "remitosProv", section: "compras", icon: "🚛", label: "Remitos de Proveedor", singular: "remito de proveedor", cls: "Remito Provedor ⊳ Comprobante Provedor",
@@ -1518,7 +1778,7 @@
           { l: "id_provedor", t: "select", ref: "proveedores" }, { l: "fecha", t: "date" },
           { l: "estado", t: "select", o: ["Pendiente", "Recibido"] },
         ],
-        details: [{ key: "detRP", cls: "Detalle Remito Provedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detRP", cls: "Detalle Remito Provedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "comprobantesProv", section: "compras", icon: "🧾", label: "Comprobantes de Venta de Proveedor", singular: "comprobante de venta de proveedor", cls: "Comprobante de Venta Provedor ⊳ Comprobante Provedor",
@@ -1529,7 +1789,7 @@
           { l: "tipo", t: "select", o: ["Contado", "Cuenta corriente"] },
           { l: "Estado (heredado de Comprobante Provedor)", t: "select", o: ["Confirmado", "Anulado"] },
         ],
-        details: [{ key: "detCVP", cls: "Detalle ComprobanteVentaProvedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "text" }] }]
+        details: [{ key: "detCVP", cls: "Detalle ComprobanteVentaProvedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
         id: "ordenesPago", section: "compras", icon: "💵", label: "Órdenes de Pago", singular: "orden de pago", cls: "OrdenPago",
@@ -1542,6 +1802,11 @@
         details: [{ key: "detOPpago", cls: "Detalle_OrdenPago", ref: "ordenesCompra", refLabel: "Orden de compra cancelada", extra: [{ l: "MontoPagado", t: "text" }] }]
       },
     ];
+
+    // Configurar con la URL de una instancia propia de Nominatim (sin la ruta /search).
+    let verifiedCustomerAddress = "";
+    let lastAddressCheckAt = 0;
+    let addressCandidates = [];
 
     const DATE_COLUMN_INDICES = {
       empleados: [3], presupuestos: [2], pedidos: [3], comprobantesVenta: [3], comprobantesPago: [3],
@@ -1564,19 +1829,18 @@
     function renderSidebar() {
       const el = document.getElementById("sidebar");
       const role = ROLES.find(item => item.id === currentRole);
-      let h = `<div class="sidebar-logo"><h1>Fabrica de Pastas</h1><span>Sistema de Gestión</span></div>
-  <div class="sidebar-section">
-    <div class="sidebar-section-title">Principal</div>
+      let h = `<div class="sidebar-logo"><h1>Fábrica de Pastas</h1><span>Sistema de Gestión</span></div>
+  <div class="sidebar-home">
     <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')"><span class="icon">🏠</span> Dashboard</button>
   </div>`;
       SECTIONS.forEach(s => {
         const sectionEntities = E.filter(e => e.section === s.id && e.id !== "cuentaCliente" && roleCanAccess(e.id));
         if (!sectionEntities.length) return;
-        h += `<div class="sidebar-section"><div class="sidebar-section-title">${s.icon} ${s.label}</div>`;
+        h += `<details class="sidebar-section"><summary class="sidebar-section-title">${s.icon} ${s.label}</summary>`;
         sectionEntities.forEach(e => {
           h += `<button class="nav-item" data-screen="${e.id}" onclick="showScreen('${e.id}',this,'${s.label}')"><span class="icon">${e.icon}</span> ${e.label}</button>`;
         });
-        h += `</div>`;
+        h += `</details>`;
       });
       el.innerHTML = h;
     }
@@ -1591,7 +1855,6 @@
       <div class="card-header">
         <div>
           <div class="card-title">${e.icon} ${e.label}</div>
-          <div class="class-tag">clase: ${e.cls}</div>
         </div>
         <div class="card-actions">
           <input class="search-input" placeholder="Buscar...">
@@ -1599,10 +1862,12 @@
         </div>
       </div>
       <table>
-        <thead><tr>${e.cols.map(c => `<th>${c}</th>`).join("")}<th></th></tr></thead>
+        <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}<th></th></tr></thead>
         <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}<td class="td-actions">
           <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
-          ${customerViewOnly ? "" : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
+          ${customerViewOnly ? "" : e.id === "productos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('productos',${e.rows.indexOf(r)})">Editar</button>
+          <button class="btn btn-ghost btn-sm" onclick="toggleProductStatus(${e.rows.indexOf(r)})">${normalizeLabel(r[7] || "Activo") === "activo" ? "Desactivar" : "Activar"}</button>
+          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-ghost btn-sm" onclick="toggleClientStatus(${e.rows.indexOf(r)})">${normalizeLabel((r[5] || "Activo").replace(/<[^>]+>/g, "")) === "activo" ? "Deshabilitar" : "Habilitar"}</button>` : e.id === "pedidos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('pedidos',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button><button class="btn btn-primary btn-sm" onclick="prefillRemitoFromOrder(${e.rows.indexOf(r)})">Generar remito</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "presupuestos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('presupuestos',${e.rows.indexOf(r)})">Editar</button>
@@ -1681,6 +1946,17 @@
     }
 
     function formatCellValue(entity, row, columnIndex) {
+      if (entity.id === "productos" && columnIndex === 5) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "repuestos" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "materias" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "productos" && columnIndex === 7) {
+        const status = row[7] || "Activo";
+        return `<span class='badge ${normalizeLabel(status) === "activo" ? "badge-green" : "badge-gray"}'>${escapeHTML(status)}</span>`;
+      }
+      if (entity.id === "productos" && columnIndex === 4) {
+        const price = parseProductPrice(row[4]);
+        return Number.isFinite(price) ? `$${price.toLocaleString("es-AR", { maximumFractionDigits: 2 })}` : row[4] ?? "—";
+      }
       if (entity.id === "pedidos" && columnIndex === 3 && row.schedule) {
         const schedule = row.schedule;
         if (schedule.type === "Fijo semanal") {
@@ -1709,7 +1985,7 @@
 
     function syncOrderScheduleFields() {
       const groups = [...document.querySelectorAll("#mf-fields .form-grid .form-group")];
-      const budgetGroup = groups.find(group => group.querySelector(".form-label").textContent === "id_Presupuesto");
+      const budgetGroup = groups.find(group => fieldKey(group) === "id_Presupuesto");
       const budget = E.find(entity => entity.id === "presupuestos").rows.find(row => row[0] === budgetGroup?.querySelector("select")?.value);
       const type = budget ? normalizeOrderScheduleType(budget.orderType) : null;
       const visibility = {
@@ -1720,7 +1996,7 @@
         FechaEvento: type === "Evento especial",
       };
       groups.forEach(group => {
-        const label = group.querySelector(".form-label").textContent;
+        const label = fieldKey(group);
         if (!(label in visibility)) return;
         const control = group.querySelector("input,select,textarea");
         group.hidden = !visibility[label];
@@ -1734,8 +2010,10 @@
 
     function getRecipeMaterialPlan(productName, plannedQty = 1) {
       const product = E.find(entity => entity.id === "productos").rows.find(row => row[0] === productName);
-      const recipe = E.find(entity => entity.id === "recetas").rows.find(row => row[0] === product?.[2] && row[1] === productName);
-      const definition = RECIPE_DEFINITIONS[productName];
+      const recipe = E.find(entity => entity.id === "recetas").rows.find(row => row[0] === product?.[3] && row[1] === productName);
+      const definition = recipe?.recipeMaterials?.length
+        ? { yield: Number(recipe.recipeYield) || 1, materials: recipe.recipeMaterials }
+        : RECIPE_DEFINITIONS[productName];
       const materials = recipe?.recipeMaterials || definition?.materials || [];
       const recipeYield = Number(recipe?.recipeYield || recipe?.[2]) || definition?.yield || 1;
       return materials.map(item => ({
@@ -1772,9 +2050,12 @@
     function syncRecipeMaterials(productSelect, resetYield = false) {
       if (!productSelect || productSelect.value === "") return;
       const groups = [...document.querySelectorAll("#mf-fields .form-group")];
-      const yieldGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento");
+      const yieldGroup = groups.find(group => normalizeLabel(fieldKey(group)) === "rendimiento");
       const yieldInput = yieldGroup?.querySelector(".form-input");
-      const recipe = RECIPE_DEFINITIONS[productSelect.value];
+      const recipeRow = E.find(entity => entity.id === "recetas")?.rows.find(row => row[1] === productSelect.value);
+      const recipe = recipeRow?.recipeMaterials?.length
+        ? { yield: Number(recipeRow.recipeYield) || 1, materials: recipeRow.recipeMaterials }
+        : RECIPE_DEFINITIONS[productSelect.value];
       if (!recipe || !yieldInput) return;
       if (resetYield || !yieldInput.value) yieldInput.value = recipe.yield;
 
@@ -1868,6 +2149,7 @@
       const e = E.find(x => x.id === id);
       if (currentRole === "cliente" && id === "clientes") return currentCustomer ? [currentCustomer] : [];
       if (currentRole === "cliente" && id === "presupuestos") return visibleRows(e).map(row => row[0].replace(/<[^>]+>/g, ""));
+      if (id === "productos") return e ? e.rows.filter(row => normalizeLabel(row[7] || "Activo") === "activo").map(row => row[0].replace(/<[^>]+>/g, "")) : [];
       return e ? e.rows.map(r => r[0].replace(/<[^>]+>/g, "")) : [];
     }
 
@@ -1875,13 +2157,18 @@
       const span = f.span === 2 ? " span2" : "";
       const required = f.required ? " required" : "";
       let input;
-      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="toggleBudgetClientForm()">+ Crear cliente</button><div id="budget-client-form" class="budget-client-fields" hidden><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido"><input class="form-input" id="budget-client-document" placeholder="Documento" aria-label="Documento"><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div>`;
-      else if (f.ref) input = `<select class="form-select"${required}>${f.optional ? '<option value="">Sin presupuesto</option>' : ""}${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>`;
+      const fieldOptions = f.optionsSource === "productTypes" ? productTypes : f.o || [];
+      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}><option value="">Seleccionar cliente</option>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="toggleBudgetClientForm()">+ Crear cliente</button><div id="budget-client-form" class="budget-client-fields" hidden><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido" required><input class="form-input" id="budget-client-document" placeholder="Documento" aria-label="Documento" required><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select><input class="form-input" id="budget-client-postal" placeholder="Código postal" aria-label="Código postal" required pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})"><input class="form-input" id="budget-client-city" placeholder="Localidad" aria-label="Localidad" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}"><input class="form-input" id="budget-client-street" placeholder="Calle" aria-label="Calle" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}"><input class="form-input" id="budget-client-height" placeholder="Altura" aria-label="Altura" type="number" min="1" step="1" required><div class="address-verify-tools"><button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button><span class="address-verify-status" data-address-status>Comprobá el domicilio con el servicio oficial de Argentina.</span><small>Verificación: <a href="https://www.argentina.gob.ar/georef" target="_blank" rel="noopener">Georef</a></small></div><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div>`;
+      else if (f.key === "productType" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="type"${required}>${productTypes.map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('add')" title="Agregar tipo de producto" aria-label="Agregar tipo de producto">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('edit')" title="Editar tipo de producto" aria-label="Editar tipo de producto">✎</button></div>`;
+      else if (f.key === "productRecipe" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="recipe"><option value="">Sin receta asignada</option>${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('add')" title="Crear receta" aria-label="Crear receta">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('edit')" title="Editar receta" aria-label="Editar receta">✎</button></div>`;
+      else if (f.ref) input = `<select class="form-select"${required}>${f.optional ? '<option value="">Sin presupuesto</option>' : f.required ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(f.l).toLocaleLowerCase("es-AR"))}</option>` : ""}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.t === "multiselect") input = `<select class="form-select" multiple size="${f.o.length}"${required}>${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
-      else if (f.t === "select") input = `<select class="form-select">${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
+      else if (f.t === "select") input = `<select class="form-select"${required}>${fieldOptions.map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.t === "textarea") input = `<textarea class="form-textarea"${required}></textarea>`;
       else input = `<input class="form-input" type="${f.t}"${f.t === "date" ? ' lang="es-AR"' : ""}${required}>`;
-      return `<div class="form-group${span}"><label class="form-label">${f.l}</label>${input}</div>`;
+      const attrs = [f.min !== undefined ? `min="${f.min}"` : "", f.max !== undefined ? `max="${f.max}"` : "", f.step ? `step="${f.step}"` : "", f.pattern ? `pattern="${escapeHTML(f.pattern)}"` : "", f.maxlength ? `maxlength="${f.maxlength}"` : "", f.placeholder ? `placeholder="${escapeHTML(f.placeholder)}"` : "", f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""].filter(Boolean).join(" ");
+      const addressTools = f.l === "Altura" && currentFormEntity === "clientes" ? `<div class="address-verify-tools"><button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button><span class="address-verify-status" data-address-status>Comprobá el domicilio con el servicio oficial de Argentina.</span><small>Verificación: <a href="https://www.argentina.gob.ar/georef" target="_blank" rel="noopener">Georef</a></small></div>` : "";
+      return `<div class="form-group${span}"><label class="form-label" data-field-key="${escapeHTML(f.l)}">${escapeHTML(friendlyAttributeLabel(f.l))}</label>${input.replace(/(class="form-input"[^>]*)(>)/, `$1 ${attrs}$2`)}${addressTools}</div>`;
     }
 
     /* ---- Líneas de detalle (Detalle_X): 1 a muchos, sin límite de filas ---- */
@@ -1890,19 +2177,20 @@
 
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
-    <div class="detail-field"><label>${g.refLabel}</label><select class="form-select">${g.key === "detOPprod" ? '<option value="">Seleccionar producto</option>' : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${o}</option>`).join("")}</select></div>
-      ${g.extra.map(x => `<div class="detail-field"><label>${x.l}</label>${x.t === "select"
+    <div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</label><select class="form-select">${["detOPprod", "detCV"].includes(g.key) ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(g.refLabel).toLocaleLowerCase("es-AR"))}</option>` : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select></div>
+      ${g.extra.map(x => `<div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(x.l))}</label>${x.t === "select"
         ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
-        : x.t === "number" ? `<input class="form-input" type="number" min="0.01" step="0.01" value="${x.defaultValue ?? "1"}">`
+        : x.t === "number" ? `<input class="form-input" type="number" min="${x.min ?? 0.01}" step="${x.step ?? "0.01"}" value="${x.defaultValue ?? "1"}">`
+          : x.t === "date" ? `<input class="form-input" type="date" lang="es-AR">`
           : `<input class="form-input" type="text">`}</div>`).join("")}
-    <button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
+    ${g.key === "detCV" ? '<div class="invoice-line-total">$0,00</div>' : ""}<button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
   </div>`;
     }
 
     function detailGroupHtml(g) {
       const rows = formState[g.key] || [];
       return `<div class="detail-block" data-group="${g.key}">
-    <div class="detail-label">${g.label || `${g.refLabel}s`} <span class="class-tag">clase: ${g.cls}</span></div>
+    <div class="detail-label">${g.label || `${g.refLabel}s`}</div>
     <div class="detail-rows">${rows.map((_, i) => detailRowHtml(g, i)).join("")}</div>
     <button type="button" class="add-detail-btn" onclick="addDetailRow('${g.key}')">+ Agregar ${g.refLabel.toLowerCase()}</button>
   </div>`;
@@ -1961,11 +2249,12 @@
       const e = E.find(x => x.id === entityId);
       const row = e.rows[rowIdx];
       document.getElementById("mv-title").textContent = `${e.icon} ${row[0].replace(/<[^>]+>/g, "")}`;
-      document.getElementById("mv-class").textContent = "clase: " + e.cls;
+      document.getElementById("mv-class").textContent = "";
       let h = `<div class="view-grid">`;
       e.cols.forEach((c, i) => {
-        h += `<div class="view-field"><div class="view-label">${c}</div><div class="view-value">${formatCellValue(e, row, i)}</div></div>`;
+        h += `<div class="view-field"><div class="view-label">${escapeHTML(friendlyAttributeLabel(c))}</div><div class="view-value">${formatCellValue(e, row, i)}</div></div>`;
       });
+      if (entityId === "clientes" && row.address) h += `<div class="view-field span2"><div class="view-label">Domicilio</div><div class="view-value">${escapeHTML(`${row.address.street || "—"} ${row.address.height || ""}, ${row.address.city || "—"} · CP ${row.address.postalCode || "—"}`)}</div></div>`;
       h += `</div>`;
       if (e.details && e.details.length) {
         e.details.filter(group => !group.transient).forEach(g => {
@@ -1976,8 +2265,8 @@
             values: [...item.inputs, ...(item.extraSelects || [])]
           })) : opts.slice(0, Math.min(2, opts.length)).map(selected => ({ selected, values: [] }));
           h += `<div class="detail-block">
-        <div class="detail-label">${g.refLabel}s <span class="class-tag">clase: ${g.cls}</span></div>
-        <table><thead><tr><th>${g.refLabel}</th>${g.extra.map(x => `<th>${x.l}</th>`).join("")}</tr></thead>
+        <div class="detail-label">${g.label || `${g.refLabel}s`}</div>
+        <table><thead><tr><th>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</th>${g.extra.map(x => `<th>${escapeHTML(friendlyAttributeLabel(x.l))}</th>`).join("")}</tr></thead>
         <tbody>${displayRows.map(item => `<tr><td>${escapeHTML(item.selected || "—")}</td>${g.extra.map((_, index) => `<td>${escapeHTML(item.values[index] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table>
         ${savedDetails.length ? "" : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Sin detalle cargado.</div>`}
       </div>`;
@@ -1990,7 +2279,7 @@
             .filter(line => line.orderId === row[0])
             .map(line => ({ receipt, line })));
         h += `<div class="detail-block">
-          <div class="detail-label">Pagos registrados <span class="class-tag">clase: Detalle_ComprobantePago</span></div>
+          <div class="detail-label">Pagos registrados</div>
           ${payments.length ? `<table><thead><tr><th>Comprobante</th><th>Fecha</th><th>Forma de pago</th><th>Monto</th></tr></thead>
             <tbody>${payments.map(({ receipt, line }) => `<tr><td>${escapeHTML(receipt[0])}</td><td>${escapeHTML(receipt[3] || "—")}</td><td>${escapeHTML(line.method || "—")}</td><td>${escapeHTML(formatAmountDisplay(line.amount))}</td></tr>`).join("")}</tbody></table>`
             : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Todavía no hay pagos registrados.</div>`}
@@ -2011,35 +2300,63 @@
         const savedDetails = editing.detailData?.[group.key];
         if (savedDetails?.length) formState[group.key] = savedDetails.map((_, index) => index);
       });
-      document.getElementById("mf-title").innerHTML = `${editing ? "Editar " : "Nuevo "}${e.singular} <span class="class-tag" style="margin-left:6px">clase: ${e.cls}</span>`;
-      let body = `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>`;
-      (e.details || []).forEach(g => { body += detailGroupHtml(g); });
+      document.getElementById("mf-title").textContent = `${editing ? "Editar " : "Nuevo "}${e.singular}`;
+      let body = entityId === "comprobantesVenta"
+        ? `<div class="invoice-paper"><div class="invoice-head"><div><span class="invoice-kicker">Fábrica de Pastas</span><strong>Gestión de ventas</strong></div><div class="invoice-title"><span>COMPROBANTE DE VENTA</span><small>Original · A</small></div></div><div class="invoice-parties"><section><span>EMISOR</span><strong>Fábrica de Pastas</strong><small>Comprobante generado desde el sistema de gestión</small></section><section><span>CLIENTE Y EMISIÓN</span><div class="form-grid">${e.fields.map(fieldHtml).join("")}</div><div id="invoice-client-summary" class="invoice-client-summary"><strong>Seleccioná un cliente</strong><span>Sus datos y domicilio aparecerán en el comprobante.</span></div></section></div>`
+        : `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>`;
+      (e.details || []).forEach(g => {
+        if (entityId === "comprobantesVenta" && g.key === "detCV") body += `<div class="invoice-items-heading"><span>Producto</span><span>Cantidad</span><span>Precio unitario</span><span>Importe</span><span></span></div>`;
+        body += detailGroupHtml(g);
+      });
+      if (entityId === "comprobantesVenta") body += `<div class="invoice-totals"><div><span>Subtotal</span><strong id="invoice-subtotal">$0</strong></div><div><span>IVA (21%)</span><strong id="invoice-iva">$0</strong></div><div class="invoice-grand-total"><span>Total</span><strong id="invoice-total">$0</strong></div></div></div>`;
       document.getElementById("mf-fields").innerHTML = body;
+      if (entityId === "clientes") {
+        verifiedCustomerAddress = "";
+        ["Calle", "Altura", "Localidad", "CodigoPostal"].forEach(key => {
+        const field = document.querySelector(`#mf-fields [data-field-key="${key}"]`);
+          field?.addEventListener("input", () => {
+            invalidateAddressVerification();
+          });
+        });
+      }
+      if (entityId === "comprobantesVenta") document.querySelector(".invoice-title small").textContent = editing ? `N° ${e.rows[rowIndex][0]}` : "Se asigna al guardar";
       if (editing) (e.details || []).forEach(group => {
         if (!group.transient) restoreDetailRows(group.key, editing.detailData?.[group.key] || []);
       });
       if (editing) {
-        document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
-          const label = group.querySelector(".form-label").textContent;
-          const colIndex = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel(label));
+        document.querySelectorAll("#mf-fields .form-grid .form-group").forEach((group, index) => {
+          const label = fieldKey(group);
+          const colIndex = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel(e.fields[index]?.col || label));
           if (colIndex < 0) return;
           const cell = document.createElement("div");
           cell.innerHTML = e.rows[rowIndex][colIndex] || "";
-          group.querySelector("input, select, textarea").value = cell.textContent.trim();
+          const control = group.querySelector("input, select, textarea");
+          control.value = control.type === "date" ? dateValueForInput(cell.textContent.trim())
+            : control.type === "number" && entityId === "productos" && label === "Precio base" ? productPriceValueForInput(cell.textContent.trim())
+              : control.type === "number" ? currencyValueForInput(cell.textContent.trim())
+              : cell.textContent.trim();
         });
+        if (entityId === "comprobantesVenta") {
+          const row = e.rows[rowIndex];
+          setFormSelect("nroPedido", row[1]);
+          setFormSelect("Id_Cliente (heredado)", row[2]);
+          setFormSelect("Id_Empleado (heredado)", row.responsible || "");
+          setFormSelect("estado (heredado)", row.invoiceStatus || "Emitido");
+          const emissionDate = document.querySelector('#mf-fields [data-field-key="FechaEmision"]');
+          if (emissionDate) emissionDate.value = dateValueForInput(row[3]);
+        }
         if (entityId === "clientes") {
           const row = e.rows[rowIndex];
           const values = {
-            Nombre: (row[0] || "").split(" ")[0],
-            Apellido: (row[0] || "").split(" ").slice(1).join(" "),
-            NroDocumento: row[1] || "",
-            TipoCliente: row[2] || "Consumidor final",
+            Nombre: (row[0] || "").split(" ")[0], Apellido: (row[0] || "").split(" ").slice(1).join(" "),
+            NroDocumento: row[1] || "", TipoCliente: row[2] || "Consumidor final",
             CuentaCorriente: row[4]?.replace(/<[^>]+>/g, "") || "No",
-            LimiteDeuda: (row[3] || "").replace(/[^\d.,-]/g, ""),
-            Estado: row[5]?.replace(/<[^>]+>/g, "") || "Activo",
+            LimiteDeuda: (row[3] || "").replace(/[^\d.,-]/g, ""), Estado: row[5]?.replace(/<[^>]+>/g, "") || "Activo",
+            Calle: row.address?.street || "", Altura: row.address?.height || "",
+            Localidad: row.address?.city || "", CodigoPostal: row.address?.postalCode || "",
           };
           document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
-            const label = group.querySelector(".form-label").textContent;
+            const label = fieldKey(group);
             if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
           });
         }
@@ -2051,7 +2368,7 @@
             "estado (heredado)": row.paymentStatus || "Confirmado",
           };
           document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
-            const label = group.querySelector(".form-label").textContent;
+            const label = fieldKey(group);
             if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
             if (label === "Id_Cliente (heredado)") setFormSelect(label, row[2]);
             if (label === "Id_Empleado (heredado)") setFormSelect(label, row[6]);
@@ -2069,7 +2386,7 @@
             estado: row?.[5]?.replace(/<[^>]+>/g, "") || "Pendiente",
           };
           document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
-            const label = group.querySelector(".form-label").textContent;
+            const label = fieldKey(group);
             if (values[label] !== undefined) group.querySelector("input,select,textarea").value = values[label];
             if (label === "DiasDeEntrega") [...group.querySelector("select").options].forEach(option => {
               option.selected = row?.schedule?.days?.includes(option.value) || false;
@@ -2079,20 +2396,26 @@
       }
       if (entityId === "pedidos") {
         const budgetSelect = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
-          .find(group => group.querySelector(".form-label").textContent === "id_Presupuesto")?.querySelector("select");
+          .find(group => fieldKey(group) === "id_Presupuesto")?.querySelector("select");
         budgetSelect?.addEventListener("change", syncOrderScheduleFields);
         syncOrderScheduleFields();
       }
       document.getElementById("mf-save").onclick = () => {
         const requiredFields = document.querySelectorAll("#mf-fields [required]");
         for (const field of requiredFields) {
+          if (field.closest("#budget-client-form")?.hidden) continue;
           if (!field.reportValidity()) return;
+        }
+        if (entityId === "clientes" && verifiedCustomerAddress !== addressSnapshot(readCustomerAddressFields())) {
+          showNotify("Verificá el domicilio antes de registrar el cliente.");
+          return;
         }
         const n = (e.details || []).reduce((s, g) => s + formState[g.key].length, 0);
         let updatedRow = editing ? [...e.rows[rowIndex]] : Array(e.cols.length).fill("—");
         document.querySelectorAll("#mf-fields .form-grid .form-group").forEach((group, index) => {
-          const label = group.querySelector(".form-label").textContent;
-          let colIndex = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel(label));
+          const label = fieldKey(group);
+          const fieldDef = e.fields[index];
+          let colIndex = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel(fieldDef?.col || label));
           if (colIndex < 0 && !editing && index < updatedRow.length) colIndex = index;
           if (colIndex < 0) return;
           const control = group.querySelector("input, select, textarea");
@@ -2101,9 +2424,9 @@
         const detailData = Object.fromEntries((e.details || []).filter(group => !group.transient).map(group => [group.key, readDetailRows(group.key)]));
         if (Object.keys(detailData).length) updatedRow.detailData = detailData;
         const getValue = label => [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
-          .find(group => group.querySelector(".form-label").textContent === label)?.querySelector("input,select,textarea")?.value.trim() || "";
+          .find(group => fieldKey(group) === label)?.querySelector("input,select,textarea")?.value.trim() || "";
         const getSelected = label => [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
-          .find(group => group.querySelector(".form-label").textContent === label)?.querySelector("select")?.selectedOptions;
+          .find(group => fieldKey(group) === label)?.querySelector("select")?.selectedOptions;
         const formatBadge = (value, tone = "amber") => `<span class='badge badge-${tone}'>${escapeHTML(value)}</span>`;
         const nextCode = (prefix, rows, first = 1) => {
           const max = rows.reduce((highest, row) => Math.max(highest, Number(row[0]?.match(/(\d+)$/)?.[1]) || 0), first - 1);
@@ -2137,9 +2460,25 @@
           }).filter(Boolean);
           if (products.length) updatedRow[3] = escapeHTML(products.join(", "));
         }
+        if (entityId === "productos" && !editing) {
+          const stockColumn = e.cols.findIndex(col => normalizeLabel(col) === normalizeLabel("Stock actual"));
+          if (stockColumn >= 0) updatedRow[stockColumn] = "0";
+        }
+        if (entityId === "productos") {
+          const previousProductName = editing ? e.rows[rowIndex][0] : "";
+          const productName = updatedRow[0];
+          const recipeName = updatedRow[3];
+          const recipe = E.find(entity => entity.id === "recetas").rows.find(row => row[0] === recipeName);
+          if (recipe) recipe[1] = productName;
+          if (previousProductName && previousProductName !== productName) {
+            E.find(entity => entity.id === "recetas").rows.forEach(row => {
+              if (row[1] === previousProductName) row[1] = productName;
+            });
+          }
+        }
         if (entityId === "recetas") {
           const productSelect = [...document.querySelectorAll("#mf-fields .form-group")]
-            .find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "idproducto")
+            .find(group => normalizeLabel(fieldKey(group)) === "idproducto")
             ?.querySelector(".form-select");
           const materialRows = [...document.querySelectorAll('.detail-block[data-group="detReceta"] .detail-row')];
           const recipe = RECIPE_DEFINITIONS[productSelect?.value];
@@ -2152,7 +2491,7 @@
           const materialColumn = e.cols.findIndex(col => col.includes("Detalle_Receta"));
           if (materialColumn >= 0 && materialSummary) updatedRow[materialColumn] = escapeHTML(materialSummary);
           const yieldInput = [...document.querySelectorAll("#mf-fields .form-group")]
-            .find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento")
+            .find(group => normalizeLabel(fieldKey(group)) === "rendimiento")
             ?.querySelector(".form-input");
           updatedRow.recipeYield = Number(yieldInput?.value) || 1;
           updatedRow.recipeMaterials = materialRows.map(row => {
@@ -2165,7 +2504,7 @@
         }
         if (entityId === "clientes") {
           const controls = [...document.querySelectorAll("#mf-fields .form-grid .form-group")];
-          const getValue = label => controls.find(group => group.querySelector(".form-label").textContent === label)?.querySelector("input,select,textarea")?.value.trim() || "";
+          const getValue = label => controls.find(group => fieldKey(group) === label)?.querySelector("input,select,textarea")?.value.trim() || "";
           const clientName = [getValue("Nombre"), getValue("Apellido")].filter(Boolean).join(" ");
           const documentNumber = getValue("NroDocumento");
           const duplicateDocument = e.rows.some((row, index) => index !== rowIndex && normalizeLabel(row[1]) === normalizeLabel(documentNumber));
@@ -2183,6 +2522,7 @@
             formatBadge(getValue("CuentaCorriente") || "No", getValue("CuentaCorriente") === "Sí"),
             formatBadge(status, status === "Activo"),
           ];
+          updatedRow.address = { street: getValue("Calle"), height: getValue("Altura"), city: getValue("Localidad"), postalCode: getValue("CodigoPostal") };
         }
         if (entityId === "presupuestos") {
           const clientName = getValue("Id_Cliente");
@@ -2252,14 +2592,32 @@
         if (entityId === "comprobantesVenta") {
           const orderId = getValue("nroPedido");
           const order = E.find(entity => entity.id === "pedidos").rows.find(row => row[0] === orderId);
-          const total = (detailData.detCV || []).reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * parseAmount(line.inputs[1]), 0);
+          const invoiceLines = detailData.detCV || [];
+          if (!invoiceLines.length || invoiceLines.some(line => !line.selected || !(Number(line.inputs[0]) > 0) || !(parseAmount(line.inputs[1]) > 0))) {
+            showNotify("Cada ítem necesita producto, cantidad y precio unitario mayores a cero.");
+            return;
+          }
+          if (!order) { showNotify("Seleccioná la orden asociada al comprobante."); return; }
+          const invoiceCustomer = E.find(entity => entity.id === "clientes").rows.find(row => row[0] === getValue("Id_Cliente (heredado)"));
+          if (!invoiceCustomer || normalizeLabel(invoiceCustomer[0]) !== normalizeLabel(order[1])) {
+            showNotify("El cliente del comprobante debe coincidir con el cliente de la orden.");
+            return;
+          }
+          const subtotal = (detailData.detCV || []).reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * parseAmount(line.inputs[1]), 0);
+          const total = subtotal * 1.21;
           updatedRow = [
             editing ? e.rows[rowIndex][0] : nextCode("CV", e.rows), orderId || "—", order?.[1] || "—",
             escapeHTML(getValue("FechaEmision") || "—"), escapeHTML(getValue("TipoVenta") || "Minorista"), formatAmount(total)
           ];
           updatedRow.orderId = orderId;
           updatedRow.invoiceStatus = getValue("estado (heredado)") || "Emitido";
-          if (order?.customerDocument) updatedRow.customerDocument = order.customerDocument;
+          updatedRow.invoiceSubtotal = subtotal;
+          updatedRow.invoiceVat = subtotal * 0.21;
+          updatedRow.responsible = getValue("Id_Empleado (heredado)");
+          if (invoiceCustomer) {
+            updatedRow.customerDocument = invoiceCustomer[1];
+            updatedRow.customerAddress = invoiceCustomer.address || null;
+          }
         }
         if (entityId === "remitos") {
           const orderId = getValue("NroPedido");
@@ -2316,8 +2674,8 @@
       if (entityId === "recetas") {
         setTimeout(() => {
           const groups = [...document.querySelectorAll("#mf-fields .form-group")];
-          const productGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "idproducto");
-          const yieldGroup = groups.find(group => normalizeLabel(group.querySelector(".form-label").textContent) === "rendimiento");
+          const productGroup = groups.find(group => normalizeLabel(fieldKey(group)) === "idproducto");
+          const yieldGroup = groups.find(group => normalizeLabel(fieldKey(group)) === "rendimiento");
           const productSelect = productGroup?.querySelector(".form-select");
           const yieldInput = yieldGroup?.querySelector(".form-input");
           if (productSelect) productSelect.addEventListener("change", () => syncRecipeMaterials(productSelect, true));
@@ -2325,11 +2683,211 @@
           if (productSelect && productSelect.value) syncRecipeMaterials(productSelect);
         }, 0);
       }
+      if (entityId === "comprobantesVenta") {
+        const host = document.getElementById("mf-fields");
+        host.oninput = syncInvoicePreview;
+        host.onchange = event => {
+          if (event.target.matches('[data-field-key="nroPedido"]')) {
+            const order = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[0] === event.target.value);
+            if (order) setFormSelect("Id_Cliente (heredado)", order[1]);
+          }
+          syncInvoicePreview(); syncInvoiceCustomer();
+        };
+        syncInvoicePreview();
+        syncInvoiceCustomer();
+      }
       openModal("modal-form");
     }
 
     function normalizeLabel(value) {
       return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    }
+
+    function syncInvoicePreview() {
+      const totals = document.querySelectorAll("#invoice-subtotal, #invoice-iva, #invoice-total");
+      if (totals.length !== 3) return;
+      const subtotal = readDetailRows("detCV").reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * (Number(line.inputs[1]) || 0), 0);
+      document.querySelectorAll('.detail-block[data-group="detCV"] .detail-row').forEach(row => {
+        const inputs = row.querySelectorAll(".form-input");
+        const amount = (Number(inputs[0]?.value) || 0) * (Number(inputs[1]?.value) || 0);
+        const output = row.querySelector(".invoice-line-total");
+        if (output) output.textContent = `$${amount.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      });
+      const money = value => `$${value.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      totals[0].textContent = money(subtotal);
+      totals[1].textContent = money(subtotal * 0.21);
+      totals[2].textContent = money(subtotal * 1.21);
+    }
+
+    function syncInvoiceCustomer() {
+      const summary = document.getElementById("invoice-client-summary");
+      if (!summary) return;
+      const customerSelect = document.querySelector('#mf-fields [data-field-key="Id_Cliente (heredado)"]');
+      const customer = E.find(entity => entity.id === "clientes")?.rows.find(row => row[0] === customerSelect?.value);
+      if (!customer) {
+        summary.innerHTML = "<strong>Seleccioná un cliente</strong><span>Sus datos y domicilio aparecerán en el comprobante.</span>";
+        return;
+      }
+      const address = customer.address;
+      summary.innerHTML = `<strong>${escapeHTML(customer[0])}</strong><span>Documento: ${escapeHTML(customer[1] || "—")}</span><span>Domicilio: ${escapeHTML(address ? `${address.street} ${address.height}, ${address.city} · CP ${address.postalCode}` : "Sin domicilio registrado")}</span>`;
+    }
+
+    function readCustomerAddressFields() {
+      const budgetPanel = document.getElementById("budget-client-form");
+      if (budgetPanel && !budgetPanel.hidden) return {
+        street: document.getElementById("budget-client-street"), height: document.getElementById("budget-client-height"),
+        city: document.getElementById("budget-client-city"), postalCode: document.getElementById("budget-client-postal")
+      };
+      const control = key => document.querySelector(`#mf-fields [data-field-key="${key}"]`)
+        ?.parentElement.querySelector("input, select, textarea") || null;
+      return {
+        street: control("Calle"), height: control("Altura"),
+        city: control("Localidad"), postalCode: control("CodigoPostal")
+      };
+    }
+
+    function addressSnapshot(fields) {
+      return [fields.street, fields.height, fields.city, fields.postalCode].map(field => normalizeLabel(field?.value || "")).join("|");
+    }
+
+    function invalidateAddressVerification() {
+      verifiedCustomerAddress = "";
+      document.querySelectorAll("[data-address-status]").forEach(status => {
+        status.dataset.state = "";
+        status.textContent = "La dirección cambió; volvé a verificarla.";
+      });
+      document.querySelectorAll(".address-suggestions").forEach(list => list.remove());
+    }
+
+    async function verifyCustomerAddress(button) {
+      const fields = readCustomerAddressFields();
+      const status = button.parentElement.querySelector("[data-address-status]");
+      const required = [fields.street, fields.height, fields.city, fields.postalCode];
+      if (required.some(field => !field)) {
+        status.dataset.state = "error";
+        status.textContent = "No se pudieron leer los campos del domicilio. Cerrá y volvé a abrir el formulario.";
+        return;
+      }
+      for (const field of required) {
+        if (!field.reportValidity()) {
+          status.dataset.state = "error";
+          status.textContent = "Completá los cuatro datos del domicilio para verificarlo.";
+          field.focus();
+          return;
+        }
+      }
+      if (Date.now() - lastAddressCheckAt < 1000) {
+        status.dataset.state = "error";
+        status.textContent = "Esperá un segundo antes de volver a verificar.";
+        return;
+      }
+      lastAddressCheckAt = Date.now();
+      button.disabled = true;
+      status.dataset.state = "";
+      status.textContent = "Buscando en el registro oficial de direcciones…";
+      button.parentElement.querySelector(".address-suggestions")?.remove();
+      try {
+        const url = new URL("https://apis.datos.gob.ar/georef/api/v2.0/direcciones");
+        url.search = new URLSearchParams({
+          direccion: `${fields.street.value.trim()} ${fields.height.value.trim()}`,
+          localidad: fields.city.value.trim()
+        });
+        const response = await fetch(url, { headers: { Accept: "application/json" } });
+        if (!response.ok) throw new Error("No se pudo consultar el servicio geográfico.");
+        const payload = await response.json();
+        const candidates = (payload.direcciones || []).filter(result => result.calle?.nombre
+          && String(result.altura?.valor || "") === fields.height.value.trim());
+        if (!candidates.length) {
+          status.dataset.state = "error";
+          status.textContent = "Georef no encontró una calle y altura coincidentes en esa localidad. Revisá los datos e intentá otra vez.";
+          verifiedCustomerAddress = "";
+          return;
+        }
+        addressCandidates = candidates;
+        const list = document.createElement("div");
+        list.className = "address-suggestions";
+        list.setAttribute("role", "listbox");
+        candidates.forEach((result, index) => {
+          const option = document.createElement("button");
+          option.type = "button";
+          option.className = "address-suggestion";
+          option.setAttribute("role", "option");
+          const label = result.nomenclatura || `${result.calle.nombre} ${result.altura.valor}`;
+          option.innerHTML = `${escapeHTML(label)}<small>${escapeHTML([result.localidad_censal?.nombre, result.departamento?.nombre, result.provincia?.nombre].filter(Boolean).join(" · "))}</small>`;
+          option.addEventListener("click", () => chooseAddressCandidate(index, button));
+          list.appendChild(option);
+        });
+        button.parentElement.appendChild(list);
+        status.dataset.state = "suggestions";
+        status.textContent = "Encontramos coincidencias oficiales. Elegí la que corresponde para confirmar.";
+        verifiedCustomerAddress = "";
+      } catch (error) {
+        status.dataset.state = "error";
+        status.textContent = error instanceof TypeError
+          ? "No se pudo conectar con Georef. Revisá tu conexión e intentá nuevamente."
+          : "El servicio de direcciones no está disponible ahora. Intentá nuevamente en unos minutos.";
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    function chooseAddressCandidate(index, verifyButton) {
+      const result = addressCandidates[index];
+      if (!result) return;
+      const fields = readCustomerAddressFields();
+      fields.street.value = result.calle?.nombre || fields.street.value;
+      fields.height.value = result.altura?.valor || fields.height.value;
+      const locality = result.localidad_censal?.nombre || result.localidad?.nombre;
+      if (locality) fields.city.value = locality;
+      verifiedCustomerAddress = addressSnapshot(fields);
+      const status = verifyButton.parentElement.querySelector("[data-address-status]");
+      status.dataset.state = "verified";
+      status.textContent = "Domicilio reconocido por Georef y normalizado con datos oficiales.";
+      verifyButton.parentElement.querySelector(".address-suggestions")?.remove();
+      [fields.street, fields.height, fields.city, fields.postalCode].forEach(field => field.dispatchEvent(new Event("change", { bubbles: true })));
+    }
+
+    const UI_ATTRIBUTE_LABELS = {
+      nombre: "Nombre", nombreapellido: "Nombre y apellido", nombrepersona: "Nombre", apellido: "Apellido",
+      nrodocumento: "Documento", tipodocumento: "Tipo de documento", telefono: "Teléfono", tel: "Teléfono", email: "Correo electrónico",
+      idivatipoiva: "Condición frente al IVA", tipoiva: "Condición frente al IVA", tipocliente: "Tipo de cliente", cuentacorriente: "Cuenta corriente",
+      limitedeuda: "Límite de deuda", estado: "Estado", cargo: "Cargo", turno: "Turno", fechaingreso: "Fecha de ingreso", sueldo: "Sueldo",
+      idcliente: "Cliente", idclienteheredado: "Cliente", idempleado: "Responsable", idempleadoheredado: "Responsable",
+      idproducto: "Producto", idunidad: "Unidad de medida", idmaquina: "Máquina", idpresupuesto: "Presupuesto asociado",
+      tipopedido: "Tipo de pedido", descripcion: "Descripción", validohasta: "Válido hasta", descuento: "Descuento (%)", fechaentrega: "Fecha de entrega",
+      fechainicio: "Inicio del período", fechafin: "Fin del período", diasdeentrega: "Días de entrega", fechaevento: "Fecha del evento",
+      nropedido: "N° de pedido", nrocv: "N° de comprobante", fechaemision: "Fecha de emisión", fechacreacion: "Fecha de creación",
+      fechaelaboracion: "Fecha de elaboración", tipoventa: "Tipo de venta", total: "Total", preciounitario: "Precio unitario",
+      fechapedido: "Fecha del pedido", fechaesperada: "Fecha esperada", fechaorden: "Fecha de la orden", fechafin: "Fin del período", fechaingreso: "Fecha de ingreso",
+      cantidad: "Cantidad", cantidadplanificada: "Cantidad a fabricar", merma: "Merma", precioactual: "Precio actual",
+      preciocomercializado: "Precio al momento de la venta", stockactual: "Stock actual", stockminimo: "Stock mínimo",
+      stockreserva: "Stock de reserva", costopromedio: "Costo promedio", preciobase: "Precio base", congelado: "¿Congelado?",
+      fechavencimiento: "Fecha de vencimiento", fechapedidoretirado: "Fecha del pedido retirado", rendimiento: "Rendimiento",
+      pasos: "Preparación", capacidad: "Capacidad", tipomaquina: "Tipo de máquina", ultimomantenimiento: "Último mantenimiento",
+      tipomantenimiento: "Tipo de mantenimiento", costo: "Costo", responsable: "Responsable", cuit: "CUIT",
+      telprov: "Teléfono del proveedor", tipoprovedor: "Tipo de proveedor", tipoproveedor: "Tipo de proveedor",
+      idprovedor: "Proveedor", idproveedor: "Proveedor", idunidad: "Unidad de medida", idmaquina: "Máquina", idordencompraprov: "Orden de compra al proveedor",
+      idpresupuestoprov: "Presupuesto del proveedor", idiva: "Condición frente al IVA", estadoheredado: "Estado", estadoheredadodecomprobanteprovedor: "Estado",
+      fechavencimientolote: "Vencimiento del lote", fecha_pedido_retirado: "Fecha del pedido retirado", precio_actual: "Precio actual", precio_comercializado: "Precio al momento de la venta",
+      montopagado: "Monto pagado", monto: "Monto", tipo_documento: "Tipo de documento", tipomantenimiento: "Tipo de mantenimiento", tipomaquina: "Tipo de máquina",
+      idformapago: "Forma de pago", fecha: "Fecha", observaciones: "Observaciones", proveedor: "Proveedor",
+      nroordencompra: "N° de orden de compra", unidad: "Unidad de medida", precio: "Precio", preciopromedio: "Precio promedio",
+      tipocomprobante: "Tipo de comprobante", idcomprobanteventaprov: "Comprobante de proveedor", idordencompra: "Orden de compra",
+      materiaprimadetallereceta: "Materias primas de la receta", materiaprima: "Materia prima", codigoPostal: "Código postal",
+      codigopostal: "Código postal", calle: "Calle", altura: "Altura", localidad: "Localidad", provincia: "Provincia",
+      identificaciondellote: "Identificación del lote", fechadevencimientodellote: "Vencimiento del lote", cantidadafabricar: "Cantidad a fabricar"
+    };
+
+    function friendlyAttributeLabel(value) {
+      const key = normalizeLabel(String(value || ""));
+      if (UI_ATTRIBUTE_LABELS[key]) return UI_ATTRIBUTE_LABELS[key];
+      return String(value || "").replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/[_.]+/g, " ").replace(/\b(id)\b/gi, "").trim()
+        .replace(/^\w/, letter => letter.toLocaleUpperCase("es-AR"));
+    }
+
+    function fieldKey(group) {
+      const label = group.querySelector(".form-label");
+      return label?.dataset.fieldKey || label?.textContent || "";
     }
 
     function escapeHTML(value) {
@@ -2344,6 +2902,180 @@
 
     function closeModal(id) {
       document.getElementById(id).classList.remove("open");
+    }
+
+    function openContextDialog(title, body, onSave) {
+      document.getElementById("context-title").textContent = title;
+      document.getElementById("context-body").innerHTML = body;
+      document.getElementById("context-save").onclick = onSave;
+      openModal("modal-context");
+    }
+
+    function productFormControl(label) {
+      return [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+        .find(group => fieldKey(group) === label)
+        ?.querySelector("input,select,textarea");
+    }
+
+    function refreshProductTypeOptions(selectedValue) {
+      const select = document.querySelector('#mf-fields [data-product-field="type"]');
+      if (!select) return;
+      select.innerHTML = productTypes.map(type => `<option>${escapeHTML(type)}</option>`).join("");
+      select.value = selectedValue || "";
+    }
+
+    function refreshProductRecipeOptions(selectedValue) {
+      const select = document.querySelector('#mf-fields [data-product-field="recipe"]');
+      if (!select) return;
+      select.innerHTML = `<option value="">Sin receta asignada</option>${refOptions("recetas").map(recipe => `<option>${escapeHTML(recipe)}</option>`).join("")}`;
+      select.value = selectedValue || "";
+    }
+
+    function openProductTypeDialog(mode) {
+      const editing = mode === "edit";
+      if (editing && !productTypes.length) {
+        showNotify("Primero agregá un tipo de producto.");
+        return;
+      }
+      const currentValue = document.querySelector('#mf-fields [data-product-field="type"]')?.value || productTypes[0] || "";
+      const selectMarkup = editing
+        ? `<div class="form-group"><label class="form-label" for="context-type-current">Tipo existente</label><select id="context-type-current" class="form-select">${productTypes.map(type => `<option${type === currentValue ? " selected" : ""}>${escapeHTML(type)}</option>`).join("")}</select></div>`
+        : "";
+      openContextDialog(editing ? "Editar tipo de producto" : "Agregar tipo de producto", `
+        <p class="context-help">Los tipos se guardan en el catálogo y quedan disponibles para todos los productos.</p>
+        ${selectMarkup}
+        <div class="form-group"><label class="form-label" for="context-type-name">${editing ? "Nuevo nombre" : "Nombre del tipo"}</label><input id="context-type-name" class="form-input" type="text" maxlength="60" required></div>
+      `, () => {
+        const name = document.getElementById("context-type-name").value.trim();
+        const oldType = editing ? document.getElementById("context-type-current").value : "";
+        if (!name) {
+          document.getElementById("context-type-name").reportValidity();
+          return;
+        }
+        const duplicate = productTypes.some(type => normalizeLabel(type) === normalizeLabel(name) && (!editing || normalizeLabel(type) !== normalizeLabel(oldType)));
+        if (duplicate) {
+          showNotify("Ya existe ese tipo de producto.");
+          return;
+        }
+        if (editing) {
+          productTypes = productTypes.map(type => type === oldType ? name : type);
+          E.find(entity => entity.id === "productos").rows.forEach(row => { if (row[1] === oldType) row[1] = name; });
+          const selected = document.querySelector('#mf-fields [data-product-field="type"]')?.value;
+          refreshProductTypeOptions(selected === oldType ? name : selected);
+        } else {
+          productTypes.push(name);
+          refreshProductTypeOptions(name);
+        }
+        persistBusinessData();
+        renderContent();
+        closeModal("modal-context");
+        showNotify(editing ? "Tipo de producto actualizado." : "Tipo de producto agregado.");
+      });
+    }
+
+    function renderContextRecipeMaterials() {
+      const host = document.getElementById("context-recipe-material-list");
+      if (!host) return;
+      const materials = E.find(entity => entity.id === "materias").rows;
+      host.innerHTML = contextRecipeMaterials.map((item, index) => `
+        <div class="context-material-row">
+          <select class="form-select" data-context-material aria-label="Materia prima">
+            <option value="">Elegir materia prima</option>
+            ${materials.map(row => `<option${row[0] === item.name ? " selected" : ""}>${escapeHTML(row[0])}</option>`).join("")}
+          </select>
+          <input class="form-input" data-context-quantity type="number" min="0.01" step="0.01" value="${Number(item.qty) || 1}" aria-label="Cantidad">
+          <button type="button" class="btn btn-ghost field-icon-btn" onclick="removeContextRecipeMaterial(${index})" title="Quitar materia prima" aria-label="Quitar materia prima">×</button>
+        </div>`).join("");
+    }
+
+    function addContextRecipeMaterial() {
+      contextRecipeMaterials.push({ name: "", qty: 1 });
+      renderContextRecipeMaterials();
+    }
+
+    function removeContextRecipeMaterial(index) {
+      contextRecipeMaterials.splice(index, 1);
+      renderContextRecipeMaterials();
+    }
+
+    function openProductRecipeDialog(mode) {
+      const productName = productFormControl("Nombre")?.value.trim();
+      if (!productName) {
+        showNotify("Ingresá el nombre del producto antes de definir su receta.");
+        productFormControl("Nombre")?.focus();
+        return;
+      }
+      const recipeSelect = document.querySelector('#mf-fields [data-product-field="recipe"]');
+      const selectedRecipe = recipeSelect?.value || "";
+      contextEditingRecipeIndex = mode === "edit"
+        ? E.find(entity => entity.id === "recetas").rows.findIndex(row => row[0] === selectedRecipe)
+        : null;
+      if (mode === "edit" && contextEditingRecipeIndex < 0) {
+        showNotify("Seleccioná una receta para editarla.");
+        return;
+      }
+      const recipeRow = contextEditingRecipeIndex === null ? null : E.find(entity => entity.id === "recetas").rows[contextEditingRecipeIndex];
+      const definition = RECIPE_DEFINITIONS[productName];
+      const savedMaterials = recipeRow?.recipeMaterials || (recipeRow?.[1] === productName ? definition?.materials : null) || [];
+      const recipeName = recipeRow?.[0] || "";
+      const initialYield = Number(recipeRow?.recipeYield) || Number.parseFloat(String(recipeRow?.[2] || "").replace(",", ".")) || definition?.yield || 1;
+      contextRecipeMaterials = savedMaterials.map(item => ({ name: item.name, qty: item.qty, unit: item.unit }));
+      if (!contextRecipeMaterials.length && definition?.materials) contextRecipeMaterials = definition.materials.map(item => ({ ...item }));
+      if (!contextRecipeMaterials.length) contextRecipeMaterials = [{ name: "", qty: 1 }];
+      openContextDialog(mode === "edit" ? "Editar receta" : "Crear receta", `
+        <p class="context-help">La receta quedará asociada a <strong>${escapeHTML(productName)}</strong> y se usará para calcular las materias primas de producción.</p>
+        <div class="form-grid">
+          <div class="form-group span2"><label class="form-label" for="context-recipe-name">Nombre de la receta</label><input id="context-recipe-name" class="form-input" type="text" maxlength="90" value="${escapeHTML(recipeName)}" required></div>
+          <div class="form-group"><label class="form-label" for="context-recipe-yield">Rendimiento (unidades)</label><input id="context-recipe-yield" class="form-input" type="number" min="0.01" step="0.01" value="${initialYield}" required></div>
+          <div class="form-group span2"><label class="form-label" for="context-recipe-steps">Preparación</label><textarea id="context-recipe-steps" class="form-textarea">${escapeHTML(recipeRow?.recipeSteps || "")}</textarea></div>
+        </div>
+        <div class="detail-block"><div class="detail-label">Materias primas y cantidades</div><div class="context-material-list" id="context-recipe-material-list"></div><button type="button" class="btn btn-ghost btn-sm" onclick="addContextRecipeMaterial()">+ Agregar materia prima</button></div>
+      `, () => saveContextRecipe(productName));
+      renderContextRecipeMaterials();
+    }
+
+    function saveContextRecipe(productName) {
+      const nameInput = document.getElementById("context-recipe-name");
+      const yieldInput = document.getElementById("context-recipe-yield");
+      const recipeName = nameInput.value.trim();
+      const recipeYield = Number(yieldInput.value);
+      if (!recipeName || !(recipeYield > 0)) {
+        (!recipeName ? nameInput : yieldInput).reportValidity();
+        return;
+      }
+      const materials = [...document.querySelectorAll("#context-recipe-material-list .context-material-row")].map(row => {
+        const name = row.querySelector("[data-context-material]").value;
+        const qty = Number(row.querySelector("[data-context-quantity]").value);
+        const material = E.find(entity => entity.id === "materias").rows.find(item => item[0] === name);
+        return name && qty > 0 ? { name, qty, unit: material?.[1] || "unidad" } : null;
+      }).filter(Boolean);
+      if (!materials.length) {
+        showNotify("Agregá al menos una materia prima con cantidad válida.");
+        return;
+      }
+      const recipes = E.find(entity => entity.id === "recetas").rows;
+      const editingRow = contextEditingRecipeIndex === null ? null : recipes[contextEditingRecipeIndex];
+      const duplicate = recipes.some((row, index) => index !== contextEditingRecipeIndex && normalizeLabel(row[0]) === normalizeLabel(recipeName));
+      if (duplicate) {
+        showNotify("Ya existe una receta con ese nombre.");
+        return;
+      }
+      const previousName = editingRow?.[0];
+      const summary = materials.map(item => `${item.name}: ${item.qty} ${item.unit}`).join("; ");
+      const nextRow = [recipeName, productName, `${recipeYield} u.`, summary];
+      nextRow.recipeYield = recipeYield;
+      nextRow.recipeMaterials = materials;
+      nextRow.recipeSteps = document.getElementById("context-recipe-steps").value.trim();
+      if (editingRow) {
+        recipes[contextEditingRecipeIndex] = Object.assign(nextRow, Object.fromEntries(Object.entries(editingRow).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key) && !["recipeYield", "recipeMaterials", "recipeSteps"].includes(key))));
+        E.find(entity => entity.id === "productos").rows.forEach(row => { if (row[3] === previousName) row[3] = recipeName; });
+      } else recipes.push(nextRow);
+      refreshProductRecipeOptions(recipeName);
+      persistBusinessData();
+      renderContent();
+      closeModal("modal-context");
+      contextEditingRecipeIndex = null;
+      showNotify(editingRow ? "Receta actualizada." : "Receta creada y asociada al producto.");
     }
 
     function showNotify(message) {
@@ -2382,6 +3114,15 @@
       showNotify(`Comprobante ${receipt.paymentStatus.toLowerCase()}.`);
     }
 
+    function toggleProductStatus(rowIndex) {
+      const product = E.find(entity => entity.id === "productos")?.rows[rowIndex];
+      if (!product) return;
+      product[7] = normalizeLabel(product[7] || "Activo") === "activo" ? "Inactivo" : "Activo";
+      persistBusinessData();
+      renderContent();
+      showNotify(`Producto ${product[7].toLowerCase()}.`);
+    }
+
     function toggleClientStatus(rowIndex) {
       const clients = E.find(entity => entity.id === "clientes");
       const row = clients?.rows[rowIndex];
@@ -2406,6 +3147,8 @@
         rerenderGroup("detCV");
         restoreDetailRows("detCV", orderDetails);
       }
+      syncInvoicePreview();
+      syncInvoiceCustomer();
       showNotify(`Factura preparada desde la orden ${order[0]}.`);
     }
 
@@ -2449,7 +3192,7 @@
 
     function setFormSelect(label, value) {
       const group = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
-        .find(item => item.querySelector(".form-label").textContent === label);
+        .find(item => fieldKey(item) === label);
       const select = group?.querySelector("select");
       if (select && [...select.options].some(option => option.value === value)) select.value = value;
     }
@@ -2457,16 +3200,28 @@
     function toggleBudgetClientForm() {
       const panel = document.getElementById("budget-client-form");
       panel.hidden = !panel.hidden;
-      if (!panel.hidden) document.getElementById("budget-client-name").focus();
+      if (!panel.hidden) {
+        verifiedCustomerAddress = "";
+        ["budget-client-street", "budget-client-height", "budget-client-city", "budget-client-postal"].forEach(id => {
+          const field = document.getElementById(id);
+          if (!field.dataset.addressBound) {
+            field.dataset.addressBound = "true";
+            field.addEventListener("input", invalidateAddressVerification);
+          }
+        });
+        document.getElementById("budget-client-name").focus();
+      }
     }
 
     function createBudgetClient() {
       const name = document.getElementById("budget-client-name").value.trim();
       const documentNumber = document.getElementById("budget-client-document").value.trim();
       const type = document.getElementById("budget-client-type").value;
+      const addressFields = ["budget-client-street", "budget-client-height", "budget-client-city", "budget-client-postal"].map(id => document.getElementById(id));
       const clients = E.find(entity => entity.id === "clientes");
-      if (!name || !documentNumber) {
-        showNotify("Ingresá el nombre y documento del cliente.");
+      for (const field of [document.getElementById("budget-client-name"), document.getElementById("budget-client-document"), ...addressFields]) if (!field.reportValidity()) return;
+      if (verifiedCustomerAddress !== addressSnapshot({ street: addressFields[0], height: addressFields[1], city: addressFields[2], postalCode: addressFields[3] })) {
+        showNotify("Verificá el domicilio antes de registrar el cliente.");
         return;
       }
       if (clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(documentNumber))) {
@@ -2477,6 +3232,10 @@
         escapeHTML(name), escapeHTML(documentNumber), escapeHTML(type), "$0",
         "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"
       ]);
+      clients.rows[clients.rows.length - 1].address = {
+        street: addressFields[0].value.trim(), height: addressFields[1].value.trim(),
+        city: addressFields[2].value.trim(), postalCode: addressFields[3].value.trim()
+      };
       const select = document.getElementById("budget-client-select");
       select.add(new Option(name, name, true, true));
       document.getElementById("budget-client-form").hidden = true;
@@ -2489,6 +3248,7 @@
         values: [...row],
         metadata: Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key)))
       }))]));
+      data.productTypes = productTypes;
       localStorage.setItem("pastas-data-v1", JSON.stringify(data));
     }
 
@@ -2518,6 +3278,15 @@
 
     function currencyValueForInput(value) {
       return String(value || "").replace(/[^\d,.-]/g, "").replace(/\./g, "").replace(",", ".");
+    }
+
+    function productPriceValueForInput(value) {
+      const text = String(value || "").trim();
+      return /^-?\d+(?:\.\d+)?$/.test(text) ? text : currencyValueForInput(text);
+    }
+
+    function parseProductPrice(value) {
+      return Number(productPriceValueForInput(value));
     }
 
     function formatAmountDisplay(value) {
@@ -2550,13 +3319,33 @@
       try {
         const data = JSON.parse(localStorage.getItem("pastas-data-v1") || "null");
         if (!data || typeof data !== "object") return;
+        if (Array.isArray(data.productTypes)) {
+          const storedTypes = [...new Set(data.productTypes.filter(type => typeof type === "string").map(type => type.trim()).filter(Boolean))];
+          productTypes = storedTypes.length ? storedTypes : DEFAULT_PRODUCT_TYPES.slice();
+        }
+        let migratedProducts = false;
         E.forEach(entity => {
           if (Array.isArray(data[entity.id])) entity.rows = data[entity.id].map(record => {
             if (Array.isArray(record)) return record;
             if (Array.isArray(record?.values)) return Object.assign(record.values, record.metadata || {});
             return record;
           });
+          if (entity.id === "productos") entity.rows = entity.rows.map(savedRow => {
+            const row = savedRow;
+            if (row.length === 6) {
+              const migrated = Object.assign([row[0], row[1], "unidad", row[2], row[3], row[4], row[5], "Activo"], Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key))));
+              migratedProducts = true;
+              return migrated;
+            }
+            if (row.length === 7) {
+              const migrated = Object.assign([...row, "Activo"], Object.fromEntries(Object.entries(row).filter(([key]) => !/^(0|[1-9]\d*)$/.test(key))));
+              migratedProducts = true;
+              return migrated;
+            }
+            return row;
+          });
         });
+        if (migratedProducts) persistBusinessData();
       } catch (error) {
         localStorage.removeItem("pastas-data-v1");
       }
