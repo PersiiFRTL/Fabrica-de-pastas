@@ -159,6 +159,20 @@
       text-align: left;
     }
 
+    .sidebar-icon {
+      width: 17px;
+      height: 17px;
+      flex: 0 0 17px;
+      color: currentColor;
+      opacity: .78;
+    }
+
+    .sidebar-section-title .sidebar-icon {
+      width: 14px;
+      height: 14px;
+      flex-basis: 14px;
+    }
+
     .nav-item:hover {
       background: rgba(154, 168, 139, 0.18);
       color: var(--cream);
@@ -168,13 +182,6 @@
       background: var(--wheat-light);
       color: var(--brown);
       font-weight: 600;
-    }
-
-    .nav-item .icon {
-      font-size: 15px;
-      width: 18px;
-      text-align: center;
-      flex-shrink: 0;
     }
 
     .main {
@@ -928,12 +935,6 @@
       margin-top: 2px;
     }
 
-    .confirm-icon {
-      font-size: 38px;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
     .confirm-msg {
       text-align: center;
       font-size: 13.5px;
@@ -953,16 +954,6 @@
       margin-bottom: 26px;
       position: relative;
       overflow: hidden;
-    }
-
-    .welcome-banner::after {
-      content: '🍝';
-      position: absolute;
-      right: 28px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 58px;
-      opacity: .15;
     }
 
     .welcome-banner h2 {
@@ -1338,7 +1329,6 @@
           onclick="closeModal('modal-delete')">×</button>
       </div>
       <div class="modal-body">
-        <div class="confirm-icon">🗑️</div>
         <div class="confirm-msg">¿Estás seguro que querés eliminar <strong id="md-name">este registro</strong>?<br>Esta
           acción no se puede deshacer.</div>
       </div>
@@ -1390,10 +1380,48 @@
   <script>
     /* ============ SECCIONES ============ */
     const SECTIONS = [
-      { id: "ventas", label: "Ventas", icon: "🧾" },
-      { id: "produccion", label: "Producción y Mantenimiento", icon: "🍝" },
-      { id: "compras", label: "Compras a Proveedores", icon: "🏭" },
+      { id: "ventas", label: "Ventas", icon: "receipt" },
+      { id: "produccion", label: "Producción y Mantenimiento", icon: "production" },
+      { id: "compras", label: "Compras a Proveedores", icon: "building" },
     ];
+
+    const MENU_ICON_PATHS = {
+      dashboard: '<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="11" width="7" height="10" rx="1"/><rect x="3" y="14" width="8" height="7" rx="1"/>',
+      clients: '<path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M20 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+      employee: '<circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>',
+      document: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>',
+      order: '<path d="M6 7h15l-1.5 9h-12z"/><path d="M6 7 5 3H2M9 20h.01M18 20h.01"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/>',
+      payment: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+      truck: '<path d="M3 6h11v12H3zM14 10h4l3 3v5h-7z"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="17.5" cy="18" r="1.5"/>',
+      return: '<path d="M3 11a9 9 0 1 1 2.6 6.4"/><path d="M3 4v7h7"/>',
+      product: '<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 8 9 5 9-5M3 8v9l9 5 9-5V8M12 13v9"/>',
+      rawMaterial: '<path d="M12 22V8M12 14c-4 0-7-3-7-7 4 0 7 3 7 7ZM12 11c0-4 3-7 7-7 0 4-3 7-7 7ZM12 19c-3 0-5-2-5-5 3 0 5 2 5 5ZM12 17c0-3 2-5 5-5 0 3-2 5-5 5Z"/>',
+      recipe: '<path d="M12 7v14M3 18V5a2 2 0 0 1 2-2h5a2 2 0 0 1 2 2v16a3 3 0 0 0-3-3H3ZM21 18V5a2 2 0 0 0-2-2h-5a2 2 0 0 0-2 2v16a3 3 0 0 1 3-3h6Z"/>',
+      production: '<path d="M4 21V8l5 3V8l5 3V4h6v17zM8 16h2M14 16h2"/><path d="M16 4V2h4v2"/>',
+      machine: '<path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/><path d="m19.4 15 .1.1 1.4 1.1-1.4 2.4-1.7-.6a8 8 0 0 1-1.5.9l-.3 1.8h-2.8l-.3-1.8a8 8 0 0 1-1.5-.9l-1.7.6-1.4-2.4 1.4-1.1a7 7 0 0 1 0-1.8l-1.4-1.1 1.4-2.4 1.7.6a8 8 0 0 1 1.5-.9l.3-1.8h2.8l.3 1.8a8 8 0 0 1 1.5.9l1.7-.6 1.4 2.4-1.4 1.1a7 7 0 0 1 0 1.8Z"/>',
+      maintenance: '<path d="M14.7 6.3a5 5 0 0 0-6.4 6.4L3 18l3 3 5.3-5.3a5 5 0 0 0 6.4-6.4L14 13l-3-3z"/>',
+      spare: '<path d="M12 3 4 7v10l8 4 8-4V7zM4 7l8 4 8-4M12 11v10"/><path d="M8 5l8 4"/>',
+      building: '<path d="M3 21h18M5 21V5l7-3 7 3v16M9 9h1M14 9h1M9 13h1M14 13h1M10 21v-4h4v4"/>',
+      purchaseQuote: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+      purchaseOrder: '<path d="M3 3h2l2.4 12.5A2 2 0 0 0 9.4 17H19M8 7h13l-2 7H9"/><circle cx="10" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>',
+      receipt: '<path d="M4 2v20l4-2 4 2 4-2 4 2V2l-4 2-4-2-4 2zM8 9h8M8 13h8"/>',
+      wallet: '<rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 8h18M16 14h2"/><path d="M7 5V3h10v2"/>',
+      account: '<circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/><path d="M19 8h3M20.5 6.5v3"/>',
+    };
+
+    const ENTITY_MENU_ICONS = {
+      clientes: "clients", cuentaCliente: "account", empleados: "employee", presupuestos: "document",
+      pedidos: "order", comprobantesVenta: "receipt", comprobantesPago: "payment", remitos: "truck",
+      devoluciones: "return", productos: "product", materias: "rawMaterial", recetas: "recipe",
+      ordenesProduccion: "production", maquinas: "machine", mantenimiento: "maintenance", repuestos: "spare",
+      proveedores: "building", presupuestosProv: "purchaseQuote", ordenesCompra: "purchaseOrder",
+      remitosProv: "truck", comprobantesProv: "receipt", ordenesPago: "wallet"
+    };
+
+    function menuIcon(name) {
+      const path = MENU_ICON_PATHS[ENTITY_MENU_ICONS[name] || name] || MENU_ICON_PATHS.document;
+      return `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+    }
 
     const ROLES = [
       { id: "dueno", label: "Administrador / dueño", entities: null },
@@ -1482,7 +1510,7 @@
        necesarias, resueltas con "ref" hacia otra entidad). */
     const E = [
       {
-        id: "cuentaCliente", section: "ventas", icon: "🪪", label: "Crear cuenta", singular: "cuenta de cliente", cls: "CuentaCliente",
+        id: "cuentaCliente", section: "ventas", label: "Crear cuenta", singular: "cuenta de cliente", cls: "CuentaCliente",
         cols: ["Nombre y apellido", "Documento", "Email", "Teléfono", "Tipo de cliente"],
         rows: [],
         fields: [
@@ -1493,7 +1521,7 @@
       },
       // ============ VENTAS ============
       {
-        id: "clientes", section: "ventas", icon: "👥", label: "Clientes", singular: "cliente", cls: "Cliente ⊳ Persona",
+        id: "clientes", section: "ventas", label: "Clientes", singular: "cliente", cls: "Cliente ⊳ Persona",
         cols: ["Cliente", "Documento", "Tipo", "Límite de deuda", "Cta. corriente", "Estado"],
         rows: [
           ["María González", "30.221.884", "Consumidor final", "$0", "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"],
@@ -1515,7 +1543,7 @@
         ]
       },
       {
-        id: "empleados", section: "produccion", icon: "🧑🍳", label: "Empleados", singular: "empleado", cls: "Empleado ⊳ Persona",
+        id: "empleados", section: "produccion", label: "Empleados", singular: "empleado", cls: "Empleado ⊳ Persona",
         cols: ["Empleado", "Cargo", "Turno", "Fecha ingreso", "Estado"],
         rows: [
           ["Carlos Bernal", "Producción", "Mañana", "01/03/2019", "<span class='badge badge-green'>Activo</span>"],
@@ -1530,7 +1558,7 @@
         ]
       },
       {
-        id: "presupuestos", section: "ventas", icon: "📋", label: "Presupuestos", singular: "presupuesto", cls: "Presupuesto",
+        id: "presupuestos", section: "ventas", label: "Presupuestos", singular: "presupuesto", cls: "Presupuesto",
         cols: ["N°", "Cliente", "Validez hasta", "Descuento", "Estado"],
         rows: [
           ["#PR-0208", "Restó La Nonna", "23/09/2026", "5%", "<span class='badge badge-amber'>Pendiente</span>"],
@@ -1546,7 +1574,7 @@
         details: [{ key: "detPresupuesto", cls: "Detalle_Presupuesto", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "pedidos", section: "ventas", icon: "📦", label: "Órdenes de Pedido", singular: "pedido", cls: "OrdenPedido",
+        id: "pedidos", section: "ventas", label: "Órdenes de Pedido", singular: "pedido", cls: "OrdenPedido",
         cols: ["N°", "Cliente", "Presupuesto origen", "Entrega", "Anticipo", "Estado"],
         rows: [
           ["#OP-0892", "María González", "—", "23/09/2026", "—", "<span class='badge badge-green'>Entregado</span>"],
@@ -1567,7 +1595,7 @@
         ]
       },
       {
-        id: "comprobantesVenta", section: "ventas", icon: "🧾", label: "Comprobantes de Venta", singular: "comprobante de venta", cls: "ComprobanteVenta ⊳ Comprobante",
+        id: "comprobantesVenta", section: "ventas", label: "Comprobantes de Venta", singular: "comprobante de venta", cls: "ComprobanteVenta ⊳ Comprobante",
         cols: ["NroCV", "nroPedido", "Cliente", "FechaEmision", "TipoVenta", "total"],
         rows: [
           ["#CV-1103", "#OP-0892", "María González", "23/09/2026", "Minorista", "$5.400"],
@@ -1583,7 +1611,7 @@
         details: [{ key: "detCV", cls: "Detalle_ComprobanteVenta", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number", min: 0.01, step: "0.01" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "comprobantesPago", section: "ventas", icon: "💳", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
+        id: "comprobantesPago", section: "ventas", label: "Comprobantes de Pago", singular: "comprobante de pago", cls: "ComprobantePago ⊳ Comprobante",
         cols: ["N°", "Orden asociada", "Cliente", "Fecha de emisión", "Monto total", "Responsable"],
         rows: [
           Object.assign(["#CP-0410", "#OP-0886", "Restó La Nonna", "22/09/2026", "$38.400", "Lucía Persani"], { paymentLines: [{ orderId: "#OP-0886", amount: 38400, method: "Transferencia" }] }),
@@ -1599,7 +1627,7 @@
         details: []
       },
       {
-        id: "remitos", section: "ventas", icon: "🚚", label: "Remitos", singular: "remito", cls: "Remito",
+        id: "remitos", section: "ventas", label: "Remitos", singular: "remito", cls: "Remito",
         cols: ["IdRemito", "NroPedido", "Estado", "Observaciones"],
         rows: [
           ["#R-0441", "#OP-0886", "<span class='badge badge-amber'>Pendiente</span>", "Entregar en horario de mañana, tocar timbre de servicio."],
@@ -1613,7 +1641,7 @@
         details: [{ key: "detRemito", cls: "Detalle_Remito", ref: "productos", refLabel: "Producto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "devoluciones", section: "ventas", icon: "↩️", label: "Devoluciones", singular: "devolución", cls: "Devolucion",
+        id: "devoluciones", section: "ventas", label: "Devoluciones", singular: "devolución", cls: "Devolucion",
         cols: ["N°", "Fecha retiro", "Tipo pedido", "Producto devuelto", "Estado"],
         rows: [["#DV-0031", "19/09/2026", "Parcial", "Sorrentinos jamón y queso", "<span class='badge badge-amber'>Pendiente</span>"]],
         fields: [
@@ -1627,7 +1655,7 @@
 
       // ============ PRODUCCIÓN Y MANTENIMIENTO ============
       {
-        id: "productos", section: "produccion", icon: "🍝", label: "Productos", singular: "producto", cls: "Producto",
+        id: "productos", section: "produccion", label: "Productos", singular: "producto", cls: "Producto",
         cols: ["Nombre", "Tipo de producto", "Unidad de medida", "Receta", "Precio base", "Stock actual", "¿Congelado?", "Estado"],
         rows: [
           ["Tallarines frescos 500g", "Pasta fresca", "unidad", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>", "Activo"],
@@ -1645,7 +1673,7 @@
         ]
       },
       {
-        id: "materias", section: "produccion", icon: "🌾", label: "Materias Primas", singular: "materia prima", cls: "MateriasPrimas",
+        id: "materias", section: "produccion", label: "Materias Primas", singular: "materia prima", cls: "MateriasPrimas",
         cols: ["nombre", "idUnidad", "stockActual", "stockMinimo", "costoPromedio"],
         rows: [
           ["Harina 000", "kg", "480", "150", "$890"],
@@ -1664,7 +1692,7 @@
         ]
       },
       {
-        id: "recetas", section: "produccion", icon: "📖", label: "Recetas", singular: "receta", cls: "Receta",
+        id: "recetas", section: "produccion", label: "Recetas", singular: "receta", cls: "Receta",
         cols: ["nombre", "idProducto", "rendimiento", "Materia prima (Detalle_Receta)"],
         rows: [
           ["Receta Tallarín clásico", "Tallarines frescos 500g", "20 u.", "Harina 000"],
@@ -1680,7 +1708,7 @@
         details: [{ key: "detReceta", cls: "Detalle_Receta", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }] }]
       },
       {
-        id: "ordenesProduccion", section: "produccion", icon: "🏗️", label: "Órdenes de Producción", singular: "orden de producción", cls: "OrdenProduccion",
+        id: "ordenesProduccion", section: "produccion", label: "Órdenes de Producción", singular: "orden de producción", cls: "OrdenProduccion",
         cols: ["N°", "Fecha de elaboración", "Responsable", "Producto a producir", "Estado"],
         rows: [
           ["#OPR-330", "23/09/2026", "Carlos Bernal", "Tallarines frescos 500g", "<span class='badge badge-amber'>En curso</span>"],
@@ -1696,7 +1724,7 @@
         ]
       },
       {
-        id: "maquinas", section: "produccion", icon: "⚙️", label: "Máquinas", singular: "máquina", cls: "Maquina",
+        id: "maquinas", section: "produccion", label: "Máquinas", singular: "máquina", cls: "Maquina",
         cols: ["nombre", "tipoMaquina", "capacidad", "estado", "ultimoMantenimiento"],
         rows: [
           ["Sobadora N°1", "Laminado", "80 kg/h", "<span class='badge badge-green'>Operativa</span>", "15/09/2026"],
@@ -1708,7 +1736,7 @@
         ]
       },
       {
-        id: "mantenimiento", section: "produccion", icon: "🧰", label: "Órdenes de Mantenimiento", singular: "orden de mantenimiento", cls: "OrdenMantenimiento",
+        id: "mantenimiento", section: "produccion", label: "Órdenes de Mantenimiento", singular: "orden de mantenimiento", cls: "OrdenMantenimiento",
         cols: ["N°", "idMaquina", "fecha", "tipoMantenimiento", "costo", "estado"],
         rows: [
           ["#OM-118", "Envasadora", "20/09/2026", "Correctivo", "$14.500", "<span class='badge badge-green'>Realizado</span>"],
@@ -1723,7 +1751,7 @@
         details: [{ key: "detMant", cls: "Detalle_OrdenMantenimiento", ref: "repuestos", refLabel: "Repuesto", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "repuestos", section: "produccion", icon: "🔩", label: "Repuestos", singular: "repuesto", cls: "Repuesto",
+        id: "repuestos", section: "produccion", label: "Repuestos", singular: "repuesto", cls: "Repuesto",
         cols: ["nombre", "precioPromedio", "StockActual"],
         rows: [["Correa transportadora", "$8.900", "2"], ["Rodillo de acero", "$21.400", "1"]],
         fields: [{ l: "nombre", t: "text", span: 2 }, { l: "precioPromedio", t: "number", min: 0, step: "0.01" }]
@@ -1731,7 +1759,7 @@
 
       // ============ COMPRAS A PROVEEDORES ============
       {
-        id: "proveedores", section: "compras", icon: "🏭", label: "Proveedores", singular: "proveedor", cls: "Provedor ⊳ Persona",
+        id: "proveedores", section: "compras", label: "Proveedores", singular: "proveedor", cls: "Provedor ⊳ Persona",
         cols: ["Proveedor", "cuit", "telProv", "tipo_provedor", "Estado"],
         rows: [
           ["Molino San Martín", "30-54332211-8", "011-4230-9911", "Habitual", "<span class='badge badge-green'>Activo</span>"],
@@ -1745,7 +1773,7 @@
         ]
       },
       {
-        id: "presupuestosProv", section: "compras", icon: "📝", label: "Presupuestos de Proveedor", singular: "presupuesto de proveedor", cls: "PresupuestoProvedor",
+        id: "presupuestosProv", section: "compras", label: "Presupuestos de Proveedor", singular: "presupuesto de proveedor", cls: "PresupuestoProvedor",
         cols: ["N°", "Proveedor", "fecha", "validohasta", "Estado"],
         rows: [["#PP-044", "Molino San Martín", "28/08/2026", "30/09/2026", "<span class='badge badge-amber'>Pendiente</span>"]],
         fields: [
@@ -1756,7 +1784,7 @@
         details: [{ key: "detPP", cls: "Detalle_PresupuestoProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "ordenesCompra", section: "compras", icon: "📑", label: "Órdenes de Compra", singular: "orden de compra", cls: "OrdenCompraProvedor",
+        id: "ordenesCompra", section: "compras", label: "Órdenes de Compra", singular: "orden de compra", cls: "OrdenCompraProvedor",
         cols: ["N°", "idPresupuestoProv", "fechaOrden", "fechaEsperada", "Estado"],
         rows: [
           ["#OC-0219", "#PP-044", "01/09/2026", "15/09/2026", "<span class='badge badge-amber'>Pendiente</span>"],
@@ -1770,7 +1798,7 @@
         details: [{ key: "detOC", cls: "Detalle_CompraProv", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "remitosProv", section: "compras", icon: "🚛", label: "Remitos de Proveedor", singular: "remito de proveedor", cls: "Remito Provedor ⊳ Comprobante Provedor",
+        id: "remitosProv", section: "compras", label: "Remitos de Proveedor", singular: "remito de proveedor", cls: "Remito Provedor ⊳ Comprobante Provedor",
         cols: ["IdRemitoProv", "idOrdenCompraProv", "Proveedor", "fecha", "estado"],
         rows: [["#RP-091", "#OC-0211", "Avícola del Sur", "19/09/2026", "<span class='badge badge-green'>Recibido</span>"]],
         fields: [
@@ -1781,7 +1809,7 @@
         details: [{ key: "detRP", cls: "Detalle Remito Provedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "comprobantesProv", section: "compras", icon: "🧾", label: "Comprobantes de Venta de Proveedor", singular: "comprobante de venta de proveedor", cls: "Comprobante de Venta Provedor ⊳ Comprobante Provedor",
+        id: "comprobantesProv", section: "compras", label: "Comprobantes de Venta de Proveedor", singular: "comprobante de venta de proveedor", cls: "Comprobante de Venta Provedor ⊳ Comprobante Provedor",
         cols: ["idCompVentaProv", "Proveedor", "fecha", "tipo", "total", "Estado"],
         rows: [["#CVP-155", "Avícola del Sur", "19/09/2026", "Cuenta corriente", "$68.200", "<span class='badge badge-green'>Confirmado</span>"]],
         fields: [
@@ -1792,7 +1820,7 @@
         details: [{ key: "detCVP", cls: "Detalle ComprobanteVentaProvedor", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }, { l: "PrecioUnitario", t: "number", min: 0, step: "0.01" }] }]
       },
       {
-        id: "ordenesPago", section: "compras", icon: "💵", label: "Órdenes de Pago", singular: "orden de pago", cls: "OrdenPago",
+        id: "ordenesPago", section: "compras", label: "Órdenes de Pago", singular: "orden de pago", cls: "OrdenPago",
         cols: ["N°", "idOrdenCompraProv (Detalle_OrdenPago)", "idFormaPago", "Fecha", "montoPagado", "estado"],
         rows: [["#PGP-070", "#OC-0211", "Transferencia", "20/09/2026", "$68.200", "<span class='badge badge-green'>Pagada</span>"]],
         fields: [
@@ -1831,14 +1859,14 @@
       const role = ROLES.find(item => item.id === currentRole);
       let h = `<div class="sidebar-logo"><h1>Fábrica de Pastas</h1><span>Sistema de Gestión</span></div>
   <div class="sidebar-home">
-    <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')"><span class="icon">🏠</span> Dashboard</button>
+    <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')">${menuIcon("dashboard")}Dashboard</button>
   </div>`;
       SECTIONS.forEach(s => {
         const sectionEntities = E.filter(e => e.section === s.id && e.id !== "cuentaCliente" && roleCanAccess(e.id));
         if (!sectionEntities.length) return;
-        h += `<details class="sidebar-section"><summary class="sidebar-section-title">${s.icon} ${s.label}</summary>`;
+        h += `<details class="sidebar-section"><summary class="sidebar-section-title">${menuIcon(s.icon)}${s.label}</summary>`;
         sectionEntities.forEach(e => {
-          h += `<button class="nav-item" data-screen="${e.id}" onclick="showScreen('${e.id}',this,'${s.label}')"><span class="icon">${e.icon}</span> ${e.label}</button>`;
+          h += `<button class="nav-item" data-screen="${e.id}" onclick="showScreen('${e.id}',this,'${s.label}')">${menuIcon(e.id)}${e.label}</button>`;
         });
         h += `</details>`;
       });
@@ -1854,7 +1882,7 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-title">${e.icon} ${e.label}</div>
+          <div class="card-title">${e.label}</div>
         </div>
         <div class="card-actions">
           <input class="search-input" placeholder="Buscar...">
@@ -1896,7 +1924,7 @@
           <div class="welcome-banner"><h2>${dashboard.heading}</h2><p>${dashboard.description}</p></div>
           <div class="stats-row">${cards}</div>
           <div class="dash-grid"><div class="dash-card"><div class="dash-card-title">Accesos de ${role.label.toLowerCase()}</div>
-            ${links.map(entity => `<div class="activity-item"><div class="activity-dot" style="background:var(--wheat)"></div><button class="nav-item" style="color:var(--text);padding:4px 0;width:auto" onclick="showScreen('${entity.id}',document.querySelector('[data-screen=\"${entity.id}\"]'),'${SECTIONS.find(section => section.id === entity.section)?.label || role.label}')"><span class="icon">${entity.icon}</span>${entity.label}</button></div>`).join("")}
+            ${links.map(entity => `<div class="activity-item"><div class="activity-dot" style="background:var(--wheat)"></div><button class="nav-item" style="color:var(--text);padding:4px 0;width:auto" onclick="showScreen('${entity.id}',document.querySelector('[data-screen=\"${entity.id}\"]'),'${SECTIONS.find(section => section.id === entity.section)?.label || role.label}')">${menuIcon(entity.id)}${entity.label}</button></div>`).join("")}
           </div><div class="dash-card"><div class="dash-card-title">Perfil activo</div><div class="activity-item"><div><div class="activity-text"><strong>${role.label}</strong></div><div class="activity-time">La navegación muestra las herramientas asignadas a este perfil.</div></div></div></div></div>
         </div>`;
       }
@@ -1946,9 +1974,9 @@
     }
 
     function formatCellValue(entity, row, columnIndex) {
-      if (entity.id === "productos" && columnIndex === 5) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
-      if (entity.id === "repuestos" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
-      if (entity.id === "materias" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">🔒 ${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "productos" && columnIndex === 5) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "repuestos" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
+      if (entity.id === "materias" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
       if (entity.id === "productos" && columnIndex === 7) {
         const status = row[7] || "Activo";
         return `<span class='badge ${normalizeLabel(status) === "activo" ? "badge-green" : "badge-gray"}'>${escapeHTML(status)}</span>`;
@@ -2248,7 +2276,7 @@
     function openView(entityId, rowIdx) {
       const e = E.find(x => x.id === entityId);
       const row = e.rows[rowIdx];
-      document.getElementById("mv-title").textContent = `${e.icon} ${row[0].replace(/<[^>]+>/g, "")}`;
+      document.getElementById("mv-title").textContent = row[0].replace(/<[^>]+>/g, "");
       document.getElementById("mv-class").textContent = "";
       let h = `<div class="view-grid">`;
       e.cols.forEach((c, i) => {
