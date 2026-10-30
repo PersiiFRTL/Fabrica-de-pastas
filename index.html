@@ -14,8 +14,8 @@
       --cream: #F8F9F5;
       --cream-dark: #E2E6DE;
       --wheat: #9AA88B;
-      --wheat-light: #F6E79C;
-      --butter: #F6E79C;
+      --wheat-light: #E8E2C7;
+      --butter: #E8E2C7;
       --wheat-dark: #2D3A2F;
       --brown: #2D3A2F;
       --brown-light: #9AA88B;
@@ -808,14 +808,14 @@
     .client-address-card-title { font-size:11px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; color:var(--brown); }
     .client-address-value { color:var(--text); font-weight:500; line-height:1.4; }
     .client-address-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:2px; }
-    .client-address-inline-editor { display:grid; grid-template-columns:1.4fr 0.8fr 1.2fr 0.9fr; gap:10px; padding:12px; margin-top:4px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); box-sizing:border-box; width:100%; }
+    .client-address-inline-editor { display:grid; grid-template-columns:.9fr 1.2fr 1.2fr 1.4fr .8fr; gap:10px; padding:12px; margin-top:4px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); box-sizing:border-box; width:100%; }
     .client-address-inline-field { display:flex; flex-direction:column; gap:4px; min-width:0; }
     .client-address-inline-field label { font-size:11px; font-weight:600; color:var(--text-muted); }
     .client-address-inline-editor[hidden] { display:none; }
     .client-address-inline-editor .span2 { grid-column:1 / -1; }
     .client-address-row-item { padding:12px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); display:grid; gap:8px; }
     .client-address-row-head { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:600; color:var(--brown); }
-    .client-address-row-grid { display:grid; grid-template-columns:1.4fr 0.8fr 1.2fr 0.9fr; gap:8px; }
+    .client-address-row-grid { display:grid; grid-template-columns:.9fr 1.2fr 1.2fr 1.4fr .8fr; gap:8px; }
     @media (max-width: 720px) { .client-address-row-grid, .client-address-inline-editor { grid-template-columns:1fr; } }
     #modal-view .modal.voucher-modal { width: 820px; max-width: 96vw; }
     .afip-doc { background: #fff; color: #111; font-family: Arial, Helvetica, sans-serif; border: 1.5px solid #111; padding: 0; font-size: 12px; line-height: 1.45; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
@@ -1105,6 +1105,7 @@
       color: var(--text);
       background: var(--cream);
     }
+    .login-card select { padding:10px 12px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); font:14px 'DM Sans',sans-serif; color:var(--text); background:var(--cream); }
 
     .login-card input:focus {
       outline: none;
@@ -1143,6 +1144,17 @@
     .register-panel.show {
       display: block;
     }
+
+    .login-card.register-mode #login-form { display:none; }
+
+    #register-form.register-form-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px 14px; align-items:end; }
+    #register-form.register-form-grid label { display:grid; gap:5px; font-size:12px; color:var(--text-muted); font-weight:600; }
+    #register-form.register-form-grid input, #register-form.register-form-grid select { width:100%; min-width:0; }
+    #register-form .register-action { grid-column:3; display:flex; justify-content:flex-end; align-items:center; gap:10px; }
+    .login-card.register-wide { width:min(920px,calc(100vw - 32px)); max-height:calc(100vh - 32px); overflow:auto; }
+    .login-overlay.checkout-register #toggle-register-btn { display:none; }
+    @media(max-width:700px) { #register-form.register-form-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } #register-form .register-action { grid-column:2; } }
+    @media(max-width:480px) { #register-form.register-form-grid { grid-template-columns:1fr; } #register-form .register-action { grid-column:1; } }
 
     @media (max-width:900px) {
       body {
@@ -1325,6 +1337,7 @@
         <label class="role-switch" id="logged-user-indicator" hidden><span>Usuario</span><strong id="logged-user-name"></strong></label>
         <label class="role-switch" id="customer-account" hidden><span>Cuenta</span><strong id="customer-name"></strong></label>
         <span style="font-size:12.5px;color:var(--text-muted)">Hoy: <strong id="today-date"></strong></span>
+        <button class="btn btn-ghost btn-sm" id="account-entry-btn" type="button" onclick="openAccountAccess()">Ingresar</button>
         <button class="btn btn-ghost btn-sm" id="logout-btn" type="button" onclick="logout()">Cerrar sesión</button>
       </div>
     </div>
@@ -1395,11 +1408,14 @@
   </div>
 
   <div class="notify" id="notify"></div>
+  <datalist id="customer-postal-options"></datalist>
+  <datalist id="customer-locality-options"></datalist>
+  <datalist id="customer-street-options"></datalist>
 
   <div class="login-overlay" id="login-overlay">
     <div class="login-card">
       <div class="login-brand">Fábrica de Pastas</div>
-      <h2>Ingresá al sistema</h2>
+      <h2 id="login-heading">Ingresá al sistema</h2>
       <form id="login-form">
         <label>
           Usuario
@@ -1410,23 +1426,32 @@
           <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
         </label>
         <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%">Ingresar</button>
-        <div class="hint">Usuarios de prueba: dueno / cliente / vendedor / produccion<br>Contraseñas: dueno123 / cliente123 / vendedor123 / produccion123</div>
+        <div class="hint">Ingresá con tu cuenta o completá el registro para comenzar a comprar.</div>
       </form>
 
       <button type="button" class="login-toggle" id="toggle-register-btn">Crear nuevo usuario</button>
 
       <div class="register-panel" id="register-panel">
         <h2 style="margin-bottom:12px; font-size:18px;">Nuevo usuario</h2>
-        <form id="register-form">
-          <label>
-            Usuario
-            <input type="text" id="register-username" placeholder="nuevo usuario" required>
-          </label>
-          <label>
-            Contraseña
-            <input type="password" id="register-password" placeholder="••••••••" required>
-          </label>
-          <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%">Crear usuario</button>
+        <form id="register-form" class="register-form-grid">
+          <label>Nombre<input type="text" id="register-first-name" autocomplete="given-name" required></label>
+          <label>Apellido<input type="text" id="register-last-name" autocomplete="family-name" required></label>
+          <label>Tipo de documento<select id="register-document-type" required><option value="DNI">DNI</option><option value="CUIT">CUIT</option><option value="CUIL">CUIL</option></select></label>
+          <label>Número de documento<input type="text" id="register-document" autocomplete="off" required></label>
+          <label>Teléfono<input type="tel" id="register-phone" autocomplete="tel" required></label>
+          <label>Correo electrónico<input type="email" id="register-email" autocomplete="email" required></label>
+          <label>Condición frente al IVA<select id="register-iva" required><option>Consumidor Final</option><option>Responsable Inscripto</option><option>Monotributo</option><option>Exento</option></select></label>
+          <label>Tipo de cliente<select id="register-customer-type" required><option>Particular</option><option>Restaurante</option><option>Hotel</option><option>Comercio</option></select></label>
+          <label>Código postal<input type="text" id="register-postal" autocomplete="postal-code" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" required></label>
+          <label>Provincia<select id="register-province" autocomplete="address-level1" required></select></label>
+          <label>Localidad<input type="text" id="register-city" list="register-locality-options" autocomplete="address-level2" required></label>
+          <label>Calle<input type="text" id="register-street" list="register-street-options" autocomplete="address-line1" required></label>
+          <label>Altura<input type="number" id="register-height" min="1" max="99999" step="1" autocomplete="address-line2" required></label>
+          <label>Usuario<input type="text" id="register-username" autocomplete="username" required></label>
+          <label>Contraseña<input type="password" id="register-password" minlength="8" autocomplete="new-password" required></label>
+          <div class="register-action"><button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button><button type="button" class="btn btn-ghost btn-sm" id="checkout-cancel-btn" onclick="cancelCheckoutAccess()" hidden>Volver al catálogo</button><button type="submit" class="btn btn-primary">Crear cuenta</button></div>
+          <div class="address-verify-status" data-address-status style="grid-column:1/-1">Comprobá el domicilio con el servicio oficial de Argentina.</div>
+          <datalist id="register-locality-options"></datalist><datalist id="register-street-options"></datalist>
         </form>
       </div>
     </div>
@@ -1438,6 +1463,7 @@
       { id: "ventas", label: "Ventas", icon: "receipt" },
       { id: "produccion", label: "Producción y Mantenimiento", icon: "production" },
       { id: "compras", label: "Compras a Proveedores", icon: "building" },
+      { id: "geografia", label: "Datos geográficos", icon: "map" },
     ];
 
     const MENU_ICON_PATHS = {
@@ -1462,6 +1488,7 @@
       receipt: '<path d="M4 2v20l4-2 4 2 4-2 4 2V2l-4 2-4-2-4 2zM8 9h8M8 13h8"/>',
       wallet: '<rect x="3" y="5" width="18" height="15" rx="2"/><path d="M3 8h18M16 14h2"/><path d="M7 5V3h10v2"/>',
       account: '<circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/><path d="M19 8h3M20.5 6.5v3"/>',
+      map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',
     };
 
     const ENTITY_MENU_ICONS = {
@@ -1470,7 +1497,8 @@
       devoluciones: "return", productos: "product", materias: "rawMaterial", recetas: "recipe",
       ordenesProduccion: "production", maquinas: "machine", mantenimiento: "maintenance", repuestos: "spare",
       proveedores: "building", presupuestosProv: "purchaseQuote", ordenesCompra: "purchaseOrder",
-      remitosProv: "truck", comprobantesProv: "receipt", ordenesPago: "wallet"
+      remitosProv: "truck", comprobantesProv: "receipt", ordenesPago: "wallet",
+      provincias: "map", localidades: "map", calles: "document"
     };
 
     function menuIcon(name) {
@@ -1479,15 +1507,16 @@
     }
 
     const ROLES = [
+      { id: "visitante", label: "Visitante", entities: ["productos"] },
       { id: "dueno", label: "Administrador / dueño", entities: null },
-      { id: "cliente", label: "Cliente", entities: ["presupuestos", "pedidos"] },
+      { id: "cliente", label: "Cliente", entities: ["productos", "presupuestos", "pedidos"] },
       { id: "vendedor", label: "Vendedor", entities: ["presupuestos", "pedidos", "remitos", "comprobantesVenta", "comprobantesPago", "devoluciones"] },
       { id: "produccion", label: "Encargado de producción", entities: ["empleados", "ordenesProduccion", "recetas", "mantenimiento"] },
     ];
 
     const DEFAULT_LOGIN_USERS = [
       { username: "dueno", password: "dueno123", role: "dueno" },
-      { username: "cliente", password: "cliente123", role: "cliente" },
+      { username: "cliente", password: "cliente123", role: "cliente", customerDocument: "30.221.884" },
       { username: "vendedor", password: "vendedor123", role: "vendedor" },
       { username: "produccion", password: "produccion123", role: "produccion" },
     ];
@@ -1528,6 +1557,11 @@
     let contextEditingRecipeIndex = null;
 
     const DASHBOARDS = {
+      visitante: {
+        heading: "Catálogo de la fábrica",
+        description: "Explorá nuestros productos y precios. Para comprar, agregá productos y completá tus datos al finalizar.",
+        stats: [], links: ["productos"]
+      },
       cliente: {
         heading: "Tu espacio de cliente",
         description: "Gestioná tus datos y seguí tus pedidos y presupuestos.",
@@ -1548,10 +1582,13 @@
       },
     };
 
-    let currentRole = "dueno";
+    let currentRole = "visitante";
     let currentCustomer = "María González";
     let currentCustomerDocument = "30.221.884";
     let currentUser = null;
+    let shoppingCart = [];
+    let checkoutPending = false;
+    let accountAccessForCheckout = false;
 
     function roleCanAccess(entityId) {
       const role = ROLES.find(item => item.id === currentRole);
@@ -1884,9 +1921,27 @@
         ],
         details: [{ key: "detOPpago", cls: "Detalle_OrdenPago", ref: "ordenesCompra", refLabel: "Orden de compra cancelada", extra: [{ l: "MontoPagado", t: "text" }] }]
       },
+      {
+        id: "provincias", section: "geografia", label: "Provincias", singular: "provincia", cls: "Provincia",
+        cols: ["Provincia", "Código", "Estado"], rows: [
+          ["Buenos Aires", "AR-B", "Activa"], ["Catamarca", "AR-K", "Activa"], ["Chaco", "AR-H", "Activa"], ["Chubut", "AR-U", "Activa"], ["Ciudad Autónoma de Buenos Aires", "AR-C", "Activa"], ["Córdoba", "AR-X", "Activa"], ["Corrientes", "AR-W", "Activa"], ["Entre Ríos", "AR-E", "Activa"], ["Formosa", "AR-P", "Activa"], ["Jujuy", "AR-Y", "Activa"], ["La Pampa", "AR-L", "Activa"], ["La Rioja", "AR-F", "Activa"], ["Mendoza", "AR-M", "Activa"], ["Misiones", "AR-N", "Activa"], ["Neuquén", "AR-Q", "Activa"], ["Río Negro", "AR-R", "Activa"], ["Salta", "AR-A", "Activa"], ["San Juan", "AR-J", "Activa"], ["San Luis", "AR-D", "Activa"], ["Santa Cruz", "AR-Z", "Activa"], ["Santa Fe", "AR-S", "Activa"], ["Santiago del Estero", "AR-G", "Activa"], ["Tierra del Fuego, Antártida e Islas del Atlántico Sur", "AR-V", "Activa"], ["Tucumán", "AR-T", "Activa"]
+        ], fields: [{ l: "Provincia", t: "text", required: true }, { l: "Código", t: "text" }, { l: "Estado", t: "select", o: ["Activa", "Inactiva"] }]
+      },
+      {
+        id: "localidades", section: "geografia", label: "Localidades", singular: "localidad", cls: "Localidad",
+        cols: ["Localidad", "Provincia", "Código postal", "Estado"], rows: [
+          ["Córdoba", "Córdoba", "5000", "Activa"], ["La Plata", "Buenos Aires", "1900", "Activa"], ["Lanús", "Buenos Aires", "1824", "Activa"], ["Mar del Plata", "Buenos Aires", "7600", "Activa"], ["Morón", "Buenos Aires", "1708", "Activa"], ["Palermo", "Ciudad Autónoma de Buenos Aires", "1425", "Activa"], ["Ramos Mejía", "Buenos Aires", "1704", "Activa"], ["Rosario", "Santa Fe", "2000", "Activa"], ["San Isidro", "Buenos Aires", "1642", "Activa"], ["San Miguel de Tucumán", "Tucumán", "4000", "Activa"]
+        ], fields: [{ l: "Localidad", t: "text", required: true }, { l: "Provincia", t: "text" }, { l: "Código postal", t: "text" }, { l: "Estado", t: "select", o: ["Activa", "Inactiva"] }]
+      },
+      {
+        id: "calles", section: "geografia", label: "Calles", singular: "calle", cls: "Calle",
+        cols: ["Calle", "Localidad", "Provincia", "Estado"], rows: [
+          ["9 de Julio", "Lanús", "Buenos Aires", "Activa"], ["Avenida Colón", "Córdoba", "Córdoba", "Activa"], ["Avenida de Mayo", "Ramos Mejía", "Buenos Aires", "Activa"], ["Avenida Rivadavia", "Morón", "Buenos Aires", "Activa"], ["Avenida Santa Fe", "Palermo", "Ciudad Autónoma de Buenos Aires", "Activa"], ["Belgrano", "San Isidro", "Buenos Aires", "Activa"], ["San Martín", "San Isidro", "Buenos Aires", "Activa"], ["Sarmiento", "Rosario", "Santa Fe", "Activa"]
+        ], fields: [{ l: "Calle", t: "text", required: true }, { l: "Localidad", t: "text" }, { l: "Provincia", t: "text" }, { l: "Estado", t: "select", o: ["Activa", "Inactiva"] }]
+      },
     ];
 
-    // Configurar con la URL de una instancia propia de Nominatim (sin la ruta /search).
+    // Las direcciones se contrastan con el servicio oficial de georreferenciación.
     let verifiedCustomerAddress = "";
     let lastAddressCheckAt = 0;
     let addressCandidates = [];
@@ -1899,15 +1954,15 @@
 
     const DEFAULT_CLIENT_ADDRESSES = {
       "María González": [
-        { street: "San Martín", height: "450", city: "Morón", postalCode: "1708" },
-        { street: "Av. Rivadavia", height: "18200", city: "Morón", postalCode: "1708" }
+        { street: "San Martín", height: "450", city: "Morón", province: "Buenos Aires", postalCode: "1708" },
+        { street: "Av. Rivadavia", height: "18200", city: "Morón", province: "Buenos Aires", postalCode: "1708" }
       ],
       "Restó La Nonna": [
-        { street: "Belgrano", height: "320", city: "Ramos Mejía", postalCode: "1704" },
-        { street: "Av. de Mayo", height: "740", city: "Ramos Mejía", postalCode: "1704" }
+        { street: "Belgrano", height: "320", city: "Ramos Mejía", province: "Buenos Aires", postalCode: "1704" },
+        { street: "Av. de Mayo", height: "740", city: "Ramos Mejía", province: "Buenos Aires", postalCode: "1704" }
       ],
       "Hotel Belgrano": [
-        { street: "9 de Julio", height: "1150", city: "Lanús", postalCode: "1824" }
+        { street: "9 de Julio", height: "1150", city: "Lanús", province: "Buenos Aires", postalCode: "1824" }
       ]
     };
 
@@ -1919,12 +1974,14 @@
       const street = String(addr.street || "").trim();
       const height = String(addr.height || "").trim();
       const city = String(addr.city || "").trim();
+      const province = String(addr.province || "").trim();
       const postalCode = String(addr.postalCode || "").trim();
       if (!street && !city && !postalCode) return "";
       const line1 = [street, height].filter(Boolean).join(" ");
-      const line2 = city ? (line1 ? `, ${city}` : city) : "";
+      const line2 = [city, province].filter(Boolean).join(", ");
+      const location = line2 ? (line1 ? `, ${line2}` : line2) : "";
       const cp = postalCode ? ` · CP ${postalCode}` : "";
-      return `${line1 || "—"}${line2}${cp}`;
+      return `${line1 || "—"}${location}${cp}`;
     }
 
     function getClientAddresses(clientRow) {
@@ -1982,9 +2039,10 @@
       const street = escapeHTML(String(addr.street || ""));
       const height = escapeHTML(String(addr.height || ""));
       const city = escapeHTML(String(addr.city || ""));
+      const province = escapeHTML(String(addr.province || ""));
       const postalCode = escapeHTML(String(addr.postalCode || ""));
-      const isSaved = Boolean(street && height && city && postalCode);
-      const snapshot = [addr.street, addr.height, addr.city, addr.postalCode].map(v => normalizeLabel(String(v || ""))).join("|");
+      const isSaved = Boolean(street && height && city && province && postalCode);
+      const snapshot = addressSnapshot({ street: { value: addr.street }, height: { value: addr.height }, city: { value: addr.city }, province: { value: addr.province }, postalCode: { value: addr.postalCode } });
       return `<div class="client-address-row-item" data-verified-snapshot="${isSaved ? escapeHTML(snapshot) : ""}">
         <div class="client-address-row-head">
           <span>Domicilio ${index + 1}${index === 0 ? " (Principal)" : ""}</span>
@@ -1992,20 +2050,24 @@
         </div>
         <div class="client-address-row-grid">
           <div class="detail-field">
+            <label>Código postal</label>
+            <input class="form-input" data-addr-field="postalCode" type="text" required maxlength="8" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" list="customer-postal-options" placeholder="1234 o B1234ABC" value="${postalCode}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+          <div class="detail-field">
+            <label>Provincia</label>
+            <select class="form-select" data-addr-field="province" required onchange="invalidateRowAddressVerification(this)"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option${row[0] === addr.province ? " selected" : ""}>${escapeHTML(row[0])}</option>`).join("")}</select>
+          </div>
+          <div class="detail-field">
+            <label>Localidad</label>
+            <input class="form-input" data-addr-field="city" type="text" required maxlength="80" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}" list="customer-locality-options" placeholder="Localidad" value="${city}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+          <div class="detail-field">
             <label>Calle</label>
-            <input class="form-input" data-addr-field="street" type="text" required maxlength="100" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}" placeholder="Ej.: San Martín" value="${street}" oninput="invalidateRowAddressVerification(this)">
+            <input class="form-input" data-addr-field="street" type="text" required maxlength="100" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}" list="customer-street-options" placeholder="Ej.: San Martín" value="${street}" oninput="invalidateRowAddressVerification(this)">
           </div>
           <div class="detail-field">
             <label>Altura</label>
             <input class="form-input" data-addr-field="height" type="number" required min="1" max="99999" step="1" placeholder="Número" value="${height}" oninput="invalidateRowAddressVerification(this)">
-          </div>
-          <div class="detail-field">
-            <label>Localidad</label>
-            <input class="form-input" data-addr-field="city" type="text" required maxlength="80" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}" placeholder="Localidad" value="${city}" oninput="invalidateRowAddressVerification(this)">
-          </div>
-          <div class="detail-field">
-            <label>Código postal</label>
-            <input class="form-input" data-addr-field="postalCode" type="text" required maxlength="8" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" value="${postalCode}" oninput="invalidateRowAddressVerification(this)">
           </div>
         </div>
         <div class="address-verify-tools">
@@ -2030,6 +2092,7 @@
         street: item.querySelector('[data-addr-field="street"]')?.value.trim() || "",
         height: item.querySelector('[data-addr-field="height"]')?.value.trim() || "",
         city: item.querySelector('[data-addr-field="city"]')?.value.trim() || "",
+        province: item.querySelector('[data-addr-field="province"]')?.value.trim() || "",
         postalCode: item.querySelector('[data-addr-field="postalCode"]')?.value.trim() || "",
       }));
     }
@@ -2118,14 +2181,17 @@
         </div>
         ${selectorHtml}
         <div id="inline-client-address-editor" class="client-address-inline-editor" hidden>
-          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><input class="form-input" id="inline-addr-street" placeholder="Ej.: San Martín"></div>
-          <div class="client-address-inline-field"><label for="inline-addr-height">Altura</label><input class="form-input" id="inline-addr-height" type="number" min="1" max="99999" step="1" placeholder="Ej.: 450"></div>
-          <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><input class="form-input" id="inline-addr-city" placeholder="Ej.: Morón"></div>
-          <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" placeholder="Ej.: 1708"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" list="customer-postal-options" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" required placeholder="Ej.: 1708" oninput="invalidateAddressVerification()"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-province">Provincia</label><select class="form-select" id="inline-addr-province" required onchange="invalidateAddressVerification()"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option>${escapeHTML(row[0])}</option>`).join("")}</select></div>
+          <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><input class="form-input" id="inline-addr-city" list="customer-locality-options" required placeholder="Ej.: Morón" oninput="invalidateAddressVerification()"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><input class="form-input" id="inline-addr-street" list="customer-street-options" required placeholder="Ej.: San Martín" oninput="invalidateAddressVerification()"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-height">Altura</label><input class="form-input" id="inline-addr-height" type="number" min="1" max="99999" step="1" required placeholder="Ej.: 450" oninput="invalidateAddressVerification()"></div>
           <div class="span2" style="display:flex;gap:6px;justify-content:flex-end;margin-top:2px;">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button>
             <button type="button" class="btn btn-ghost btn-sm" onclick="closeInlineClientAddressEditor()">Cancelar</button>
             <button type="button" class="btn btn-primary btn-sm" onclick="saveInlineClientAddress()">Guardar domicilio</button>
           </div>
+          <div class="address-verify-tools span2"><span class="address-verify-status" data-address-status>Comprobá el domicilio con el servicio oficial de Argentina.</span></div>
         </div>`;
       container.innerHTML = currentFormEntity === "comprobantesVenta" ? innerHtml : `<div class="client-address-card">${innerHtml}</div>`;
     }
@@ -2152,7 +2218,11 @@
       document.getElementById("inline-addr-street").value = current.street || "";
       document.getElementById("inline-addr-height").value = current.height || "";
       document.getElementById("inline-addr-city").value = current.city || "";
+      document.getElementById("inline-addr-province").value = current.province || "";
       document.getElementById("inline-addr-postal").value = current.postalCode || "";
+      verifiedCustomerAddress = "";
+      editor.querySelector("[data-address-status]").textContent = "Comprobá el domicilio con el servicio oficial de Argentina.";
+      editor.querySelector("[data-address-status]").dataset.state = "";
       editor.hidden = false;
       document.getElementById("inline-addr-street").focus();
     }
@@ -2166,15 +2236,18 @@
     function saveInlineClientAddress() {
       const client = findClientByName(getActiveFormClientSelect()?.value || "");
       if (!client) return;
+      const inlineAddress = readCustomerAddressFields(document.getElementById("inline-client-address-editor"));
+      if (verifiedCustomerAddress !== addressSnapshot(inlineAddress)) { showNotify("Verificá el domicilio antes de guardarlo."); return; }
       const street = document.getElementById("inline-addr-street")?.value.trim() || "";
       const height = document.getElementById("inline-addr-height")?.value.trim() || "";
       const city = document.getElementById("inline-addr-city")?.value.trim() || "";
+      const province = document.getElementById("inline-addr-province")?.value.trim() || "";
       const postalCode = document.getElementById("inline-addr-postal")?.value.trim() || "";
-      if (!street || !height || !city || !postalCode) {
-        showNotify("Completá calle, altura, localidad y código postal del domicilio.");
+      if (!street || !height || !city || !province || !postalCode) {
+        showNotify("Completá código postal, provincia, localidad, calle y altura del domicilio.");
         return;
       }
-      const nextAddr = { street, height, city, postalCode };
+      const nextAddr = { street, height, city, province, postalCode };
       const addresses = getClientAddresses(client).map(a => ({ ...a }));
       if (currentInlineAddressEditMode === "edit" && addresses[currentSelectedAddressIndex]) {
         addresses[currentSelectedAddressIndex] = nextAddr;
@@ -2272,8 +2345,14 @@
   <div class="sidebar-home">
     <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this,'${role.label}')">${menuIcon("dashboard")}Dashboard</button>
   </div>`;
+      if (currentRole === "visitante") {
+        h += `<div class="sidebar-section"><button class="nav-item" data-screen="productos" onclick="showScreen('productos',this,'Catálogo')">${menuIcon("productos")}Catálogo</button></div>`;
+        el.innerHTML = h;
+        return;
+      }
+      if (currentRole === "cliente") h += `<div class="sidebar-section"><button class="nav-item" data-screen="productos" onclick="showScreen('productos',this,'Catálogo')">${menuIcon("productos")}Catálogo</button></div>`;
       SECTIONS.forEach(s => {
-        const sectionEntities = E.filter(e => e.section === s.id && e.id !== "cuentaCliente" && roleCanAccess(e.id));
+        const sectionEntities = E.filter(e => e.section === s.id && e.id !== "cuentaCliente" && !(currentRole === "cliente" && e.id === "productos") && roleCanAccess(e.id));
         if (!sectionEntities.length) return;
         h += `<details class="sidebar-section"><summary class="sidebar-section-title">${menuIcon(s.icon)}${s.label}</summary>`;
         sectionEntities.forEach(e => {
@@ -2286,6 +2365,7 @@
 
     /* ============ RENDER SCREENS ============ */
     function entityScreen(e) {
+      if (e.id === "productos" && ["visitante", "cliente"].includes(currentRole)) return publicCatalogScreen(e);
       const rows = visibleRows(e);
       const customerViewOnly = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(e.id);
       const paymentReceiptViewOnly = e.id === "comprobantesPago";
@@ -2297,7 +2377,7 @@
         </div>
         <div class="card-actions">
           <input class="search-input" placeholder="Buscar...">
-          ${paymentReceiptViewOnly ? "" : `<button class="btn btn-primary" onclick="openForm('${e.id}')">+ Nuevo</button>`}
+          ${paymentReceiptViewOnly || (currentRole === "cliente" && e.id === "pedidos") ? "" : `<button class="btn btn-primary" onclick="openForm('${e.id}')">+ Nuevo</button>`}
         </div>
       </div>
       <table>
@@ -2317,6 +2397,50 @@
       </table>
     </div>
   </div>`;
+    }
+
+    function publicCatalogScreen(entity) {
+      const items = visibleRows(entity);
+      const count = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
+      return `<div id="screen-productos" class="screen"><div class="card"><div class="card-header"><div><div class="card-title">Catálogo</div><div>Productos disponibles y precios de fábrica</div></div><div class="card-actions"><strong>${count} producto${count === 1 ? "" : "s"} en el pedido</strong><button class="btn btn-primary" type="button" onclick="startCheckout()">Continuar con la compra</button></div></div><div class="dash-grid">${items.map(row => { const name = row[0].replace(/<[^>]+>/g, ""); return `<article class="dash-card"><div class="dash-card-title">${escapeHTML(name)}</div><div class="activity-time">${escapeHTML(row[1] || "Producto")}${row[2] ? ` · ${escapeHTML(row[2])}` : ""}</div><div class="value" style="font-size:22px;margin:12px 0">${escapeHTML(formatCellValue(entity,row,4))}</div><button class="btn btn-ghost btn-sm" type="button" onclick="addCatalogProduct('${escapeHTML(name)}')">Agregar al pedido</button></article>`; }).join("") || `<p>Por el momento no hay productos disponibles.</p>`}</div></div></div>`;
+    }
+
+    function addCatalogProduct(name) {
+      const product = E.find(entity => entity.id === "productos").rows.find(row => row[0] === name && normalizeLabel(row[7] || "Activo") === "activo");
+      if (!product) return;
+      const line = shoppingCart.find(item => item.product === name);
+      if (line) line.quantity += 1; else shoppingCart.push({ product:name, quantity:1 });
+      renderContent();
+      showScreen("productos", document.querySelector('[data-screen="productos"]'), "Catálogo");
+      showNotify(`${name} agregado al pedido.`);
+    }
+
+    function startCheckout() {
+      if (!shoppingCart.length) { showNotify("Agregá al menos un producto para continuar."); return; }
+      if (currentRole === "cliente" && currentUser) { submitShoppingCartAsBudget(); return; }
+      checkoutPending = true;
+      openAccountAccess(true);
+    }
+
+    function submitShoppingCartAsBudget() {
+      const products = E.find(entity => entity.id === "productos");
+      const budgets = E.find(entity => entity.id === "presupuestos");
+      const today = new Date();
+      const date = `${String(today.getDate()).padStart(2,"0")}/${String(today.getMonth()+1).padStart(2,"0")}/${today.getFullYear()}`;
+      const next = budgets.rows.reduce((highest,row) => Math.max(highest,Number(row[0]?.match(/(\d+)$/)?.[1])||0),208)+1;
+      const row = [`#PR-${String(next).padStart(4,"0")}`, currentCustomer, date, "0%", "<span class='badge badge-amber'>Pendiente</span>"];
+      row.customerDocument = currentCustomerDocument;
+      row.orderType = "Mostrador";
+      row.detailData = { detPresupuesto: shoppingCart.map(item => { const product = products.rows.find(entry => entry[0] === item.product); return { selected:item.product, extraSelects:[], inputs:[String(item.quantity),String(parseProductPrice(product?.[4]))] }; }) };
+      const customer = findClientByName(currentCustomer);
+      const customerAddress = getClientAddresses(customer)[0];
+      if (customerAddress) { row.customerAddress = { ...customerAddress }; row.customerAddressIndex = 0; }
+      row.checkoutRequest = true;
+      budgets.rows.unshift(row); shoppingCart = []; persistBusinessData();
+      renderSidebar(); renderContent(); renderCustomerIndicator();
+      showScreen("presupuestos",document.querySelector('[data-screen="presupuestos"]'),"Ventas");
+      openView("presupuestos",0);
+      showNotify("Solicitud de compra registrada como presupuesto. La fábrica confirmará disponibilidad.");
     }
 
     function dashboardScreen() {
@@ -2521,12 +2645,17 @@
       const indicator = document.getElementById("customer-account");
       indicator.hidden = currentRole !== "cliente";
       document.getElementById("customer-name").textContent = currentCustomer || "Sin cuenta";
+      document.getElementById("account-entry-btn").hidden = !!currentUser;
+      document.getElementById("logout-btn").hidden = !currentUser;
     }
 
     function hideLogin() {
       const loginOverlay = document.getElementById("login-overlay");
       if (loginOverlay) loginOverlay.classList.add("hidden");
       document.body.classList.remove("logged-out");
+      document.getElementById("login-overlay")?.classList.remove("checkout-register");
+      document.querySelector(".login-card")?.classList.remove("register-wide");
+      accountAccessForCheckout = false;
     }
 
     function showLogin() {
@@ -2535,20 +2664,45 @@
       document.body.classList.add("logged-out");
     }
 
+    function openAccountAccess(forCheckout = false) {
+      accountAccessForCheckout = forCheckout;
+      const overlay = document.getElementById("login-overlay");
+      const card = document.querySelector(".login-card");
+      const registerPanel = document.getElementById("register-panel");
+      const toggle = document.getElementById("toggle-register-btn");
+      overlay.classList.toggle("checkout-register", forCheckout);
+      card.classList.toggle("register-wide", forCheckout);
+      card.classList.remove("register-mode");
+      registerPanel.classList.toggle("show", forCheckout);
+      document.getElementById("login-heading").textContent = forCheckout ? "Creá tu cuenta para continuar" : "Ingresá al sistema";
+      toggle.textContent = "Crear nuevo usuario";
+      toggle.hidden = forCheckout;
+      document.getElementById("checkout-cancel-btn").hidden = !forCheckout;
+      renderRegisterGeographyFields();
+      showLogin();
+      if (forCheckout) setTimeout(() => document.getElementById("register-first-name").focus(), 0);
+    }
+
+    function cancelCheckoutAccess() {
+      checkoutPending = false;
+      hideLogin();
+      renderSidebar(); renderContent(); renderCustomerIndicator();
+    }
+
     function logout() {
       currentUser = null;
-      currentRole = "dueno";
+      currentRole = "visitante";
       localStorage.removeItem("pastas-user");
       localStorage.removeItem("pastas-role");
       document.getElementById("login-username").value = "";
       document.getElementById("login-password").value = "";
-      showLogin();
+      hideLogin();
       renderSidebar();
       renderContent();
       renderCustomerIndicator();
       document.getElementById("topbar-title").textContent = "Dashboard";
       document.getElementById("topbar-crumb").textContent = "Principal";
-      showNotify("Sesión cerrada.");
+      showNotify("Sesión cerrada. Podés seguir explorando el catálogo.");
     }
 
     function setRole(roleId) {
@@ -2564,6 +2718,7 @@
 
     function visibleRows(entity) {
       if (!entity) return [];
+      if (["visitante", "cliente"].includes(currentRole) && entity.id === "productos") return entity.rows.filter(row => normalizeLabel(row[7] || "Activo") === "activo");
       if (currentRole !== "cliente") return entity.rows;
       if (entity.id === "cuentaCliente") return entity.rows.filter(row => row[1] === currentCustomerDocument);
       if (!["presupuestos", "pedidos"].includes(entity.id)) return entity.rows;
@@ -2791,7 +2946,7 @@
       const grandTotal = itemsTotal;
 
       const orderIdForPayments = isInvoice ? row[1] : isOrder ? row[0] : null;
-      const linkedPayments = orderIdForPayments
+      const linkedPayments = orderIdForPayments && currentRole !== "cliente"
         ? (E.find(entity => entity.id === "comprobantesPago")?.rows || [])
             .filter(receipt => receipt.paymentStatus !== "Anulado")
             .flatMap(receipt => (receipt.paymentLines || [])
@@ -2966,7 +3121,7 @@
       </div>`;
         });
       }
-      if (entityId === "pedidos") {
+      if (entityId === "pedidos" && currentRole !== "cliente") {
         const payments = E.find(entity => entity.id === "comprobantesPago").rows
           .filter(receipt => receipt.paymentStatus !== "Anulado")
           .flatMap(receipt => (receipt.paymentLines || [])
@@ -3255,6 +3410,13 @@
             showNotify("Ya existe un cliente con ese documento.");
             return;
           }
+          const addressRows = [...document.querySelectorAll("#client-addresses-rows .client-address-row-item")];
+          const unverifiedAddress = addressRows.some(item => {
+            const fields = readCustomerAddressFields(item);
+            const complete = [fields.postalCode, fields.province, fields.city, fields.street, fields.height].every(field => field?.value.trim());
+            return complete && item.dataset.verifiedSnapshot !== addressSnapshot(fields);
+          });
+          if (unverifiedAddress) { showNotify("Verificá cada domicilio completo antes de guardar el cliente."); return; }
           const status = getValue("Estado") || "Activo";
           const formatBadge = (value, positive) => `<span class='badge badge-${positive ? "green" : "gray"}'>${escapeHTML(value)}</span>`;
           updatedRow = [
@@ -3533,8 +3695,15 @@
           street: rowItem.querySelector('[data-addr-field="street"]'),
           height: rowItem.querySelector('[data-addr-field="height"]'),
           city: rowItem.querySelector('[data-addr-field="city"]'),
+          province: rowItem.querySelector('[data-addr-field="province"]'),
           postalCode: rowItem.querySelector('[data-addr-field="postalCode"]')
         };
+      }
+      const inlineEditor = contextElement?.closest?.(".client-address-inline-editor") || document.querySelector("#inline-client-address-editor:not([hidden])");
+      if (inlineEditor) return { street:inlineEditor.querySelector("#inline-addr-street"), height:inlineEditor.querySelector("#inline-addr-height"), city:inlineEditor.querySelector("#inline-addr-city"), province:inlineEditor.querySelector("#inline-addr-province"), postalCode:inlineEditor.querySelector("#inline-addr-postal") };
+      const registerForm = document.getElementById("register-form");
+      if (registerForm && !document.getElementById("login-overlay").classList.contains("hidden") && document.getElementById("register-panel").classList.contains("show")) {
+        return { street: document.getElementById("register-street"), height: document.getElementById("register-height"), city: document.getElementById("register-city"), province: document.getElementById("register-province"), postalCode: document.getElementById("register-postal") };
       }
       const firstRow = document.querySelector("#budget-client-form:not([hidden]) .client-address-row-item, #client-addresses-rows .client-address-row-item");
       if (firstRow) {
@@ -3542,24 +3711,25 @@
           street: firstRow.querySelector('[data-addr-field="street"]'),
           height: firstRow.querySelector('[data-addr-field="height"]'),
           city: firstRow.querySelector('[data-addr-field="city"]'),
+          province: firstRow.querySelector('[data-addr-field="province"]'),
           postalCode: firstRow.querySelector('[data-addr-field="postalCode"]')
         };
       }
       const budgetPanel = document.getElementById("budget-client-form");
       if (budgetPanel && !budgetPanel.hidden) return {
         street: document.getElementById("budget-client-street"), height: document.getElementById("budget-client-height"),
-        city: document.getElementById("budget-client-city"), postalCode: document.getElementById("budget-client-postal")
+        city: document.getElementById("budget-client-city"), province: document.getElementById("budget-client-province"), postalCode: document.getElementById("budget-client-postal")
       };
       const control = key => document.querySelector(`#mf-fields [data-field-key="${key}"]`)
         ?.parentElement.querySelector("input, select, textarea") || null;
       return {
         street: control("Calle"), height: control("Altura"),
-        city: control("Localidad"), postalCode: control("CodigoPostal")
+        city: control("Localidad"), province: control("Provincia"), postalCode: control("CodigoPostal")
       };
     }
 
     function addressSnapshot(fields) {
-      return [fields.street, fields.height, fields.city, fields.postalCode].map(field => normalizeLabel(field?.value || "")).join("|");
+      return [fields.postalCode, fields.province, fields.city, fields.street, fields.height].map(field => normalizeLabel(field?.value || "")).join("|");
     }
 
     function invalidateAddressVerification() {
@@ -3572,9 +3742,10 @@
     }
 
     async function verifyCustomerAddress(button) {
-      const fields = readCustomerAddressFields(typeof button !== "undefined" ? button : verifyButton);
-      const status = button.parentElement.querySelector("[data-address-status]");
-      const required = [fields.street, fields.height, fields.city, fields.postalCode];
+      const fields = readCustomerAddressFields(button);
+      const rowItem = button.closest(".client-address-row-item");
+      const status = rowItem?.querySelector("[data-address-status]") || button.closest(".client-address-inline-editor")?.querySelector("[data-address-status]") || button.closest(".login-card")?.querySelector("[data-address-status]") || button.parentElement.querySelector("[data-address-status]");
+      const required = [fields.postalCode, fields.province, fields.city, fields.street, fields.height];
       if (required.some(field => !field)) {
         status.dataset.state = "error";
         status.textContent = "No se pudieron leer los campos del domicilio. Cerrá y volvé a abrir el formulario.";
@@ -3583,7 +3754,7 @@
       for (const field of required) {
         if (!field.reportValidity()) {
           status.dataset.state = "error";
-          status.textContent = "Completá los cuatro datos del domicilio para verificarlo.";
+          status.textContent = "Completá código postal, provincia, localidad, calle y altura para verificar.";
           field.focus();
           return;
         }
@@ -3597,18 +3768,29 @@
       button.disabled = true;
       status.dataset.state = "";
       status.textContent = "Buscando en el registro oficial de direcciones…";
-      button.parentElement.querySelector(".address-suggestions")?.remove();
+      (rowItem || button.closest(".client-address-inline-editor") || button.closest(".register-form-grid") || button.parentElement).querySelector(".address-suggestions")?.remove();
       try {
         const url = new URL("https://apis.datos.gob.ar/georef/api/v2.0/direcciones");
         url.search = new URLSearchParams({
           direccion: `${fields.street.value.trim()} ${fields.height.value.trim()}`,
-          localidad: fields.city.value.trim()
+          localidad: fields.city.value.trim(),
+          provincia: fields.province.value.trim()
         });
         const response = await fetch(url, { headers: { Accept: "application/json" } });
         if (!response.ok) throw new Error("No se pudo consultar el servicio geográfico.");
         const payload = await response.json();
-        const candidates = (payload.direcciones || []).filter(result => result.calle?.nombre
-          && String(result.altura?.valor || "") === fields.height.value.trim());
+        const normalizeStreet = value => normalizeLabel(value).replace(/^av(?=\w)/, "avenida").replace(/^av\s/, "avenida ");
+        const postalCore = value => String(value || "").replace(/[^0-9]/g, "");
+        const candidates = (payload.direcciones || []).filter(result => {
+          const officialPostal = result.codigo_postal || result.codigoPostal || result.cod_postal || "";
+          const officialLocality = result.localidad_censal?.nombre || result.localidad?.nombre || "";
+          return result.calle?.nombre
+            && String(result.altura?.valor || "") === fields.height.value.trim()
+            && normalizeStreet(result.calle.nombre) === normalizeStreet(fields.street.value)
+            && normalizeLabel(officialLocality) === normalizeLabel(fields.city.value)
+            && normalizeLabel(result.provincia?.nombre || "") === normalizeLabel(fields.province.value)
+            && (!officialPostal || postalCore(officialPostal) === postalCore(fields.postalCode.value));
+        });
         if (!candidates.length) {
           status.dataset.state = "error";
           status.textContent = "Georef no encontró una calle y altura coincidentes en esa localidad. Revisá los datos e intentá otra vez.";
@@ -3629,7 +3811,7 @@
           option.addEventListener("click", () => chooseAddressCandidate(index, button));
           list.appendChild(option);
         });
-        button.parentElement.appendChild(list);
+        (rowItem || button.closest(".client-address-inline-editor") || button.closest(".register-form-grid") || button.parentElement).appendChild(list);
         status.dataset.state = "suggestions";
         status.textContent = "Encontramos coincidencias oficiales. Elegí la que corresponde para confirmar.";
         verifiedCustomerAddress = "";
@@ -3646,17 +3828,22 @@
     function chooseAddressCandidate(index, verifyButton) {
       const result = addressCandidates[index];
       if (!result) return;
-      const fields = readCustomerAddressFields(typeof button !== "undefined" ? button : verifyButton);
+      const fields = readCustomerAddressFields(verifyButton);
       fields.street.value = result.calle?.nombre || fields.street.value;
       fields.height.value = result.altura?.valor || fields.height.value;
       const locality = result.localidad_censal?.nombre || result.localidad?.nombre;
       if (locality) fields.city.value = locality;
-      verifiedCustomerAddress = addressSnapshot(fields);
-      const status = verifyButton.parentElement.querySelector("[data-address-status]");
+      if (result.provincia?.nombre && fields.province) fields.province.value = result.provincia.nombre;
+      const postal = result.codigo_postal || result.codigoPostal || result.cod_postal;
+      if (postal && fields.postalCode) fields.postalCode.value = postal;
+      const rowItem = verifyButton.closest(".client-address-row-item");
+      const status = rowItem?.querySelector("[data-address-status]") || verifyButton.closest(".client-address-inline-editor")?.querySelector("[data-address-status]") || verifyButton.closest(".login-card")?.querySelector("[data-address-status]") || verifyButton.parentElement.querySelector("[data-address-status]");
       status.dataset.state = "verified";
       status.textContent = "Domicilio reconocido por Georef y normalizado con datos oficiales.";
-      verifyButton.parentElement.querySelector(".address-suggestions")?.remove();
-      [fields.street, fields.height, fields.city, fields.postalCode].forEach(field => field.dispatchEvent(new Event("change", { bubbles: true })));
+      document.querySelectorAll(".address-suggestions").forEach(list => list.remove());
+      [fields.street, fields.height, fields.city, fields.province, fields.postalCode].forEach(field => field?.dispatchEvent(new Event("change", { bubbles: true })));
+      verifiedCustomerAddress = addressSnapshot(fields);
+      if (rowItem) rowItem.dataset.verifiedSnapshot = verifiedCustomerAddress;
     }
 
     const UI_ATTRIBUTE_LABELS = {
@@ -4051,6 +4238,11 @@
         showNotify("Cargá al menos un domicilio para el cliente.");
         return;
       }
+      const addressRows = [...document.querySelectorAll("#budget-client-addresses-rows .client-address-row-item")];
+      if (addressRows.some(item => item.dataset.verifiedSnapshot !== addressSnapshot(readCustomerAddressFields(item)))) {
+        showNotify("Verificá cada domicilio antes de guardar el cliente.");
+        return;
+      }
       if (clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(documentNumber))) {
         showNotify("Ya existe un cliente con ese documento.");
         return;
@@ -4107,6 +4299,76 @@
       }))]));
       data.productTypes = productTypes;
       localStorage.setItem("pastas-data-v1", JSON.stringify(data));
+    }
+
+    function initializeGeographyAndCustomerAddresses() {
+      ["provincias", "localidades", "calles"].forEach(id => E.find(item => item.id === id)?.rows.sort((a,b) => String(a[0]).localeCompare(String(b[0]), "es")));
+      E.find(item => item.id === "clientes").rows.forEach(client => {
+        const provinceForCity = city => E.find(item => item.id === "localidades").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(city))?.[1] || "";
+        const addresses = getClientAddresses(client).map(address => ({ ...address, province: address.province || provinceForCity(address.city) }));
+        if (addresses.length) { client.addresses = addresses; client.address = addresses[0]; }
+      });
+      persistBusinessData();
+    }
+
+    function renderRegisterGeographyFields() {
+      const provinces = E.find(entity => entity.id === "provincias").rows.map(row => row[0]);
+      const province = document.getElementById("register-province");
+      if (province) {
+        const value = province.value;
+        province.innerHTML = '<option value="">Seleccionar provincia</option>' + provinces.map(item => `<option>${escapeHTML(item)}</option>`).join("");
+        if (value) province.value = value;
+      }
+      const localities = [...new Set(E.find(entity => entity.id === "localidades").rows.map(row => row[0]))].sort((a,b) => a.localeCompare(b,"es"));
+      const streets = [...new Set(E.find(entity => entity.id === "calles").rows.map(row => row[0]))].sort((a,b) => a.localeCompare(b,"es"));
+      const postals = [...new Set(E.find(entity => entity.id === "localidades").rows.map(row => row[2]).filter(Boolean))].sort();
+      ["register-locality-options", "customer-locality-options"].forEach(id => { const list = document.getElementById(id); if (list) list.innerHTML = localities.map(value => `<option value="${escapeHTML(value)}">`).join(""); });
+      ["register-street-options", "customer-street-options"].forEach(id => { const list = document.getElementById(id); if (list) list.innerHTML = streets.map(value => `<option value="${escapeHTML(value)}">`).join(""); });
+      const postalList = document.getElementById("customer-postal-options");
+      if (postalList) postalList.innerHTML = postals.map(value => `<option value="${escapeHTML(value)}">`).join("");
+    }
+
+    function setCustomerIdentity(user) {
+      const customers = E.find(entity => entity.id === "clientes").rows;
+      let customer = customers.find(row => row[1] === user.customerDocument);
+      if (!customer && user.role === "cliente" && user.username === "cliente") customer = customers.find(row => row[1] === "30.221.884");
+      currentCustomer = customer?.[0] || "";
+      currentCustomerDocument = customer?.[1] || "";
+      if (customer) user.customerDocument = customer[1];
+    }
+
+    function completeCustomerRegistration() {
+      const get = id => document.getElementById(id).value.trim();
+      const form = document.getElementById("register-form");
+      for (const field of form.querySelectorAll("[required]")) if (!field.reportValidity()) return;
+      const address = readCustomerAddressFields();
+      if (verifiedCustomerAddress !== addressSnapshot(address)) { showNotify("Verificá el domicilio antes de crear la cuenta."); return; }
+      const username = get("register-username").toLowerCase();
+      const documentNumber = get("register-document");
+      const password = get("register-password");
+      const users = getLoginUsers();
+      const clients = E.find(entity => entity.id === "clientes");
+      if (!username || password.length < 8) { showNotify("Ingresá un usuario y una contraseña de al menos 8 caracteres."); return; }
+      if (users.some(user => normalizeLabel(user.username) === normalizeLabel(username))) { showNotify("Ese usuario ya existe."); return; }
+      if (clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(documentNumber))) { showNotify("Ya existe una cuenta con ese documento."); return; }
+      const email = get("register-email").toLowerCase();
+      if (clients.rows.some(row => String(row.email || "").trim().toLowerCase() === email)) { showNotify("Ya existe una cuenta con ese correo electrónico."); return; }
+      const fullName = `${get("register-first-name")} ${get("register-last-name")}`.trim();
+      const profile = { postalCode:address.postalCode.value.trim(), province:address.province.value.trim(), city:address.city.value.trim(), street:address.street.value.trim(), height:address.height.value.trim() };
+      const client = [escapeHTML(fullName), escapeHTML(documentNumber), escapeHTML(get("register-customer-type")), "$0", "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"];
+      client.addresses = [profile]; client.address = profile; client.email = email; client.phone = get("register-phone"); client.documentType = get("register-document-type"); client.iva = get("register-iva");
+      clients.rows.push(client);
+      E.find(entity => entity.id === "cuentaCliente").rows.push([escapeHTML(fullName), escapeHTML(documentNumber), escapeHTML(email), escapeHTML(get("register-phone")), escapeHTML(get("register-customer-type"))]);
+      const createdUser = { username, password, role:"cliente", customerDocument:documentNumber, email };
+      users.push(createdUser); persistLoginUsers(users); persistBusinessData();
+      currentUser = createdUser; currentRole = "cliente"; currentCustomer = fullName; currentCustomerDocument = documentNumber;
+      localStorage.setItem("pastas-user", username); localStorage.setItem("pastas-role", "cliente");
+      hideLogin(); renderSidebar(); renderContent(); renderCustomerIndicator();
+      document.getElementById("topbar-title").textContent = "Dashboard";
+      document.getElementById("topbar-crumb").textContent = "Cliente";
+      form.reset();
+      if (checkoutPending) { checkoutPending = false; submitShoppingCartAsBudget(); }
+      else showNotify("Cuenta de cliente creada y registrada en el sistema.");
     }
 
     function updateOrderPaidTotals() {
@@ -4266,7 +4528,6 @@
     }
 
     function init() {
-      const savedRole = localStorage.getItem("pastas-role");
       const savedUser = localStorage.getItem("pastas-user");
       const matchedUser = getLoginUsers().find(user => user.username === savedUser);
 
@@ -4274,11 +4535,12 @@
         currentUser = matchedUser;
         currentRole = matchedUser.role;
         hideLogin();
-      } else if (ROLES.some(role => role.id === savedRole)) {
-        currentRole = savedRole;
-        hideLogin();
       } else {
-        showLogin();
+        currentUser = null;
+        currentRole = "visitante";
+        localStorage.removeItem("pastas-user");
+        localStorage.removeItem("pastas-role");
+        hideLogin();
       }
 
       document.getElementById("login-form").addEventListener("submit", (event) => {
@@ -4294,6 +4556,7 @@
 
         currentUser = user;
         currentRole = user.role;
+        if (user.role === "cliente") setCustomerIdentity(user);
         localStorage.setItem("pastas-user", user.username);
         localStorage.setItem("pastas-role", user.role);
         hideLogin();
@@ -4302,50 +4565,30 @@
         renderCustomerIndicator();
         document.getElementById("topbar-title").textContent = "Dashboard";
         document.getElementById("topbar-crumb").textContent = ROLES.find(role => role.id === currentRole).label;
-        showNotify(`Bienvenido, ${user.username}.`);
+        if (checkoutPending && user.role === "cliente") { checkoutPending = false; submitShoppingCartAsBudget(); }
+        else showNotify(`Bienvenido, ${user.username}.`);
       });
 
       document.getElementById("toggle-register-btn").addEventListener("click", () => {
         const panel = document.getElementById("register-panel");
-        panel.classList.toggle("show");
+        const card = document.querySelector(".login-card");
+        const showingRegistration = !panel.classList.contains("show");
+        panel.classList.toggle("show", showingRegistration);
+        card.classList.toggle("register-mode", showingRegistration);
+        card.classList.toggle("register-wide", showingRegistration);
+        document.getElementById("toggle-register-btn").textContent = showingRegistration ? "Volver a ingresar" : "Crear nuevo usuario";
+        document.getElementById("login-heading").textContent = showingRegistration ? "Crear tu cuenta" : "Ingresá al sistema";
+        renderRegisterGeographyFields();
       });
 
       document.getElementById("register-form").addEventListener("submit", (event) => {
         event.preventDefault();
-        const username = document.getElementById("register-username").value.trim().toLowerCase();
-        const password = document.getElementById("register-password").value.trim();
-        const role = "cliente";
-
-        if (!username || !password) {
-          showNotify("Completa usuario y contraseña.");
-          return;
-        }
-
-        const users = getLoginUsers();
-        if (users.some(user => user.username === username)) {
-          showNotify("Ese usuario ya existe.");
-          return;
-        }
-
-        users.push({ username, password, role });
-        persistLoginUsers(users);
-
-        document.getElementById("register-form").reset();
-        document.getElementById("register-panel").classList.remove("show");
-
-        const createdUser = { username, password, role };
-        currentUser = createdUser;
-        currentRole = role;
-        localStorage.setItem("pastas-user", username);
-        localStorage.setItem("pastas-role", role);
-        hideLogin();
-        renderSidebar();
-        renderContent();
-        renderCustomerIndicator();
-        document.getElementById("topbar-title").textContent = "Dashboard";
-        document.getElementById("topbar-crumb").textContent = ROLES.find(item => item.id === role).label;
-        showNotify(`Usuario creado: ${username}.`);
+        completeCustomerRegistration();
       });
+
+      document.getElementById("register-form").querySelectorAll("input,select").forEach(field => field.addEventListener("input", () => {
+        if (["register-postal","register-province","register-city","register-street","register-height"].includes(field.id)) invalidateAddressVerification();
+      }));
 
       restoreBusinessData();
       const migratedPaymentLines = migrateLegacyPaymentLines();
@@ -4354,6 +4597,9 @@
       initializeBudgetTypes();
       updateOrderPaidTotals();
       initializeCustomerOwnership();
+      initializeGeographyAndCustomerAddresses();
+      renderRegisterGeographyFields();
+      if (currentUser?.role === "cliente") setCustomerIdentity(currentUser);
       renderSidebar();
       renderContent();
       renderCustomerIndicator();
