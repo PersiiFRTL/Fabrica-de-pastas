@@ -709,6 +709,7 @@
     }
 
     .form-input:user-invalid, .form-select:user-invalid { border-color:var(--red); box-shadow:0 0 0 2px rgba(190,80,63,.1); }
+    .form-input:disabled, .form-select:disabled, .form-input[readonly] { background:var(--cream-dark); color:var(--text-muted); cursor:not-allowed; opacity:0.85; }
 
     .form-textarea {
       resize: vertical;
@@ -797,8 +798,62 @@
     .invoice-parties section:first-child { display:flex; flex-direction:column; gap:7px; padding:12px; border-radius:var(--radius-sm); background:var(--cream); }
     .invoice-parties section > span { color:var(--green-dark); font-size:10px; font-weight:800; letter-spacing:.08em; }
     .invoice-parties section > small { color:var(--text-muted); font-size:11px; }
-    .invoice-client-summary { display:grid; gap:4px; margin-top:12px; padding:10px 12px; border-left:3px solid var(--wheat); border-radius:4px; background:var(--cream); font-size:12px; }
+    .invoice-client-summary { width:100%; box-sizing:border-box; display:flex; flex-direction:column; gap:8px; margin-top:12px; padding:14px 16px; border:1.5px solid var(--cream-dark); border-left:4px solid var(--wheat); border-radius:var(--radius-sm); background:var(--cream); font-size:12.5px; }
+    .invoice-client-summary .form-select, .invoice-client-summary .form-input { width:100%; min-width:0; box-sizing:border-box; background:var(--white); }
     .invoice-client-summary span { color:var(--text-muted); }
+    .client-address-card { width:100%; box-sizing:border-box; margin-top:12px; padding:14px 16px; border:1.5px solid var(--cream-dark); border-left:4px solid var(--wheat); border-radius:var(--radius-sm); background:var(--cream); display:flex; flex-direction:column; gap:10px; font-size:12.5px; }
+    .client-address-card .form-select, .client-address-card .form-input { width:100%; min-width:0; box-sizing:border-box; background:var(--white); }
+    .budget-client-fields { width:100%; box-sizing:border-box; margin-top:12px; padding:14px 16px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); gap:10px; }
+    .client-address-card-header { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+    .client-address-card-title { font-size:11px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; color:var(--brown); }
+    .client-address-value { color:var(--text); font-weight:500; line-height:1.4; }
+    .client-address-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:2px; }
+    .client-address-inline-editor { display:grid; grid-template-columns:1.4fr 0.8fr 1.2fr 0.9fr; gap:10px; padding:12px; margin-top:4px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); box-sizing:border-box; width:100%; }
+    .client-address-inline-field { display:flex; flex-direction:column; gap:4px; min-width:0; }
+    .client-address-inline-field label { font-size:11px; font-weight:600; color:var(--text-muted); }
+    .client-address-inline-editor[hidden] { display:none; }
+    .client-address-inline-editor .span2 { grid-column:1 / -1; }
+    .client-address-row-item { padding:12px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); display:grid; gap:8px; }
+    .client-address-row-head { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:600; color:var(--brown); }
+    .client-address-row-grid { display:grid; grid-template-columns:1.4fr 0.8fr 1.2fr 0.9fr; gap:8px; }
+    @media (max-width: 720px) { .client-address-row-grid, .client-address-inline-editor { grid-template-columns:1fr; } }
+    #modal-view .modal.voucher-modal { width: 820px; max-width: 96vw; }
+    .afip-doc { background: #fff; color: #111; font-family: Arial, Helvetica, sans-serif; border: 1.5px solid #111; padding: 0; font-size: 12px; line-height: 1.45; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
+    .afip-doc-original { text-align: center; font-weight: 700; font-size: 14px; padding: 6px 10px; border-bottom: 1.5px solid #111; letter-spacing: 0.5px; text-transform: uppercase; }
+    .afip-doc-header { display: grid; grid-template-columns: 1fr 1fr; position: relative; border-bottom: 1.5px solid #111; }
+    .afip-doc-letter { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 54px; height: 54px; background: #fff; border: 1.5px solid #111; border-top: none; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+    .afip-doc-letter strong { font-size: 28px; font-weight: 400; line-height: 1; color: #111; }
+    .afip-doc-letter small { font-size: 8.5px; color: #333; margin-top: 2px; }
+    .afip-doc-emitter { border-right: 1.5px solid #111; padding: 14px 34px 12px 14px; }
+    .afip-doc-brand { font-size: 20px; font-weight: 400; text-align: center; margin: 2px 0 18px; letter-spacing: 0.4px; text-transform: uppercase; }
+    .afip-doc-meta { padding: 14px 14px 12px 38px; }
+    .afip-doc-type-title { font-size: 15px; font-weight: 700; margin: 2px 0 12px 10px; text-transform: uppercase; }
+    .afip-doc-row { margin-bottom: 4px; font-size: 11.5px; }
+    .afip-doc-row b { font-weight: 700; margin-right: 5px; }
+    .afip-doc-client { display: grid; grid-template-columns: 1.25fr 1fr; gap: 8px 18px; padding: 9px 14px; border-bottom: 1.5px solid #111; font-size: 11.5px; }
+    .afip-doc-items-section { padding: 14px 0 0; min-height: 230px; display: flex; flex-direction: column; justify-content: space-between; }
+    .afip-doc-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    .afip-doc-table thead th { background: #dcdcdc !important; color: #111 !important; font-weight: 700; font-size: 11px; text-transform: none; letter-spacing: 0; padding: 5px 7px; border: 1.5px solid #111; text-align: left; }
+    .afip-doc-table thead th.num, .afip-doc-table tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .afip-doc-table tbody tr { border: none !important; background: transparent !important; }
+    .afip-doc-table tbody td { padding: 4px 7px; border: none !important; color: #111; font-size: 11.5px; }
+    .afip-doc-totals-bar { border-top: 1.5px solid #111; margin-top: 28px; padding: 10px 14px 26px; display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; font-size: 12px; }
+    .afip-doc-payments { display: grid; gap: 3px; font-size: 11.5px; }
+    .afip-doc-grand-total { display: flex; align-items: baseline; gap: 28px; font-weight: 700; font-size: 13px; white-space: nowrap; }
+    .afip-doc-footer { border-top: 2px solid #111; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 11.5px; }
+    .afip-doc-qr-group { display: flex; align-items: flex-end; gap: 12px; }
+    .afip-doc-afip-badge { display: grid; gap: 2px; }
+    .afip-doc-afip-logo { font-size: 24px; font-weight: 900; font-style: italic; letter-spacing: 1px; color: #c4c4c4; -webkit-text-stroke: 1px #555; line-height: 1; }
+    .afip-doc-cae { display: grid; grid-template-columns: auto auto; gap: 4px 18px; align-items: baseline; font-size: 11.5px; }
+    @media print {
+      body * { visibility: hidden !important; }
+      #modal-view, #modal-view * { visibility: visible !important; }
+      #modal-view { position: absolute !important; inset: 0 !important; display: block !important; background: #fff !important; padding: 0 !important; overflow: visible !important; }
+      #modal-view .modal { width: 100% !important; max-width: 100% !important; max-height: none !important; box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; overflow: visible !important; }
+      #modal-view .modal-header, #modal-view .modal-footer { display: none !important; }
+      #modal-view .modal-body { padding: 0 !important; overflow: visible !important; }
+      .afip-doc { box-shadow: none !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
     .address-verify-tools { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-top:7px; }
     .address-suggestions { display:grid; flex:1 0 100%; gap:6px; margin-top:4px; }
     .address-suggestion { width:100%; padding:8px 10px; border:1px solid var(--cream-dark); border-radius:8px; background:var(--white); color:var(--text); text-align:left; cursor:pointer; }
@@ -1288,7 +1343,7 @@
       <div class="modal-body">
         <div id="mv-body"></div>
       </div>
-      <div class="modal-footer"><button class="btn btn-ghost" onclick="closeModal('modal-view')">Cerrar</button></div>
+      <div class="modal-footer"><button class="btn btn-primary" type="button" id="mv-print-btn" onclick="printCurrentViewVoucher()" hidden>🖨 Imprimir</button><button class="btn btn-ghost" onclick="closeModal('modal-view')">Cerrar</button></div>
     </div>
   </div>
 
@@ -1536,10 +1591,10 @@
           { l: "TipoCliente", t: "select", o: ["Consumidor final", "Restaurante", "Hotel", "Supermercado", "Comercio de barrio"] },
           { l: "CuentaCorriente", t: "select", o: ["No", "Sí"] }, { l: "LimiteDeuda", t: "number", min: 0, step: "0.01" },
           { l: "Estado", t: "select", o: ["Activo", "Inactivo"] },
-          { l: "CodigoPostal", t: "text", required: true, maxlength: 8, pattern: "([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})", autocomplete: "postal-code", placeholder: "1234 o B1234ABC" },
-          { l: "Localidad", t: "text", required: true, maxlength: 80, pattern: "[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}", autocomplete: "address-level2" },
-          { l: "Calle", t: "text", required: true, maxlength: 100, pattern: "[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}", autocomplete: "address-line1", placeholder: "Ej.: San Martín" },
-          { l: "Altura", t: "number", required: true, min: 1, max: 99999, step: 1, autocomplete: "address-line2", placeholder: "Número" },
+          // Domicilios gestionados en bloque dinámico (1 o más domicilios por cliente)
+
+
+
         ]
       },
       {
@@ -1566,7 +1621,7 @@
           ["#PR-0203", "María González", "15/09/2026", "0%", "<span class='badge badge-red'>Vencido</span>"],
         ],
         fields: [
-          { l: "Id_Cliente", t: "select", ref: "clientes" },
+          { l: "Id_Cliente", t: "select", ref: "clientes", required: true },
           { l: "tipoPedido", t: "select", o: ["Mostrador", "Evento / fiesta", "Fijo semanal"] },
           { l: "validohasta", t: "date" }, { l: "descuento", t: "number" },
           { l: "estado", t: "select", o: ["Pendiente", "Aprobado", "Rechazado", "Vencido"] },
@@ -1582,7 +1637,7 @@
           ["#OP-0879", "Iglesia San José", "—", "25/09/2026", "—", "<span class='badge badge-blue'>Pendiente</span>"],
         ],
         fields: [
-          { l: "Id_Cliente", t: "select", ref: "clientes" },
+          { l: "Id_Cliente", t: "select", ref: "clientes", required: true },
           { l: "id_Presupuesto", t: "select", ref: "presupuestos", optional: true },
           { l: "FechaEntrega", t: "date" }, { l: "FechaInicio", t: "date" }, { l: "FechaFin", t: "date" },
           { l: "DiasDeEntrega", t: "multiselect", o: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"] },
@@ -1842,7 +1897,363 @@
       presupuestosProv: [2, 3], ordenesCompra: [2, 3], remitosProv: [3], comprobantesProv: [2], ordenesPago: [3],
     };
 
+    const DEFAULT_CLIENT_ADDRESSES = {
+      "María González": [
+        { street: "San Martín", height: "450", city: "Morón", postalCode: "1708" },
+        { street: "Av. Rivadavia", height: "18200", city: "Morón", postalCode: "1708" }
+      ],
+      "Restó La Nonna": [
+        { street: "Belgrano", height: "320", city: "Ramos Mejía", postalCode: "1704" },
+        { street: "Av. de Mayo", height: "740", city: "Ramos Mejía", postalCode: "1704" }
+      ],
+      "Hotel Belgrano": [
+        { street: "9 de Julio", height: "1150", city: "Lanús", postalCode: "1824" }
+      ]
+    };
+
+    let currentSelectedAddressIndex = 0;
+    let currentInlineAddressEditMode = null;
+
+    function formatAddressObject(addr) {
+      if (!addr || typeof addr !== "object") return "";
+      const street = String(addr.street || "").trim();
+      const height = String(addr.height || "").trim();
+      const city = String(addr.city || "").trim();
+      const postalCode = String(addr.postalCode || "").trim();
+      if (!street && !city && !postalCode) return "";
+      const line1 = [street, height].filter(Boolean).join(" ");
+      const line2 = city ? (line1 ? `, ${city}` : city) : "";
+      const cp = postalCode ? ` · CP ${postalCode}` : "";
+      return `${line1 || "—"}${line2}${cp}`;
+    }
+
+    function getClientAddresses(clientRow) {
+      if (!clientRow) return [];
+      if (Array.isArray(clientRow.addresses) && clientRow.addresses.length) {
+        return clientRow.addresses.filter(a => a && (a.street || a.city || a.postalCode));
+      }
+      if (clientRow.address && (clientRow.address.street || clientRow.address.city || clientRow.address.postalCode)) {
+        return [clientRow.address];
+      }
+      return [];
+    }
+
+    function findClientByName(name) {
+      if (!name) return null;
+      return E.find(entity => entity.id === "clientes")?.rows.find(item => normalizeLabel(item[0] || "") === normalizeLabel(name)) || null;
+    }
+
+    function syncClientAddressesAcrossRecords(clientRow, updatedIndex = null) {
+      if (!clientRow) return;
+      const addresses = getClientAddresses(clientRow);
+      if (!addresses.length) return;
+      ["presupuestos", "pedidos", "comprobantesVenta"].forEach(entityId => {
+        const entity = E.find(item => item.id === entityId);
+        const clientCol = entityId === "comprobantesVenta" ? 2 : 1;
+        entity?.rows.forEach(row => {
+          if (normalizeLabel(row[clientCol] || "") !== normalizeLabel(clientRow[0] || "")) return;
+          const idx = Number.isInteger(row.customerAddressIndex) && addresses[row.customerAddressIndex] ? row.customerAddressIndex : 0;
+          if (updatedIndex === null || idx === updatedIndex || !row.customerAddress) {
+            row.customerAddressIndex = idx;
+            row.customerAddress = { ...addresses[idx] };
+          }
+        });
+      });
+    }
+
+    function getRecordAddressDisplay(entityId, row) {
+      if (!row) return "Sin domicilio registrado";
+      const clientCol = entityId === "comprobantesVenta" ? 2 : 1;
+      const client = findClientByName(row[clientCol]);
+      const addresses = getClientAddresses(client);
+      if (Number.isInteger(row.customerAddressIndex) && addresses[row.customerAddressIndex]) {
+        return formatAddressObject(addresses[row.customerAddressIndex]);
+      }
+      if (row.customerAddress && formatAddressObject(row.customerAddress)) {
+        return formatAddressObject(row.customerAddress);
+      }
+      if (addresses.length) {
+        return formatAddressObject(addresses[0]);
+      }
+      return "Sin domicilio registrado";
+    }
+
+    function clientAddressRowHtml(containerId, index, addr = {}) {
+      const street = escapeHTML(String(addr.street || ""));
+      const height = escapeHTML(String(addr.height || ""));
+      const city = escapeHTML(String(addr.city || ""));
+      const postalCode = escapeHTML(String(addr.postalCode || ""));
+      const isSaved = Boolean(street && height && city && postalCode);
+      const snapshot = [addr.street, addr.height, addr.city, addr.postalCode].map(v => normalizeLabel(String(v || ""))).join("|");
+      return `<div class="client-address-row-item" data-verified-snapshot="${isSaved ? escapeHTML(snapshot) : ""}">
+        <div class="client-address-row-head">
+          <span>Domicilio ${index + 1}${index === 0 ? " (Principal)" : ""}</span>
+          <button type="button" class="rm-detail-btn" onclick="removeClientAddressRow('${containerId}', ${index})" title="Quitar domicilio">✕</button>
+        </div>
+        <div class="client-address-row-grid">
+          <div class="detail-field">
+            <label>Calle</label>
+            <input class="form-input" data-addr-field="street" type="text" required maxlength="100" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}" placeholder="Ej.: San Martín" value="${street}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+          <div class="detail-field">
+            <label>Altura</label>
+            <input class="form-input" data-addr-field="height" type="number" required min="1" max="99999" step="1" placeholder="Número" value="${height}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+          <div class="detail-field">
+            <label>Localidad</label>
+            <input class="form-input" data-addr-field="city" type="text" required maxlength="80" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}" placeholder="Localidad" value="${city}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+          <div class="detail-field">
+            <label>Código postal</label>
+            <input class="form-input" data-addr-field="postalCode" type="text" required maxlength="8" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" value="${postalCode}" oninput="invalidateRowAddressVerification(this)">
+          </div>
+        </div>
+        <div class="address-verify-tools">
+          <button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button>
+          <span class="address-verify-status" data-address-status data-state="${isSaved ? "verified" : ""}">${isSaved ? "Domicilio cargado." : "Comprobá el domicilio con el servicio oficial de Argentina."}</span>
+          <small>Verificación: <a href="https://www.argentina.gob.ar/georef" target="_blank" rel="noopener">Georef</a></small>
+        </div>
+      </div>`;
+    }
+
+    function renderAddressRowsInContainer(containerId, addresses = [{}]) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      const list = addresses.length ? addresses : [{}];
+      container.innerHTML = list.map((addr, idx) => clientAddressRowHtml(containerId, idx, addr)).join("");
+    }
+
+    function readAddressRowsFromContainer(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+      return [...container.querySelectorAll(".client-address-row-item")].map(item => ({
+        street: item.querySelector('[data-addr-field="street"]')?.value.trim() || "",
+        height: item.querySelector('[data-addr-field="height"]')?.value.trim() || "",
+        city: item.querySelector('[data-addr-field="city"]')?.value.trim() || "",
+        postalCode: item.querySelector('[data-addr-field="postalCode"]')?.value.trim() || "",
+      }));
+    }
+
+    function addClientAddressRow(containerId = "client-addresses-rows") {
+      const current = readAddressRowsFromContainer(containerId);
+      current.push({ street: "", height: "", city: "", postalCode: "" });
+      renderAddressRowsInContainer(containerId, current);
+    }
+
+    function removeClientAddressRow(containerId, index) {
+      const current = readAddressRowsFromContainer(containerId);
+      if (current.length <= 1) {
+        showNotify("El cliente debe tener al menos un domicilio.");
+        return;
+      }
+      current.splice(index, 1);
+      renderAddressRowsInContainer(containerId, current);
+    }
+
+    function invalidateRowAddressVerification(input) {
+      const rowItem = input?.closest?.(".client-address-row-item");
+      if (!rowItem) return;
+      rowItem.dataset.verifiedSnapshot = "";
+      const status = rowItem.querySelector("[data-address-status]");
+      if (status) {
+        status.dataset.state = "";
+        status.textContent = "La dirección cambió; podés verificarla o guardar.";
+      }
+      rowItem.querySelector(".address-suggestions")?.remove();
+    }
+
+    function getFormControl(label) {
+      const group = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+        .find(item => fieldKey(item) === label);
+      return group?.querySelector("input, select, textarea") || null;
+    }
+
+    function getActiveFormClientSelect() {
+      if (currentFormEntity === "presupuestos") return document.getElementById("budget-client-select") || getFormControl("Id_Cliente");
+      if (currentFormEntity === "pedidos") return document.getElementById("order-client-select") || getFormControl("Id_Cliente");
+      if (currentFormEntity === "comprobantesVenta") return getFormControl("Id_Cliente (heredado)");
+      return null;
+    }
+
+    function syncClientAddressWidget(preferredAddress = null, preferredIndex = null) {
+      const targetId = currentFormEntity === "comprobantesVenta" ? "invoice-client-summary" : "entity-client-address-widget";
+      const container = document.getElementById(targetId);
+      if (!container) return;
+      const clientSelect = getActiveFormClientSelect();
+      const clientName = clientSelect?.value || "";
+      const client = findClientByName(clientName);
+      if (!client) {
+        if (currentFormEntity === "comprobantesVenta") {
+          container.innerHTML = "<strong>Seleccioná un cliente</strong><span>Sus datos y domicilio aparecerán en el comprobante.</span>";
+        } else {
+          container.innerHTML = `<div class="client-address-card"><span style="color:var(--text-muted)">Seleccioná un cliente para visualizar su domicilio cargado.</span></div>`;
+        }
+        return;
+      }
+      const addresses = getClientAddresses(client);
+      if (preferredIndex !== null && preferredIndex !== undefined && addresses[preferredIndex]) {
+        currentSelectedAddressIndex = Number(preferredIndex);
+      } else if (preferredAddress) {
+        const matchIdx = addresses.findIndex(a => normalizeLabel(formatAddressObject(a)) === normalizeLabel(formatAddressObject(preferredAddress)));
+        currentSelectedAddressIndex = matchIdx >= 0 ? matchIdx : 0;
+      } else if (currentSelectedAddressIndex >= addresses.length || currentSelectedAddressIndex < 0) {
+        currentSelectedAddressIndex = 0;
+      }
+      const selectedAddr = addresses[currentSelectedAddressIndex] || null;
+      const headerHtml = currentFormEntity === "comprobantesVenta"
+        ? `<strong>${escapeHTML(client[0])}</strong><span>Documento: ${escapeHTML(client[1] || "—")}</span>`
+        : "";
+      const selectorHtml = addresses.length > 0
+        ? `<select class="form-select" id="active-client-address-select" aria-label="Domicilio del cliente" onchange="handleClientAddressSelectChange(this.value)">${addresses.map((addr, idx) => `<option value="${idx}"${idx === currentSelectedAddressIndex ? " selected" : ""}>${addresses.length > 1 ? `Domicilio ${idx + 1}: ` : ""}${escapeHTML(formatAddressObject(addr))}</option>`).join("")}</select>
+           <div class="client-address-value" id="active-client-address-display">Domicilio cargado: <strong>${escapeHTML(formatAddressObject(selectedAddr))}</strong></div>`
+        : `<div class="client-address-value" id="active-client-address-display" style="color:var(--text-muted)">Sin domicilio registrado para este cliente.</div>`;
+      const innerHtml = `
+        ${headerHtml}
+        <div class="client-address-card-header">
+          <span class="client-address-card-title">${addresses.length > 1 ? `Domicilios cargados (${addresses.length})` : "Domicilio del cliente"}</span>
+          <div class="client-address-actions">
+            ${addresses.length ? `<button type="button" class="btn btn-ghost btn-sm" onclick="openInlineClientAddressEditor('edit')">Actualizar domicilio</button>` : ""}
+            <button type="button" class="btn btn-ghost btn-sm" onclick="openInlineClientAddressEditor('add')">+ Agregar domicilio</button>
+          </div>
+        </div>
+        ${selectorHtml}
+        <div id="inline-client-address-editor" class="client-address-inline-editor" hidden>
+          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><input class="form-input" id="inline-addr-street" placeholder="Ej.: San Martín"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-height">Altura</label><input class="form-input" id="inline-addr-height" type="number" min="1" max="99999" step="1" placeholder="Ej.: 450"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><input class="form-input" id="inline-addr-city" placeholder="Ej.: Morón"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" placeholder="Ej.: 1708"></div>
+          <div class="span2" style="display:flex;gap:6px;justify-content:flex-end;margin-top:2px;">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="closeInlineClientAddressEditor()">Cancelar</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="saveInlineClientAddress()">Guardar domicilio</button>
+          </div>
+        </div>`;
+      container.innerHTML = currentFormEntity === "comprobantesVenta" ? innerHtml : `<div class="client-address-card">${innerHtml}</div>`;
+    }
+
+    function handleClientAddressSelectChange(indexValue) {
+      const client = findClientByName(getActiveFormClientSelect()?.value || "");
+      const addresses = getClientAddresses(client);
+      const idx = Number(indexValue) || 0;
+      currentSelectedAddressIndex = addresses[idx] ? idx : 0;
+      const display = document.getElementById("active-client-address-display");
+      if (display && addresses[currentSelectedAddressIndex]) {
+        display.innerHTML = `Domicilio cargado: <strong>${escapeHTML(formatAddressObject(addresses[currentSelectedAddressIndex]))}</strong>`;
+      }
+      closeInlineClientAddressEditor();
+    }
+
+    function openInlineClientAddressEditor(mode) {
+      const editor = document.getElementById("inline-client-address-editor");
+      if (!editor) return;
+      currentInlineAddressEditMode = mode;
+      const client = findClientByName(getActiveFormClientSelect()?.value || "");
+      const addresses = getClientAddresses(client);
+      const current = mode === "edit" ? (addresses[currentSelectedAddressIndex] || {}) : {};
+      document.getElementById("inline-addr-street").value = current.street || "";
+      document.getElementById("inline-addr-height").value = current.height || "";
+      document.getElementById("inline-addr-city").value = current.city || "";
+      document.getElementById("inline-addr-postal").value = current.postalCode || "";
+      editor.hidden = false;
+      document.getElementById("inline-addr-street").focus();
+    }
+
+    function closeInlineClientAddressEditor() {
+      const editor = document.getElementById("inline-client-address-editor");
+      if (editor) editor.hidden = true;
+      currentInlineAddressEditMode = null;
+    }
+
+    function saveInlineClientAddress() {
+      const client = findClientByName(getActiveFormClientSelect()?.value || "");
+      if (!client) return;
+      const street = document.getElementById("inline-addr-street")?.value.trim() || "";
+      const height = document.getElementById("inline-addr-height")?.value.trim() || "";
+      const city = document.getElementById("inline-addr-city")?.value.trim() || "";
+      const postalCode = document.getElementById("inline-addr-postal")?.value.trim() || "";
+      if (!street || !height || !city || !postalCode) {
+        showNotify("Completá calle, altura, localidad y código postal del domicilio.");
+        return;
+      }
+      const nextAddr = { street, height, city, postalCode };
+      const addresses = getClientAddresses(client).map(a => ({ ...a }));
+      if (currentInlineAddressEditMode === "edit" && addresses[currentSelectedAddressIndex]) {
+        addresses[currentSelectedAddressIndex] = nextAddr;
+      } else {
+        addresses.push(nextAddr);
+        currentSelectedAddressIndex = addresses.length - 1;
+      }
+      client.addresses = addresses;
+      client.address = addresses[0] || null;
+      syncClientAddressesAcrossRecords(client, currentSelectedAddressIndex);
+      persistBusinessData();
+      const wasEdit = currentInlineAddressEditMode === "edit";
+      closeInlineClientAddressEditor();
+      syncClientAddressWidget(null, currentSelectedAddressIndex);
+      showNotify(wasEdit ? "Domicilio del cliente actualizado." : "Nuevo domicilio agregado al cliente.");
+    }
+
+    function getSelectedClientAddressForForm() {
+      const client = findClientByName(getActiveFormClientSelect()?.value || "");
+      const addresses = getClientAddresses(client);
+      if (!addresses.length) return null;
+      const select = document.getElementById("active-client-address-select");
+      const idx = select ? (Number(select.value) || 0) : currentSelectedAddressIndex;
+      const safeIdx = addresses[idx] ? idx : 0;
+      return { index: safeIdx, address: { ...addresses[safeIdx] } };
+    }
+
     function initializeCustomerOwnership() {
+      const clients = E.find(entity => entity.id === "clientes");
+      clients.rows.forEach(clientRow => {
+        const existing = getClientAddresses(clientRow);
+        if (existing.length) {
+          clientRow.addresses = existing.map(a => ({ ...a }));
+        } else if (DEFAULT_CLIENT_ADDRESSES[clientRow[0]]) {
+          clientRow.addresses = DEFAULT_CLIENT_ADDRESSES[clientRow[0]].map(a => ({ ...a }));
+        } else {
+          clientRow.addresses = [];
+        }
+        clientRow.address = clientRow.addresses[0] || null;
+      });
+      const DEFAULT_RECORD_DETAILS = {
+        "#PR-0208": { detPresupuesto: [{ selected: "Sorrentinos jamón y queso", inputs: ["10", "3200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["4", "1600"], extraSelects: [] }] },
+        "#PR-0207": { detPresupuesto: [{ selected: "Tallarines frescos 500g", inputs: ["15", "1200"], extraSelects: [] }, { selected: "Sorrentinos jamón y queso", inputs: ["8", "3200"], extraSelects: [] }] },
+        "#PR-0203": { detPresupuesto: [{ selected: "Tallarines frescos 500g", inputs: ["2", "1200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["1", "1800"], extraSelects: [] }] },
+        "#OP-0892": { detPedido: [{ selected: "Tallarines frescos 500g", inputs: ["3", "1200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["1", "1800"], extraSelects: [] }] },
+        "#OP-0886": { detPedido: [{ selected: "Sorrentinos jamón y queso", inputs: ["10", "3200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["4", "1600"], extraSelects: [] }] },
+        "#OP-0879": { detPedido: [{ selected: "Tallarines frescos 500g", inputs: ["12", "1200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["6", "1800"], extraSelects: [] }] },
+        "#CV-1103": { detCV: [{ selected: "Tallarines frescos 500g", inputs: ["3", "1200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["1", "1800"], extraSelects: [] }] },
+        "#CV-1098": { detCV: [{ selected: "Sorrentinos jamón y queso", inputs: ["10", "3200"], extraSelects: [] }, { selected: "Salsa bolognesa (pote)", inputs: ["4", "1600"], extraSelects: [] }] }
+      };
+      ["presupuestos", "pedidos", "comprobantesVenta"].forEach(id => {
+        const entity = E.find(item => item.id === id);
+        const clientCol = id === "comprobantesVenta" ? 2 : 1;
+        entity?.rows.forEach(row => {
+          if (!row.detailData && DEFAULT_RECORD_DETAILS[row[0]]) {
+            row.detailData = JSON.parse(JSON.stringify(DEFAULT_RECORD_DETAILS[row[0]]));
+          }
+          if (!row.customerAddress && normalizeLabel(row[clientCol] || "") === normalizeLabel("Iglesia San José")) {
+            row.customerAddress = { street: "Av. Hipólito Yrigoyen", height: "850", city: "Morón", postalCode: "1708" };
+          }
+        });
+      });
+      ["presupuestos", "pedidos", "comprobantesVenta"].forEach(id => {
+        const entity = E.find(item => item.id === id);
+        const clientCol = id === "comprobantesVenta" ? 2 : 1;
+        entity?.rows.forEach(row => {
+          const client = clients.rows.find(item => normalizeLabel(item[0]) === normalizeLabel(row[clientCol] || ""));
+          if (client) {
+            row.customerDocument = client[1];
+            const addrs = getClientAddresses(client);
+            if (!row.customerAddress && addrs.length) {
+              row.customerAddressIndex = 0;
+              row.customerAddress = { ...addrs[0] };
+            }
+          }
+        });
+      });
+    }
+    function _unusedOldCustomerOwnership() {
       const clients = E.find(entity => entity.id === "clientes");
       ["presupuestos", "pedidos"].forEach(id => {
         const entity = E.find(item => item.id === id);
@@ -1892,7 +2303,7 @@
       <table>
         <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}<th></th></tr></thead>
         <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}<td class="td-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>
+          <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>${["presupuestos", "pedidos", "comprobantesVenta"].includes(e.id) ? `<button class="btn btn-ghost btn-sm" onclick="printEntityVoucher('${e.id}',${e.rows.indexOf(r)})">Imprimir</button>` : ""}
           ${customerViewOnly ? "" : e.id === "productos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('productos',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-ghost btn-sm" onclick="toggleProductStatus(${e.rows.indexOf(r)})">${normalizeLabel(r[7] || "Activo") === "activo" ? "Desactivar" : "Activar"}</button>
           <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
@@ -2186,14 +2597,17 @@
       const required = f.required ? " required" : "";
       let input;
       const fieldOptions = f.optionsSource === "productTypes" ? productTypes : f.o || [];
-      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}><option value="">Seleccionar cliente</option>${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="toggleBudgetClientForm()">+ Crear cliente</button><div id="budget-client-form" class="budget-client-fields" hidden><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido" required><input class="form-input" id="budget-client-document" placeholder="Documento" aria-label="Documento" required><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select><input class="form-input" id="budget-client-postal" placeholder="Código postal" aria-label="Código postal" required pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})"><input class="form-input" id="budget-client-city" placeholder="Localidad" aria-label="Localidad" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}"><input class="form-input" id="budget-client-street" placeholder="Calle" aria-label="Calle" required pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}"><input class="form-input" id="budget-client-height" placeholder="Altura" aria-label="Altura" type="number" min="1" step="1" required><div class="address-verify-tools"><button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button><span class="address-verify-status" data-address-status>Comprobá el domicilio con el servicio oficial de Argentina.</span><small>Verificación: <a href="https://www.argentina.gob.ar/georef" target="_blank" rel="noopener">Georef</a></small></div><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div>`;
+      const isClientRole = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(currentFormEntity);
+      const clientLockedField = isClientRole && ["Id_Cliente", "estado", "descuento", "validohasta"].includes(f.l);
+      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>${isClientRole ? "" : '<button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;width:fit-content;" onclick="toggleBudgetClientForm()">+ Crear cliente</button>'}`;
+      else if (f.ref && currentFormEntity === "pedidos" && f.ref === "clientes") input = `<select class="form-select" id="order-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.key === "productType" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="type"${required}>${productTypes.map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('add')" title="Agregar tipo de producto" aria-label="Agregar tipo de producto">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('edit')" title="Editar tipo de producto" aria-label="Editar tipo de producto">✎</button></div>`;
       else if (f.key === "productRecipe" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="recipe"><option value="">Sin receta asignada</option>${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('add')" title="Crear receta" aria-label="Crear receta">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('edit')" title="Editar receta" aria-label="Editar receta">✎</button></div>`;
       else if (f.ref) input = `<select class="form-select"${required}>${f.optional ? '<option value="">Sin presupuesto</option>' : f.required ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(f.l).toLocaleLowerCase("es-AR"))}</option>` : ""}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.t === "multiselect") input = `<select class="form-select" multiple size="${f.o.length}"${required}>${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
-      else if (f.t === "select") input = `<select class="form-select"${required}>${fieldOptions.map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
+      else if (f.t === "select") input = `<select class="form-select"${required}${clientLockedField ? " disabled" : ""}>${(isClientRole && f.l === "estado" ? ["Pendiente"] : fieldOptions).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.t === "textarea") input = `<textarea class="form-textarea"${required}></textarea>`;
-      else input = `<input class="form-input" type="${f.t}"${f.t === "date" ? ' lang="es-AR"' : ""}${required}>`;
+      else input = `<input class="form-input" type="${f.t}"${f.t === "date" ? ' lang="es-AR"' : ""}${clientLockedField ? (f.l === "descuento" ? ' value="0" readonly disabled' : f.l === "validohasta" ? ` value="${new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10)}" readonly disabled` : " readonly disabled") : ""}${required}>`;
       const attrs = [f.min !== undefined ? `min="${f.min}"` : "", f.max !== undefined ? `max="${f.max}"` : "", f.step ? `step="${f.step}"` : "", f.pattern ? `pattern="${escapeHTML(f.pattern)}"` : "", f.maxlength ? `maxlength="${f.maxlength}"` : "", f.placeholder ? `placeholder="${escapeHTML(f.placeholder)}"` : "", f.autocomplete ? `autocomplete="${f.autocomplete}"` : ""].filter(Boolean).join(" ");
       const addressTools = f.l === "Altura" && currentFormEntity === "clientes" ? `<div class="address-verify-tools"><button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button><span class="address-verify-status" data-address-status>Comprobá el domicilio con el servicio oficial de Argentina.</span><small>Verificación: <a href="https://www.argentina.gob.ar/georef" target="_blank" rel="noopener">Georef</a></small></div>` : "";
       return `<div class="form-group${span}"><label class="form-label" data-field-key="${escapeHTML(f.l)}">${escapeHTML(friendlyAttributeLabel(f.l))}</label>${input.replace(/(class="form-input"[^>]*)(>)/, `$1 ${attrs}$2`)}${addressTools}</div>`;
@@ -2205,10 +2619,10 @@
 
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
-    <div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</label><select class="form-select">${["detOPprod", "detCV"].includes(g.key) ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(g.refLabel).toLocaleLowerCase("es-AR"))}</option>` : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select></div>
+    <div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</label><select class="form-select" onchange="handleDetailProductChange(this, '${g.key}')">${["detOPprod", "detCV"].includes(g.key) ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(g.refLabel).toLocaleLowerCase("es-AR"))}</option>` : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select></div>
       ${g.extra.map(x => `<div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(x.l))}</label>${x.t === "select"
         ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
-        : x.t === "number" ? `<input class="form-input" type="number" min="${x.min ?? 0.01}" step="${x.step ?? "0.01"}" value="${x.defaultValue ?? "1"}">`
+        : x.t === "number" ? `<input class="form-input" type="number" min="${x.min ?? 0.01}" step="${x.step ?? "0.01"}" value="${x.defaultValue ?? (x.l === "PrecioUnitario" && g.ref === "productos" && g.key !== "detCV" ? (getDefaultProductBasePrice(refOptions(g.ref)[0]) || "1") : "1")}"${currentRole === "cliente" && x.l === "PrecioUnitario" ? " readonly disabled" : ""}>`
           : x.t === "date" ? `<input class="form-input" type="date" lang="es-AR">`
           : `<input class="form-input" type="text">`}</div>`).join("")}
     ${g.key === "detCV" ? '<div class="invoice-line-total">$0,00</div>' : ""}<button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
@@ -2273,16 +2687,268 @@
       if (key === "detOPprod") syncProductionMaterials();
     }
 
+    function getDefaultProductBasePrice(productName) {
+      if (!productName) return "";
+      const prod = E.find(entity => entity.id === "productos")?.rows.find(r => normalizeLabel(r[0]) === normalizeLabel(productName));
+      if (!prod) return "";
+      const price = parseProductPrice(prod[4]);
+      return Number.isFinite(price) && price > 0 ? String(price) : "";
+    }
+
+    function handleDetailProductChange(selectEl, groupKey) {
+      if (!["detPresupuesto", "detPedido", "detCV", "detRemito"].includes(groupKey)) return;
+      const row = selectEl.closest(".detail-row");
+      if (!row) return;
+      const inputs = row.querySelectorAll(".form-input");
+      const priceInput = inputs[1];
+      const basePrice = getDefaultProductBasePrice(selectEl.value);
+      if (priceInput && basePrice) {
+        priceInput.value = basePrice;
+      }
+      if (groupKey === "detCV") syncInvoicePreview();
+    }
+
+    function renderAfipQrSvg() {
+      const cells = [
+        [0,0,7,7],[1,1,5,5],[2,2,3,3],[14,0,7,7],[15,1,5,5],[16,2,3,3],[0,14,7,7],[1,15,5,5],[2,16,3,3],
+        [8,0,1,1],[10,0,2,1],[8,2,2,1],[11,2,1,2],[8,4,1,2],[10,5,2,1],[0,8,2,1],[3,8,1,2],[5,8,2,1],[8,8,2,2],
+        [11,8,1,1],[13,8,2,1],[16,8,1,2],[19,8,2,1],[2,11,2,1],[5,11,1,2],[8,11,1,1],[10,11,3,1],[14,11,2,2],
+        [18,11,2,1],[8,13,2,1],[11,14,2,1],[14,14,1,2],[17,14,3,1],[8,16,1,2],[10,17,2,1],[13,17,2,2],[16,17,1,1],
+        [19,16,2,2],[8,19,2,2],[11,19,1,2],[15,19,2,1],[18,19,3,2]
+      ];
+      return `<svg width="74" height="74" viewBox="0 0 21 21" shape-rendering="crispEdges" style="border:1px solid #ddd;padding:3px;background:#fff;flex-shrink:0;" aria-label="Código QR"><rect width="21" height="21" fill="#fff"/>${cells.map(([x,y,w,h], idx) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${idx % 9 === 1 ? "#fff" : "#111"}"/>`).join("")}</svg>`;
+    }
+
+    function renderAfipVoucherHtml(entityId, row) {
+      const stripTags = val => String(val ?? "").replace(/<[^>]+>/g, "").trim();
+      const rawCode = stripTags(row[0] || "0001");
+      const numMatch = rawCode.match(/(\d+)/);
+      const numericId = numMatch ? Number(numMatch[1]) : 1;
+      const paddedNum = String(numericId).padStart(8, "0");
+
+      const isInvoice = entityId === "comprobantesVenta";
+      const isBudget = entityId === "presupuestos";
+      const isOrder = entityId === "pedidos";
+
+      const docLetter = isInvoice ? "C" : "X";
+      const docCodeLabel = isInvoice ? "cod.011" : "cod.000";
+      const docTitle = isInvoice ? "FACTURA (cod.011)" : isBudget ? "PRESUPUESTO (cod.000)" : "ORDEN DE PEDIDO (cod.000)";
+      const pointOfSale = isInvoice ? "00003" : isBudget ? "00001" : "00002";
+      const prefixCode = isInvoice ? "fac-C" : isBudget ? "pre-X" : "ped-X";
+      const fullVoucherNumber = `${prefixCode}-${pointOfSale}-${paddedNum} (${rawCode})`;
+
+      const clientName = stripTags(isInvoice ? row[2] : row[1]) || "Consumidor final";
+      const clientRow = E.find(entity => entity.id === "clientes")?.rows.find(c => normalizeLabel(c[0]) === normalizeLabel(clientName));
+      const clientDoc = stripTags(clientRow?.[1] || row.customerDocument || "0");
+      const clientType = stripTags(clientRow?.[2] || "Consumidor Final");
+      const clientAddress = getRecordAddressDisplay(entityId, row);
+
+      const todayFormatted = new Date().toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const emissionDate = isInvoice
+        ? formatDateForDisplay(stripTags(row[3]) || todayFormatted)
+        : isBudget
+          ? formatDateForDisplay(stripTags(row[2]) || todayFormatted)
+          : formatDateForDisplay(row.schedule?.deliveryDate || row.schedule?.startDate || row.schedule?.eventDate || stripTags(row[3]) || todayFormatted);
+
+      const detailKey = isBudget ? "detPresupuesto" : isOrder ? "detPedido" : "detCV";
+      let detailLines = row.detailData?.[detailKey] || [];
+      if (!detailLines.length && isInvoice && row[1]) {
+        const linkedOrder = E.find(entity => entity.id === "pedidos")?.rows.find(o => o[0] === row[1]);
+        if (linkedOrder?.detailData?.detPedido?.length) detailLines = linkedOrder.detailData.detPedido;
+      }
+      if (!detailLines.length && isOrder && row[2] && row[2] !== "—") {
+        const linkedBudget = E.find(entity => entity.id === "presupuestos")?.rows.find(b => b[0] === row[2]);
+        if (linkedBudget?.detailData?.detPresupuesto?.length) detailLines = linkedBudget.detailData.detPresupuesto;
+      }
+
+      const productsEntity = E.find(entity => entity.id === "productos")?.rows || [];
+      const discountPct = isBudget ? (Number(String(row[3] || "0").replace(/[^\d.,-]/g, "").replace(",", ".")) || 0) : 0;
+
+      const computedItems = (detailLines.length ? detailLines : [{ selected: productsEntity[0]?.[0] || "Tallarines frescos 500g", inputs: ["1", getDefaultProductBasePrice(productsEntity[0]?.[0]) || "1200"] }]).map((line, idx) => {
+        const prodName = line.selected || "Producto";
+        const prodIndex = productsEntity.findIndex(p => normalizeLabel(p[0]) === normalizeLabel(prodName));
+        const prodCode = prodIndex >= 0 ? String(1001 + prodIndex) : String(2001 + idx);
+        const qty = Number(String(line.inputs?.[0] ?? "1").replace(",", ".")) || 1;
+        let unitPrice = parseProductPrice(line.inputs?.[1]);
+        if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+          unitPrice = parseProductPrice(productsEntity[prodIndex]?.[4]) || 1200;
+        }
+        const gross = qty * unitPrice;
+        const discountAmount = gross * (discountPct / 100);
+        const netTotal = gross - discountAmount;
+        return {
+          code: prodCode,
+          description: prodName,
+          qty,
+          unitPrice,
+          discountAmount,
+          alicuota: 21,
+          total: netTotal
+        };
+      });
+
+      const itemsTotal = computedItems.reduce((sum, item) => sum + item.total, 0);
+      const grandTotal = itemsTotal;
+
+      const orderIdForPayments = isInvoice ? row[1] : isOrder ? row[0] : null;
+      const linkedPayments = orderIdForPayments
+        ? (E.find(entity => entity.id === "comprobantesPago")?.rows || [])
+            .filter(receipt => receipt.paymentStatus !== "Anulado")
+            .flatMap(receipt => (receipt.paymentLines || [])
+              .filter(line => line.orderId === orderIdForPayments)
+              .map(line => ({ method: line.method || "Efectivo", amount: Number(line.amount) || 0, receiptId: receipt[0], date: receipt[3] })))
+        : [];
+
+      let paymentsHtml = "";
+      if (linkedPayments.length) {
+        paymentsHtml = linkedPayments.map(p => `<div>${escapeHTML(p.method)} $ ${p.amount.toFixed(2)} <span style="color:#555;font-size:10.5px;">(${escapeHTML(p.receiptId)})</span></div>`).join("");
+      } else if (isInvoice) {
+        const saleMode = stripTags(row[4] || "Efectivo");
+        paymentsHtml = `<div>${escapeHTML(saleMode === "Minorista" ? "Efectivo" : saleMode)} $ ${grandTotal.toFixed(2)}</div>`;
+      } else if (isOrder) {
+        const advanceText = stripTags(row[4] || "—");
+        const statusText = stripTags(row[5] || "Pendiente");
+        paymentsHtml = `<div>Anticipo: ${escapeHTML(advanceText === "—" ? "$ 0.00" : advanceText)} · Estado: <strong>${escapeHTML(statusText)}</strong></div><div>Entrega: ${escapeHTML(stripTags(formatCellValue(E.find(x => x.id === "pedidos"), row, 3)))}</div>`;
+      } else {
+        const statusText = stripTags(row[4] || "Pendiente");
+        paymentsHtml = `<div>Modalidad: ${escapeHTML(row.orderType || "Mostrador")} · Validez hasta: ${escapeHTML(formatDateForDisplay(stripTags(row[2])))}</div><div>Descuento: ${escapeHTML(stripTags(row[3] || "0%"))} · Estado: <strong>${escapeHTML(statusText)}</strong></div>`;
+      }
+
+      const caeNumber = `74200169${String(280000 + numericId * 37).slice(-6)}`;
+      const extraMetaLine = isBudget
+        ? `<div class="afip-doc-row"><b>Válido hasta:</b> ${escapeHTML(formatDateForDisplay(stripTags(row[2] || "—")))} · <b>Modalidad:</b> ${escapeHTML(row.orderType || "Mostrador")}</div>`
+        : isOrder
+          ? `<div class="afip-doc-row"><b>Entrega:</b> ${escapeHTML(stripTags(formatCellValue(E.find(x => x.id === "pedidos"), row, 3)))}${row[2] && row[2] !== "—" ? ` · <b>Presupuesto:</b> ${escapeHTML(stripTags(row[2]))}` : ""}</div>`
+          : `<div class="afip-doc-row"><b>Orden asociada:</b> ${escapeHTML(stripTags(row[1] || "—"))} · <b>Condición venta:</b> ${escapeHTML(stripTags(row[4] || "Minorista"))}</div>`;
+
+      return `<div class="afip-doc" id="printable-afip-voucher">
+        <div class="afip-doc-original">ORIGINAL</div>
+        <div class="afip-doc-header">
+          <div class="afip-doc-letter">
+            <strong>${escapeHTML(docLetter)}</strong>
+            <small>${escapeHTML(docCodeLabel)}</small>
+          </div>
+          <div class="afip-doc-emitter">
+            <div class="afip-doc-brand">FÁBRICA DE PASTAS</div>
+            <div class="afip-doc-row"><b>Razón Social:</b> FÁBRICA DE PASTAS ARTESANALES</div>
+            <div class="afip-doc-row"><b>Domicilio:</b> Paraguay 475</div>
+            <div class="afip-doc-row"><b>Localidad:</b> MORÓN, BUENOS AIRES</div>
+            <div class="afip-doc-row"><b>Condición IVA:</b> Monotributo</div>
+          </div>
+          <div class="afip-doc-meta">
+            <div class="afip-doc-type-title">${escapeHTML(docTitle)}</div>
+            <div class="afip-doc-row"><b>Comprobante:</b> ${escapeHTML(fullVoucherNumber)}</div>
+            <div class="afip-doc-row"><b>Fecha Emisión:</b> ${escapeHTML(emissionDate)}</div>
+            ${extraMetaLine}
+            <div style="height:6px"></div>
+            <div class="afip-doc-row"><b>CUIT:</b> 20240116120</div>
+            <div class="afip-doc-row"><b>Ingresos Brutos:</b> 20240116120</div>
+            <div class="afip-doc-row"><b>Fecha Inicio Actividades:</b> 01/03/2012</div>
+          </div>
+        </div>
+        <div class="afip-doc-client">
+          <div>
+            <div class="afip-doc-row"><b>Cliente:</b> ${escapeHTML(clientName)}</div>
+            <div class="afip-doc-row" style="margin-top:6px;"><b>Domicilio:</b> ${escapeHTML(clientAddress)}</div>
+          </div>
+          <div>
+            <div class="afip-doc-row"><b>CUIT/DNI:</b> ${escapeHTML(clientDoc)}</div>
+            <div class="afip-doc-row" style="margin-top:6px;"><b>Condición IVA:</b> ${escapeHTML(clientType)}</div>
+          </div>
+        </div>
+        <div class="afip-doc-items-section">
+          <table class="afip-doc-table">
+            <thead>
+              <tr>
+                <th style="width:10%">Código</th>
+                <th style="width:34%">Descripción</th>
+                <th class="num" style="width:11%">Cantidad</th>
+                <th class="num" style="width:14%">Precio Unit.</th>
+                <th class="num" style="width:11%">Descuento</th>
+                <th class="num" style="width:10%">Alícuota %</th>
+                <th class="num" style="width:10%">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${computedItems.map(item => `<tr>
+                <td>${escapeHTML(item.code)}</td>
+                <td>${escapeHTML(item.description)}</td>
+                <td class="num">${item.qty.toFixed(2)}</td>
+                <td class="num">${item.unitPrice.toFixed(2)}</td>
+                <td class="num">${item.discountAmount.toFixed(2)}</td>
+                <td class="num">${item.alicuota.toFixed(2)}</td>
+                <td class="num">${item.total.toFixed(2)}</td>
+              </tr>`).join("")}
+            </tbody>
+          </table>
+          <div class="afip-doc-totals-bar">
+            <div class="afip-doc-payments">
+              <b>Pagos</b>
+              ${paymentsHtml}
+            </div>
+            <div class="afip-doc-grand-total">
+              <span>Importe Total:$</span>
+              <span>${grandTotal.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+        <div class="afip-doc-footer">
+          <div class="afip-doc-qr-group">
+            ${renderAfipQrSvg()}
+            <div class="afip-doc-afip-badge">
+              <div class="afip-doc-afip-logo">AFIP</div>
+              <div style="font-size:9.5px;font-weight:700;color:#222;">${isInvoice ? "Comprobante Autorizado" : "Documento Emitido"}</div>
+            </div>
+          </div>
+          <div style="display:grid;gap:8px;justify-items:end;">
+            <div class="afip-doc-cae">
+              <b>${isInvoice ? "CAE Nro:" : "Código Interno:"}</b><span>${escapeHTML(caeNumber)}</span>
+              <b>${isInvoice ? "Fecha Vto CAE:" : "Fecha Validez:"}</b><span>${escapeHTML(emissionDate)}</span>
+            </div>
+            <div style="font-size:9.5px;color:#555;">Facturado Simple · <strong>Fábrica de Pastas</strong></div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function printCurrentViewVoucher() {
+      window.print();
+    }
+
+    function printEntityVoucher(entityId, rowIdx) {
+      openView(entityId, rowIdx);
+      setTimeout(() => {
+        window.print();
+      }, 120);
+    }
+
     function openView(entityId, rowIdx) {
       const e = E.find(x => x.id === entityId);
       const row = e.rows[rowIdx];
       document.getElementById("mv-title").textContent = row[0].replace(/<[^>]+>/g, "");
       document.getElementById("mv-class").textContent = "";
+      const isVoucherEntity = ["presupuestos", "pedidos", "comprobantesVenta"].includes(entityId);
+      const modalEl = document.querySelector("#modal-view .modal");
+      const printBtn = document.getElementById("mv-print-btn");
+      if (modalEl) modalEl.classList.toggle("voucher-modal", isVoucherEntity);
+      if (printBtn) printBtn.hidden = !isVoucherEntity;
+      if (isVoucherEntity) {
+        document.getElementById("mv-title").textContent = `${e.singular.charAt(0).toUpperCase() + e.singular.slice(1)} ${row[0].replace(/<[^>]+>/g, "")}`;
+        document.getElementById("mv-body").innerHTML = renderAfipVoucherHtml(entityId, row);
+        openModal("modal-view");
+        return;
+      }
       let h = `<div class="view-grid">`;
       e.cols.forEach((c, i) => {
         h += `<div class="view-field"><div class="view-label">${escapeHTML(friendlyAttributeLabel(c))}</div><div class="view-value">${formatCellValue(e, row, i)}</div></div>`;
       });
-      if (entityId === "clientes" && row.address) h += `<div class="view-field span2"><div class="view-label">Domicilio</div><div class="view-value">${escapeHTML(`${row.address.street || "—"} ${row.address.height || ""}, ${row.address.city || "—"} · CP ${row.address.postalCode || "—"}`)}</div></div>`;
+      if (entityId === "clientes") {
+        const addrs = getClientAddresses(row);
+        h += `<div class="view-field span2"><div class="view-label">${addrs.length > 1 ? `Domicilios (${addrs.length})` : "Domicilio"}</div><div class="view-value">${addrs.length ? addrs.map((a, idx) => `<div>${addrs.length > 1 ? `<strong>Domicilio ${idx + 1}:</strong> ` : ""}${escapeHTML(formatAddressObject(a))}</div>`).join("") : "Sin domicilio registrado"}</div></div>`;
+      }
+      if (["presupuestos", "pedidos", "comprobantesVenta"].includes(entityId)) {
+        h += `<div class="view-field span2"><div class="view-label">Domicilio del cliente</div><div class="view-value">${escapeHTML(getRecordAddressDisplay(entityId, row))}</div></div>`;
+      }
       h += `</div>`;
       if (e.details && e.details.length) {
         e.details.filter(group => !group.transient).forEach(g => {
@@ -2331,13 +2997,20 @@
       document.getElementById("mf-title").textContent = `${editing ? "Editar " : "Nuevo "}${e.singular}`;
       let body = entityId === "comprobantesVenta"
         ? `<div class="invoice-paper"><div class="invoice-head"><div><span class="invoice-kicker">Fábrica de Pastas</span><strong>Gestión de ventas</strong></div><div class="invoice-title"><span>COMPROBANTE DE VENTA</span><small>Original · A</small></div></div><div class="invoice-parties"><section><span>EMISOR</span><strong>Fábrica de Pastas</strong><small>Comprobante generado desde el sistema de gestión</small></section><section><span>CLIENTE Y EMISIÓN</span><div class="form-grid">${e.fields.map(fieldHtml).join("")}</div><div id="invoice-client-summary" class="invoice-client-summary"><strong>Seleccioná un cliente</strong><span>Sus datos y domicilio aparecerán en el comprobante.</span></div></section></div>`
-        : `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>`;
+        : `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>${["presupuestos", "pedidos"].includes(entityId) ? '<div id="entity-client-address-widget"></div>' : ""}${entityId === "presupuestos" && currentRole !== "cliente" ? '<div id="budget-client-form" class="budget-client-fields" hidden><div style="font-size:11.5px;font-weight:700;text-transform:uppercase;color:var(--brown);letter-spacing:0.4px;">Nuevo cliente rápido</div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;"><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido" required><input class="form-input" id="budget-client-document" placeholder="Documento (DNI / CUIT)" aria-label="Documento" required><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select></div><div id="budget-client-addresses-rows" class="detail-rows"></div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><button type="button" class="add-detail-btn" onclick="addClientAddressRow(\'budget-client-addresses-rows\')">+ Agregar otro domicilio</button><div style="display:flex;gap:8px;"><button type="button" class="btn btn-ghost btn-sm" onclick="toggleBudgetClientForm()">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div></div></div>' : ""}`;
       (e.details || []).forEach(g => {
+        if (currentRole === "cliente" && g.key === "detOPpago") return;
         if (entityId === "comprobantesVenta" && g.key === "detCV") body += `<div class="invoice-items-heading"><span>Producto</span><span>Cantidad</span><span>Precio unitario</span><span>Importe</span><span></span></div>`;
         body += detailGroupHtml(g);
       });
       if (entityId === "comprobantesVenta") body += `<div class="invoice-totals"><div><span>Subtotal</span><strong id="invoice-subtotal">$0</strong></div><div><span>IVA (21%)</span><strong id="invoice-iva">$0</strong></div><div class="invoice-grand-total"><span>Total</span><strong id="invoice-total">$0</strong></div></div></div>`;
+      if (entityId === "clientes") {
+        body += `<div class="detail-block" id="client-addresses-block"><div class="detail-label">Domicilios del cliente</div><div class="detail-rows" id="client-addresses-rows"></div><button type="button" class="add-detail-btn" style="margin-top:10px" onclick="addClientAddressRow('client-addresses-rows')">+ Agregar domicilio</button></div>`;
+      }
       document.getElementById("mf-fields").innerHTML = body;
+      if (entityId === "clientes") {
+        renderAddressRowsInContainer("client-addresses-rows", editing ? getClientAddresses(e.rows[rowIndex]) : [{}]);
+      }
       if (entityId === "clientes") {
         verifiedCustomerAddress = "";
         ["Calle", "Altura", "Localidad", "CodigoPostal"].forEach(key => {
@@ -2370,8 +3043,19 @@
           setFormSelect("Id_Cliente (heredado)", row[2]);
           setFormSelect("Id_Empleado (heredado)", row.responsible || "");
           setFormSelect("estado (heredado)", row.invoiceStatus || "Emitido");
-          const emissionDate = document.querySelector('#mf-fields [data-field-key="FechaEmision"]');
-          if (emissionDate) emissionDate.value = dateValueForInput(row[3]);
+          const emissionDate = getFormControl("FechaEmision");
+          if (typeof emissionDate !== "undefined" && emissionDate) emissionDate.value = dateValueForInput(row[3]);
+        }
+        if (entityId === "presupuestos") {
+          const row = e.rows[rowIndex];
+          setFormSelect("Id_Cliente", row[1]);
+          if (row.orderType) setFormSelect("tipoPedido", row.orderType);
+          const validControl = getFormControl("validohasta");
+          if (validControl) validControl.value = dateValueForInput(row[2]);
+          const discountControl = getFormControl("descuento");
+          if (discountControl) discountControl.value = String(row[3] || "").replace(/[^\d.,-]/g, "");
+          setFormSelect("estado", (row[4] || "Pendiente").replace(/<[^>]+>/g, ""));
+          if (typeof emissionDate !== "undefined" && emissionDate) emissionDate.value = dateValueForInput(row[3]);
         }
         if (entityId === "clientes") {
           const row = e.rows[rowIndex];
@@ -2425,8 +3109,39 @@
       if (entityId === "pedidos") {
         const budgetSelect = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
           .find(group => fieldKey(group) === "id_Presupuesto")?.querySelector("select");
-        budgetSelect?.addEventListener("change", syncOrderScheduleFields);
+        budgetSelect?.addEventListener("change", () => {
+          syncOrderScheduleFields();
+      if (typeof budget !== "undefined" && budget) syncClientAddressWidget(budget.customerAddress || null, budget.customerAddressIndex ?? null);
+          const selectedBudget = E.find(entity => entity.id === "presupuestos")?.rows.find(row => row[0] === budgetSelect.value);
+          if (selectedBudget) {
+            setFormSelect("Id_Cliente", selectedBudget[1]);
+            syncClientAddressWidget(selectedBudget.customerAddress || null, selectedBudget.customerAddressIndex ?? null);
+          }
+        });
+        const orderClientSelect = getActiveFormClientSelect();
+        orderClientSelect?.addEventListener("change", () => {
+          currentSelectedAddressIndex = 0;
+          syncClientAddressWidget();
+        });
+        if (!editing && currentRole === "cliente" && currentCustomer && orderClientSelect) {
+          orderClientSelect.value = currentCustomer;
+        }
+        syncClientAddressWidget(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
+      }
+      if (entityId === "presupuestos") {
+        const budgetClientSelect = getActiveFormClientSelect();
+        budgetClientSelect?.addEventListener("change", () => {
+          currentSelectedAddressIndex = 0;
+          syncClientAddressWidget();
+        });
+        if (!editing && currentRole === "cliente" && currentCustomer && budgetClientSelect) {
+          budgetClientSelect.value = currentCustomer;
+        }
+        syncClientAddressWidget(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
+      }
+      if (entityId === "pedidos") {
         syncOrderScheduleFields();
+      if (typeof budget !== "undefined" && budget) syncClientAddressWidget(budget.customerAddress || null, budget.customerAddressIndex ?? null);
       }
       document.getElementById("mf-save").onclick = () => {
         const requiredFields = document.querySelectorAll("#mf-fields [required]");
@@ -2434,7 +3149,7 @@
           if (field.closest("#budget-client-form")?.hidden) continue;
           if (!field.reportValidity()) return;
         }
-        if (entityId === "clientes" && verifiedCustomerAddress !== addressSnapshot(readCustomerAddressFields())) {
+        if (false && entityId === "clientes" && verifiedCustomerAddress !== addressSnapshot(readCustomerAddressFields())) {
           showNotify("Verificá el domicilio antes de registrar el cliente.");
           return;
         }
@@ -2550,13 +3265,26 @@
             formatBadge(getValue("CuentaCorriente") || "No", getValue("CuentaCorriente") === "Sí"),
             formatBadge(status, status === "Activo"),
           ];
-          updatedRow.address = { street: getValue("Calle"), height: getValue("Altura"), city: getValue("Localidad"), postalCode: getValue("CodigoPostal") };
+          const loadedAddresses = readAddressRowsFromContainer("client-addresses-rows").filter(a => a.street || a.city || a.postalCode);
+          if (!loadedAddresses.length) {
+            showNotify("Cargá al menos un domicilio para el cliente.");
+            return;
+          }
+          updatedRow.addresses = loadedAddresses;
+          updatedRow.address = loadedAddresses[0] || null;
+          syncClientAddressesAcrossRecords(updatedRow);
         }
         if (entityId === "presupuestos") {
           const clientName = getValue("Id_Cliente");
           const validity = getValue("validohasta");
-          const discount = getValue("descuento");
-          const status = getValue("estado") || "Pendiente";
+          const discount = currentRole === "cliente" ? "0" : getValue("descuento");
+          if (currentRole === "cliente" && detailData.detPresupuesto) {
+            detailData.detPresupuesto.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
+          }
+          const status = currentRole === "cliente" ? "Pendiente" : (getValue("estado") || "Pendiente");
+          if (currentRole === "cliente" && detailData.detPedido) {
+            detailData.detPedido.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
+          }
           updatedRow = [
             editing ? e.rows[rowIndex][0] : nextCode("PR", e.rows),
             escapeHTML(clientName || "—"), escapeHTML(validity || "—"),
@@ -2564,6 +3292,11 @@
           ];
           const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientName));
           if (client) updatedRow.customerDocument = client[1];
+          const selectedClientAddr = getSelectedClientAddressForForm();
+          if (selectedClientAddr) {
+            updatedRow.customerAddress = selectedClientAddr.address;
+            updatedRow.customerAddressIndex = selectedClientAddr.index;
+          }
           updatedRow.orderType = getValue("tipoPedido");
         }
         if (entityId === "pedidos") {
@@ -2579,7 +3312,10 @@
             return;
           }
           const clientName = getValue("Id_Cliente");
-          const status = getValue("estado") || "Pendiente";
+          const status = currentRole === "cliente" ? "Pendiente" : (getValue("estado") || "Pendiente");
+          if (currentRole === "cliente" && detailData.detPedido) {
+            detailData.detPedido.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
+          }
           if (budgetRecord) {
             const type = normalizeOrderScheduleType(budgetRecord.orderType);
             const deliveryDate = getValue("FechaEntrega");
@@ -2616,6 +3352,11 @@
           }
           const client = E.find(entity => entity.id === "clientes").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(clientName));
           if (client) updatedRow.customerDocument = client[1];
+          const selectedClientAddr = getSelectedClientAddressForForm();
+          if (selectedClientAddr) {
+            updatedRow.customerAddress = selectedClientAddr.address;
+            updatedRow.customerAddressIndex = selectedClientAddr.index;
+          }
         }
         if (entityId === "comprobantesVenta") {
           const orderId = getValue("nroPedido");
@@ -2644,7 +3385,9 @@
           updatedRow.responsible = getValue("Id_Empleado (heredado)");
           if (invoiceCustomer) {
             updatedRow.customerDocument = invoiceCustomer[1];
-            updatedRow.customerAddress = invoiceCustomer.address || null;
+            const selectedInvoiceAddr = getSelectedClientAddressForForm();
+            updatedRow.customerAddress = selectedInvoiceAddr?.address || invoiceCustomer.address || null;
+            if (selectedInvoiceAddr) updatedRow.customerAddressIndex = selectedInvoiceAddr.index;
           }
         }
         if (entityId === "remitos") {
@@ -2654,7 +3397,10 @@
             showNotify("Seleccioná la orden de pedido asociada al remito.");
             return;
           }
-          const status = getValue("estado") || "Pendiente";
+          const status = currentRole === "cliente" ? "Pendiente" : (getValue("estado") || "Pendiente");
+          if (currentRole === "cliente" && detailData.detPedido) {
+            detailData.detPedido.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
+          }
           updatedRow = [
             editing ? e.rows[rowIndex][0] : nextCode("R", e.rows), orderId,
             formatBadge(status, status === "Entregado" ? "green" : "amber"), escapeHTML(getValue("Observaciones") || "—")
@@ -2663,7 +3409,10 @@
           if (order.customerDocument) updatedRow.customerDocument = order.customerDocument;
         }
         if (entityId === "ordenesPago") {
-          const status = getValue("estado") || "Pendiente";
+          const status = currentRole === "cliente" ? "Pendiente" : (getValue("estado") || "Pendiente");
+          if (currentRole === "cliente" && detailData.detPedido) {
+            detailData.detPedido.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
+          }
           const total = (detailData.detOPpago || []).reduce((sum, line) => sum + parseAmount(line.inputs[0]), 0);
           updatedRow = [
             editing ? e.rows[rowIndex][0] : nextCode("PGP", e.rows),
@@ -2682,6 +3431,9 @@
         persistBusinessData();
         renderContent();
         closeModal("modal-form");
+        if (["presupuestos", "pedidos", "comprobantesVenta"].includes(entityId)) {
+          openView(entityId, editing ? rowIndex : e.rows.length - 1);
+        }
         showNotify(entityId === "pedidos" && newOrderPayments.length
           ? `Orden guardada y comprobante de pago generado.`
           : editing ? "Registro actualizado." : "Registro agregado.");
@@ -2715,14 +3467,26 @@
         const host = document.getElementById("mf-fields");
         host.oninput = syncInvoicePreview;
         host.onchange = event => {
-          if (event.target.matches('[data-field-key="nroPedido"]')) {
+          const changedGroup = event.target.closest(".form-group");
+          const changedKey = changedGroup ? fieldKey(changedGroup) : "";
+          if (changedKey === "nroPedido") {
+            const order = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[0] === event.target.value);
+            if (order) {
+              setFormSelect("Id_Cliente (heredado)", order[1]);
+              syncClientAddressWidget(order.customerAddress || null, order.customerAddressIndex ?? null);
+            }
+          } else if (changedKey === "Id_Cliente (heredado)") {
+            currentSelectedAddressIndex = 0;
+            syncClientAddressWidget();
+          }
+          if (false) {
             const order = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[0] === event.target.value);
             if (order) setFormSelect("Id_Cliente (heredado)", order[1]);
           }
-          syncInvoicePreview(); syncInvoiceCustomer();
+          syncInvoicePreview();
         };
         syncInvoicePreview();
-        syncInvoiceCustomer();
+        syncInvoiceCustomer(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
       }
       openModal("modal-form");
     }
@@ -2747,7 +3511,9 @@
       totals[2].textContent = money(subtotal * 1.21);
     }
 
-    function syncInvoiceCustomer() {
+    function syncInvoiceCustomer(preferredAddress = null, preferredIndex = null) {
+      syncClientAddressWidget(preferredAddress, preferredIndex);
+      return;
       const summary = document.getElementById("invoice-client-summary");
       if (!summary) return;
       const customerSelect = document.querySelector('#mf-fields [data-field-key="Id_Cliente (heredado)"]');
@@ -2760,7 +3526,25 @@
       summary.innerHTML = `<strong>${escapeHTML(customer[0])}</strong><span>Documento: ${escapeHTML(customer[1] || "—")}</span><span>Domicilio: ${escapeHTML(address ? `${address.street} ${address.height}, ${address.city} · CP ${address.postalCode}` : "Sin domicilio registrado")}</span>`;
     }
 
-    function readCustomerAddressFields() {
+    function readCustomerAddressFields(contextElement = null) {
+      const rowItem = contextElement?.closest?.(".client-address-row-item");
+      if (rowItem) {
+        return {
+          street: rowItem.querySelector('[data-addr-field="street"]'),
+          height: rowItem.querySelector('[data-addr-field="height"]'),
+          city: rowItem.querySelector('[data-addr-field="city"]'),
+          postalCode: rowItem.querySelector('[data-addr-field="postalCode"]')
+        };
+      }
+      const firstRow = document.querySelector("#budget-client-form:not([hidden]) .client-address-row-item, #client-addresses-rows .client-address-row-item");
+      if (firstRow) {
+        return {
+          street: firstRow.querySelector('[data-addr-field="street"]'),
+          height: firstRow.querySelector('[data-addr-field="height"]'),
+          city: firstRow.querySelector('[data-addr-field="city"]'),
+          postalCode: firstRow.querySelector('[data-addr-field="postalCode"]')
+        };
+      }
       const budgetPanel = document.getElementById("budget-client-form");
       if (budgetPanel && !budgetPanel.hidden) return {
         street: document.getElementById("budget-client-street"), height: document.getElementById("budget-client-height"),
@@ -2788,7 +3572,7 @@
     }
 
     async function verifyCustomerAddress(button) {
-      const fields = readCustomerAddressFields();
+      const fields = readCustomerAddressFields(typeof button !== "undefined" ? button : verifyButton);
       const status = button.parentElement.querySelector("[data-address-status]");
       const required = [fields.street, fields.height, fields.city, fields.postalCode];
       if (required.some(field => !field)) {
@@ -2862,7 +3646,7 @@
     function chooseAddressCandidate(index, verifyButton) {
       const result = addressCandidates[index];
       if (!result) return;
-      const fields = readCustomerAddressFields();
+      const fields = readCustomerAddressFields(typeof button !== "undefined" ? button : verifyButton);
       fields.street.value = result.calle?.nombre || fields.street.value;
       fields.height.value = result.altura?.valor || fields.height.value;
       const locality = result.localidad_censal?.nombre || result.localidad?.nombre;
@@ -3177,6 +3961,7 @@
       }
       syncInvoicePreview();
       syncInvoiceCustomer();
+      syncInvoiceCustomer(order.customerAddress || null, order.customerAddressIndex ?? null);
       showNotify(`Factura preparada desde la orden ${order[0]}.`);
     }
 
@@ -3187,6 +3972,7 @@
       setFormSelect("Id_Cliente", budget[1]);
       setFormSelect("id_Presupuesto", budget[0]);
       syncOrderScheduleFields();
+      if (typeof budget !== "undefined" && budget) syncClientAddressWidget(budget.customerAddress || null, budget.customerAddressIndex ?? null);
       const budgetDetails = budget.detailData?.detPresupuesto || [];
       if (budgetDetails.length) {
         formState.detPedido = budgetDetails.map((_, index) => index);
@@ -3229,6 +4015,16 @@
       const panel = document.getElementById("budget-client-form");
       panel.hidden = !panel.hidden;
       if (!panel.hidden) {
+        if (!document.querySelector("#budget-client-addresses-rows .client-address-row-item")) {
+          renderAddressRowsInContainer("budget-client-addresses-rows", [{}]);
+        }
+        document.getElementById("budget-client-name").focus();
+      }
+    }
+    function _unusedOldToggleBudgetClientForm() {
+      const panel = document.getElementById("budget-client-form");
+      panel.hidden = !panel.hidden;
+      if (!panel.hidden) {
         verifiedCustomerAddress = "";
         ["budget-client-street", "budget-client-height", "budget-client-city", "budget-client-postal"].forEach(id => {
           const field = document.getElementById(id);
@@ -3242,6 +4038,39 @@
     }
 
     function createBudgetClient() {
+      const name = document.getElementById("budget-client-name").value.trim();
+      const documentNumber = document.getElementById("budget-client-document").value.trim();
+      const type = document.getElementById("budget-client-type").value;
+      const addressInputs = [...document.querySelectorAll("#budget-client-addresses-rows [required]")];
+      const clients = E.find(entity => entity.id === "clientes");
+      for (const field of [document.getElementById("budget-client-name"), document.getElementById("budget-client-document"), ...addressInputs]) {
+        if (!field.reportValidity()) return;
+      }
+      const loadedAddresses = readAddressRowsFromContainer("budget-client-addresses-rows").filter(a => a.street || a.city || a.postalCode);
+      if (!loadedAddresses.length) {
+        showNotify("Cargá al menos un domicilio para el cliente.");
+        return;
+      }
+      if (clients.rows.some(row => normalizeLabel(row[1]) === normalizeLabel(documentNumber))) {
+        showNotify("Ya existe un cliente con ese documento.");
+        return;
+      }
+      const newClientRow = [
+        escapeHTML(name), escapeHTML(documentNumber), escapeHTML(type), "$0",
+        "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"
+      ];
+      newClientRow.addresses = loadedAddresses;
+      newClientRow.address = loadedAddresses[0] || null;
+      clients.rows.push(newClientRow);
+      const select = document.getElementById("budget-client-select");
+      select.add(new Option(name, name, true, true));
+      document.getElementById("budget-client-form").hidden = true;
+      currentSelectedAddressIndex = 0;
+      syncClientAddressWidget();
+      persistBusinessData();
+      showNotify("Cliente creado y asociado al presupuesto.");
+    }
+    function _unusedOldCreateBudgetClient() {
       const name = document.getElementById("budget-client-name").value.trim();
       const documentNumber = document.getElementById("budget-client-document").value.trim();
       const type = document.getElementById("budget-client-type").value;
