@@ -1442,7 +1442,7 @@
           <label>Correo electrónico<input type="email" id="register-email" autocomplete="email" required></label>
           <label>Condición frente al IVA<select id="register-iva" required><option>Consumidor Final</option><option>Responsable Inscripto</option><option>Monotributo</option><option>Exento</option></select></label>
           <label>Tipo de cliente<select id="register-customer-type" required><option>Particular</option><option>Restaurante</option><option>Hotel</option><option>Comercio</option></select></label>
-          <label>Código postal<input type="text" id="register-postal" autocomplete="postal-code" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" required></label>
+          <label>Código postal<input type="text" id="register-postal" autocomplete="postal-code" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" required onchange="handlePostalCodeLookup(this)"></label>
           <label>Provincia<select id="register-province" autocomplete="address-level1" required></select></label>
           <label>Localidad<input type="text" id="register-city" list="register-locality-options" autocomplete="address-level2" required></label>
           <label>Calle<input type="text" id="register-street" list="register-street-options" autocomplete="address-line1" required></label>
@@ -1930,7 +1930,7 @@
       {
         id: "localidades", section: "geografia", label: "Localidades", singular: "localidad", cls: "Localidad",
         cols: ["Localidad", "Provincia", "Código postal", "Estado"], rows: [
-          ["Córdoba", "Córdoba", "5000", "Activa"], ["La Plata", "Buenos Aires", "1900", "Activa"], ["Lanús", "Buenos Aires", "1824", "Activa"], ["Mar del Plata", "Buenos Aires", "7600", "Activa"], ["Morón", "Buenos Aires", "1708", "Activa"], ["Palermo", "Ciudad Autónoma de Buenos Aires", "1425", "Activa"], ["Ramos Mejía", "Buenos Aires", "1704", "Activa"], ["Rosario", "Santa Fe", "2000", "Activa"], ["San Isidro", "Buenos Aires", "1642", "Activa"], ["San Miguel de Tucumán", "Tucumán", "4000", "Activa"]
+          ["Córdoba", "Córdoba", "5000", "Activa"], ["La Plata", "Buenos Aires", "1900", "Activa"], ["Lanús", "Buenos Aires", "1824", "Activa"], ["Mar del Plata", "Buenos Aires", "7600", "Activa"], ["Morón", "Buenos Aires", "1708", "Activa"], ["Palermo", "Ciudad Autónoma de Buenos Aires", "1425", "Activa"], ["Ramos Mejía", "Buenos Aires", "1704", "Activa"], ["Rosario", "Santa Fe", "2000", "Activa"], ["San Isidro", "Buenos Aires", "1642", "Activa"], ["San Miguel de Tucumán", "Tucumán", "4000", "Activa"], ["Trenque Lauquen", "Buenos Aires", "6400", "Activa"]
         ], fields: [{ l: "Localidad", t: "text", required: true }, { l: "Provincia", t: "text" }, { l: "Código postal", t: "text" }, { l: "Estado", t: "select", o: ["Activa", "Inactiva"] }]
       },
       {
@@ -2051,7 +2051,7 @@
         <div class="client-address-row-grid">
           <div class="detail-field">
             <label>Código postal</label>
-            <input class="form-input" data-addr-field="postalCode" type="text" required maxlength="8" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" list="customer-postal-options" placeholder="1234 o B1234ABC" value="${postalCode}" oninput="invalidateRowAddressVerification(this)">
+            <input class="form-input" data-addr-field="postalCode" type="text" required maxlength="8" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" list="customer-postal-options" placeholder="1234 o B1234ABC" value="${postalCode}" oninput="invalidateRowAddressVerification(this)" onchange="handlePostalCodeLookup(this)">
           </div>
           <div class="detail-field">
             <label>Provincia</label>
@@ -2181,7 +2181,7 @@
         </div>
         ${selectorHtml}
         <div id="inline-client-address-editor" class="client-address-inline-editor" hidden>
-          <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" list="customer-postal-options" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" required placeholder="Ej.: 1708" oninput="invalidateAddressVerification()"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" list="customer-postal-options" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" required placeholder="Ej.: 1708" oninput="invalidateAddressVerification()" onchange="handlePostalCodeLookup(this)"></div>
           <div class="client-address-inline-field"><label for="inline-addr-province">Provincia</label><select class="form-select" id="inline-addr-province" required onchange="invalidateAddressVerification()"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option>${escapeHTML(row[0])}</option>`).join("")}</select></div>
           <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><input class="form-input" id="inline-addr-city" list="customer-locality-options" required placeholder="Ej.: Morón" oninput="invalidateAddressVerification()"></div>
           <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><input class="form-input" id="inline-addr-street" list="customer-street-options" required placeholder="Ej.: San Martín" oninput="invalidateAddressVerification()"></div>
@@ -4302,6 +4302,12 @@
     }
 
     function initializeGeographyAndCustomerAddresses() {
+      const provinces = E.find(item => item.id === "provincias").rows;
+      const localities = E.find(item => item.id === "localidades").rows;
+      if (!provinces.some(row => normalizeLabel(row[0]) === normalizeLabel("Buenos Aires"))) provinces.push(["Buenos Aires", "AR-B", "Activa"]);
+      const trenqueLauquen = localities.find(row => normalizeLabel(row[0]) === normalizeLabel("Trenque Lauquen") && normalizeLabel(row[1]) === normalizeLabel("Buenos Aires"));
+      if (trenqueLauquen) trenqueLauquen[2] = "6400";
+      else localities.push(["Trenque Lauquen", "Buenos Aires", "6400", "Activa"]);
       ["provincias", "localidades", "calles"].forEach(id => E.find(item => item.id === id)?.rows.sort((a,b) => String(a[0]).localeCompare(String(b[0]), "es")));
       E.find(item => item.id === "clientes").rows.forEach(client => {
         const provinceForCity = city => E.find(item => item.id === "localidades").rows.find(row => normalizeLabel(row[0]) === normalizeLabel(city))?.[1] || "";
@@ -4326,6 +4332,45 @@
       ["register-street-options", "customer-street-options"].forEach(id => { const list = document.getElementById(id); if (list) list.innerHTML = streets.map(value => `<option value="${escapeHTML(value)}">`).join(""); });
       const postalList = document.getElementById("customer-postal-options");
       if (postalList) postalList.innerHTML = postals.map(value => `<option value="${escapeHTML(value)}">`).join("");
+    }
+
+    function handlePostalCodeLookup(postalInput) {
+      const entered = normalizeLabel(postalInput?.value || "");
+      if (!entered) return;
+      const postalDigits = String(postalInput.value).replace(/\D/g, "");
+      if (postalDigits.length < 4) return;
+      const localities = E.find(entity => entity.id === "localidades").rows;
+      const matches = localities.filter(row => {
+        const known = normalizeLabel(row[2] || "");
+        const knownDigits = String(row[2] || "").replace(/\D/g, "");
+        return known === entered || (postalDigits.length === 4 && knownDigits === postalDigits);
+      });
+      const uniquePlaces = [...new Map(matches.map(row => [`${normalizeLabel(row[0])}|${normalizeLabel(row[1])}`, row])).values()];
+      const rowItem = postalInput.closest(".client-address-row-item");
+      const inlineEditor = postalInput.closest(".client-address-inline-editor");
+      const fields = readCustomerAddressFields(postalInput);
+      const status = rowItem?.querySelector("[data-address-status]") || inlineEditor?.querySelector("[data-address-status]") || postalInput.closest(".login-card")?.querySelector("[data-address-status]");
+      if (uniquePlaces.length !== 1) {
+        if (status && matches.length) {
+          status.dataset.state = "suggestions";
+          status.textContent = "Este código postal corresponde a más de una localidad; completá localidad y provincia manualmente.";
+        } else if (status) {
+          status.dataset.state = "";
+          status.textContent = "No hay una localidad asociada a ese código postal en los datos cargados; completá provincia y localidad manualmente.";
+        }
+        return;
+      }
+      const [locality, province] = uniquePlaces[0];
+      const provinceOption = [...(fields.province?.options || [])].find(option => normalizeLabel(option.value || option.textContent) === normalizeLabel(province));
+      if (!fields.city || !fields.province || !provinceOption) return;
+      fields.city.value = locality;
+      fields.province.value = provinceOption.value || provinceOption.textContent;
+      if (rowItem) invalidateRowAddressVerification(postalInput);
+      else invalidateAddressVerification();
+      if (status) {
+        status.dataset.state = "suggestions";
+        status.textContent = `Provincia y localidad completadas: ${locality}, ${province}. Verificá el domicilio para confirmar.`;
+      }
     }
 
     function setCustomerIdentity(user) {
