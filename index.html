@@ -816,6 +816,9 @@
     .client-address-row-item { padding:12px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); display:grid; gap:8px; }
     .client-address-row-head { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:600; color:var(--brown); }
     .client-address-row-grid { display:grid; grid-template-columns:.9fr 1.2fr 1.2fr 1.4fr .8fr; gap:8px; }
+    .add-street-inline-box { display:flex; align-items:center; gap:6px; margin-top:6px; padding:6px; border:1px dashed var(--wheat); border-radius:var(--radius-sm); background:var(--cream); width:100%; box-sizing:border-box; }
+    .add-street-inline-box[hidden] { display:none; }
+    .add-street-inline-box .form-input { flex:1; min-width:0; padding:6px 8px; font-size:12px; background:var(--white); }
     @media (max-width: 720px) { .client-address-row-grid, .client-address-inline-editor { grid-template-columns:1fr; } }
     #modal-view .modal.voucher-modal { width: 820px; max-width: 96vw; }
     .afip-doc { background: #fff; color: #111; font-family: Arial, Helvetica, sans-serif; border: 1.5px solid #111; padding: 0; font-size: 12px; line-height: 1.45; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
@@ -870,6 +873,70 @@
     .invoice-totals > div { display:flex; justify-content:space-between; gap:20px; padding:7px 10px; border-bottom:1px solid var(--border); }
     .invoice-grand-total { margin-top:5px; border:0 !important; border-radius:var(--radius-sm); background:var(--green-dark); color:#fff; font-size:16px; }
     .stock-readonly { display:inline-flex; align-items:center; gap:5px; color:var(--text-muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+    .detail-line-subtotal { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:7px 10px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); font-family:'DM Sans',sans-serif; font-size:12.5px; color:var(--text); min-height:35px; box-sizing:border-box; font-variant-numeric:tabular-nums; }
+    .detail-line-formula { font-size:11px; color:var(--text-muted); white-space:nowrap; }
+    .detail-line-amount { font-size:13px; font-weight:700; color:var(--green-dark); white-space:nowrap; margin-left:auto; }
+    .detail-voucher-summary { margin-top:12px; padding:12px 14px; border:1.5px solid var(--cream-dark); border-left:4px solid var(--green-dark); border-radius:var(--radius-sm); background:var(--cream); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; font-variant-numeric:tabular-nums; }
+    .detail-voucher-breakdown { display:grid; gap:4px; font-size:12px; color:var(--text); flex:1; min-width:220px; }
+    .detail-voucher-breakdown-title { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:var(--brown); margin-bottom:2px; }
+    .detail-voucher-breakdown-item { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; color:var(--text-muted); padding:2px 0; border-bottom:1px dashed rgba(200,169,110,.25); }
+    .detail-voucher-breakdown-item strong { color:var(--text); }
+    .detail-voucher-totals { display:grid; gap:4px; justify-items:end; min-width:210px; margin-left:auto; }
+    .detail-voucher-subrow { display:flex; justify-content:space-between; gap:14px; width:100%; font-size:12px; color:var(--text-muted); }
+    .detail-voucher-grand { display:flex; justify-content:space-between; align-items:baseline; gap:16px; width:100%; padding:8px 12px; border-radius:var(--radius-sm); background:var(--green-dark); color:var(--white); font-size:14px; font-weight:700; margin-top:2px; }
+    .topbar-cart-btn { display:inline-flex; align-items:center; gap:8px; padding:6px 13px; border-radius:999px; border:1.5px solid var(--wheat); background:linear-gradient(135deg, #2d3a2f 0%, #3d4f40 100%); color:#fff; font-family:'DM Sans',sans-serif; font-size:12.5px; font-weight:600; cursor:pointer; box-shadow:0 3px 10px rgba(45,58,47,.16); transition:transform .15s, box-shadow .15s; }
+    .topbar-cart-btn:hover { transform:translateY(-1px); box-shadow:0 5px 14px rgba(45,58,47,.25); }
+    .topbar-cart-badge { display:inline-flex; align-items:center; justify-content:center; min-width:20px; height:20px; padding:0 6px; border-radius:999px; background:var(--wheat); color:#1f2820; font-size:11px; font-weight:800; }
+    .topbar-cart-total { color:#f5e6c8; font-weight:700; font-variant-numeric:tabular-nums; padding-left:4px; border-left:1px solid rgba(255,255,255,.22); }
+    .client-hero { position:relative; overflow:hidden; border-radius:var(--radius); background:linear-gradient(125deg, #233025 0%, #354939 52%, #5c4938 100%); color:#fff; padding:26px 28px; margin-bottom:20px; box-shadow:0 12px 30px rgba(35,48,37,.16); display:grid; grid-template-columns:1.35fr .85fr; gap:22px; align-items:center; }
+    .client-hero-kicker { display:inline-flex; align-items:center; gap:6px; padding:4px 11px; border-radius:999px; background:rgba(200,169,110,.22); border:1px solid rgba(200,169,110,.45); color:#f3dfb6; font-size:11px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; margin-bottom:10px; }
+    .client-hero h2 { font-family:'Playfair Display',serif; font-size:28px; line-height:1.18; margin:0 0 8px; color:#fff; }
+    .client-hero p { font-size:13.5px; color:rgba(255,255,255,.86); line-height:1.5; margin:0 0 16px; max-width:560px; }
+    .client-hero-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+    .client-hero-btn-primary { background:var(--wheat); color:#1f2820; border:none; padding:10px 18px; border-radius:var(--radius-sm); font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; box-shadow:0 4px 12px rgba(0,0,0,.18); transition:all .15s; }
+    .client-hero-btn-primary:hover { background:#d6b87c; transform:translateY(-1px); }
+    .client-hero-btn-secondary { background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.28); padding:9px 15px; border-radius:var(--radius-sm); font-weight:600; font-size:12.5px; cursor:pointer; display:inline-flex; align-items:center; gap:7px; transition:all .15s; }
+    .client-hero-btn-secondary:hover { background:rgba(255,255,255,.2); }
+    .client-hero-perks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .client-hero-perk { background:rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.15); border-radius:var(--radius-sm); padding:11px 13px; backdrop-filter:blur(6px); }
+    .client-hero-perk strong { display:block; font-size:12.5px; color:#f7e7c4; margin-bottom:2px; }
+    .client-hero-perk span { font-size:11px; color:rgba(255,255,255,.78); line-height:1.35; display:block; }
+    .catalog-toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:14px 18px; background:var(--cream); border-bottom:1px solid var(--cream-dark); }
+    .catalog-filter-pills { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+    .catalog-pill { padding:6px 13px; border-radius:999px; border:1.5px solid var(--cream-dark); background:var(--white); color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; }
+    .catalog-pill:hover { border-color:var(--wheat); color:var(--text); }
+    .catalog-pill.active { background:var(--green-dark); border-color:var(--green-dark); color:#fff; box-shadow:0 2px 8px rgba(45,58,47,.18); }
+    .catalog-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(255px, 1fr)); gap:16px; padding:18px; }
+    .catalog-card { background:var(--white); border:1.5px solid var(--cream-dark); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; box-shadow:0 3px 12px rgba(45,58,47,.05); }
+    .catalog-card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(45,58,47,.12); border-color:var(--wheat); }
+    .catalog-card.in-cart { border-color:var(--green-dark); box-shadow:0 6px 18px rgba(45,58,47,.12); }
+    .catalog-card-media { position:relative; height:158px; background:var(--cream); overflow:hidden; }
+    .catalog-card-media img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .35s ease; }
+    .catalog-card:hover .catalog-card-media img { transform:scale(1.05); }
+    .catalog-card-badges { position:absolute; top:9px; left:9px; right:9px; display:flex; justify-content:space-between; align-items:flex-start; gap:6px; pointer-events:none; }
+    .catalog-badge-tag { padding:3px 9px; border-radius:999px; background:rgba(31,40,32,.84); color:#f7e7c4; font-size:10.5px; font-weight:700; backdrop-filter:blur(4px); letter-spacing:.2px; }
+    .catalog-badge-temp { padding:3px 8px; border-radius:999px; background:rgba(255,255,255,.92); color:var(--text); font-size:10.5px; font-weight:700; box-shadow:0 2px 6px rgba(0,0,0,.1); }
+    .catalog-card-meta-strip { position:absolute; bottom:0; inset-inline:0; padding:6px 10px; background:linear-gradient(to top, rgba(20,26,21,.82), rgba(20,26,21,0)); color:#fff; font-size:11px; font-weight:500; display:flex; justify-content:space-between; align-items:center; }
+    .catalog-card-body { padding:12px 14px 10px; display:flex; flex-direction:column; gap:5px; flex:1; }
+    .catalog-card-category { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--wheat-dark); display:flex; justify-content:space-between; align-items:center; }
+    .catalog-card-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--text); line-height:1.25; margin:0; }
+    .catalog-card-desc { font-size:12px; color:var(--text-muted); line-height:1.4; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .catalog-card-footer { padding:10px 14px 12px; border-top:1px dashed var(--cream-dark); background:rgba(246,241,231,.55); display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:auto; }
+    .catalog-card-price { display:flex; flex-direction:column; line-height:1.1; }
+    .catalog-card-price strong { font-size:18px; font-weight:800; color:var(--green-dark); font-variant-numeric:tabular-nums; }
+    .catalog-card-price small { font-size:10.5px; color:var(--text-muted); }
+    .catalog-card-controls { display:flex; align-items:center; gap:6px; }
+    .catalog-qty-stepper { display:inline-flex; align-items:center; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); overflow:hidden; height:32px; }
+    .catalog-qty-stepper button { border:none; background:transparent; width:26px; height:100%; font-size:14px; font-weight:700; color:var(--text); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+    .catalog-qty-stepper button:hover { background:var(--cream); }
+    .catalog-qty-stepper input { width:32px; border:none; text-align:center; font-size:12.5px; font-weight:700; color:var(--text); background:transparent; outline:none; -moz-appearance:textfield; }
+    .catalog-qty-stepper input::-webkit-outer-spin-button, .catalog-qty-stepper input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+    .cart-item-row { display:grid; grid-template-columns:56px 1.4fr auto auto auto; align-items:center; gap:12px; padding:10px 12px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); }
+    .cart-item-row img { width:56px; height:46px; border-radius:6px; object-fit:cover; border:1px solid var(--cream-dark); background:var(--white); }
+    .cart-summary-Banner { padding:14px 16px; border-radius:var(--radius-sm); background:linear-gradient(135deg, #2d3a2f 0%, #3d4f40 100%); color:#fff; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:12px; }
+    .prod-table-cell { display:flex; align-items:center; gap:10px; }
+    .prod-table-thumb { width:40px; height:32px; border-radius:6px; object-fit:cover; border:1px solid var(--cream-dark); flex-shrink:0; background:var(--cream); }
+    @media (max-width: 860px) { .client-hero { grid-template-columns:1fr; } .cart-item-row { grid-template-columns:48px 1fr auto; } }
 
     .rm-detail-btn {
       background: none;
@@ -1334,6 +1401,7 @@
         <div class="topbar-crumb" id="topbar-crumb">Principal</div>
       </div>
       <div class="topbar-controls">
+        <button type="button" class="topbar-cart-btn" id="topbar-cart-btn" onclick="openCartModal()" hidden><span>🛒 Mi Pedido</span><span class="topbar-cart-badge" id="topbar-cart-count">0</span><span class="topbar-cart-total" id="topbar-cart-total">$0</span></button>
         <label class="role-switch" id="logged-user-indicator" hidden><span>Usuario</span><strong id="logged-user-name"></strong></label>
         <label class="role-switch" id="customer-account" hidden><span>Cuenta</span><strong id="customer-name"></strong></label>
         <span style="font-size:12.5px;color:var(--text-muted)">Hoy: <strong id="today-date"></strong></span>
@@ -1407,6 +1475,24 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-cart">
+    <div class="modal" style="width:760px;max-width:95vw;">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">🛒 Mi Carrito · Presupuesto y Pedido</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Revisá los productos seleccionados, tu domicilio de entrega y tus presupuestos/pedidos</div>
+        </div>
+        <button class="modal-close" type="button" onclick="closeModal('modal-cart')">×</button>
+      </div>
+      <div class="modal-body" id="cart-modal-body"></div>
+      <div class="modal-footer" id="cart-modal-footer">
+        <button class="btn btn-ghost" type="button" onclick="clearShoppingCart()">Vaciar carrito</button>
+        <button class="btn btn-ghost" type="button" onclick="closeModal('modal-cart')">Seguir viendo productos</button>
+        <button class="btn btn-primary" type="button" onclick="startCheckoutFromCart()">Confirmar y generar presupuesto</button>
+      </div>
+    </div>
+  </div>
+
   <div class="notify" id="notify"></div>
   <datalist id="customer-postal-options"></datalist>
   <datalist id="customer-locality-options"></datalist>
@@ -1443,9 +1529,9 @@
           <label>Condición frente al IVA<select id="register-iva" required><option>Consumidor Final</option><option>Responsable Inscripto</option><option>Monotributo</option><option>Exento</option></select></label>
           <label>Tipo de cliente<select id="register-customer-type" required><option>Particular</option><option>Restaurante</option><option>Hotel</option><option>Comercio</option></select></label>
           <label>Código postal<input type="text" id="register-postal" autocomplete="postal-code" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" required onchange="handlePostalCodeLookup(this)"></label>
-          <label>Provincia<select id="register-province" autocomplete="address-level1" required></select></label>
-          <label>Localidad<input type="text" id="register-city" list="register-locality-options" autocomplete="address-level2" required></label>
-          <label>Calle<input type="text" id="register-street" list="register-street-options" autocomplete="address-line1" required></label>
+          <label>Provincia<select id="register-province" autocomplete="address-level1" required onchange="handleProvinceSelectChange(this)"></select></label>
+          <label>Localidad<select id="register-city" autocomplete="address-level2" required onchange="handleLocalitySelectChange(this)"></select></label>
+          <label>Calle<select id="register-street" autocomplete="address-line1" required onchange="handleStreetSelectChange(this)"></select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div></label>
           <label>Altura<input type="number" id="register-height" min="1" max="99999" step="1" autocomplete="address-line2" required></label>
           <label>Usuario<input type="text" id="register-username" autocomplete="username" required></label>
           <label>Contraseña<input type="password" id="register-password" minlength="8" autocomplete="new-password" required></label>
@@ -1753,6 +1839,15 @@
           ["Tallarines frescos 500g", "Pasta fresca", "unidad", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>", "Activo"],
           ["Sorrentinos jamón y queso", "Pasta fresca", "unidad", "Receta Sorrentino J. y Q.", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>", "Activo"],
           ["Salsa bolognesa (pote)", "Salsa", "unidad", "Receta Salsa Bolognesa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Ravioles de ricota y nuez", "Pasta fresca", "unidad", "Receta Raviol Ricota y Nuez", "$2.900", "28", "<span class='badge badge-gray'>No</span>", "Activo"],
+          ["Ñoquis de papa caseros 500g", "Pasta fresca", "unidad", "Receta Ñoquis de Papa", "$1.650", "36", "<span class='badge badge-gray'>No</span>", "Activo"],
+          ["Fetuccini de espinaca 500g", "Pasta fresca", "unidad", "Receta Fetuccini Espinaca", "$1.450", "24", "<span class='badge badge-gray'>No</span>", "Activo"],
+          ["Agnolottis de calabaza y parmesano", "Pasta fresca", "unidad", "Receta Agnolotti Calabaza", "$3.400", "16", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Canelones de verdura y pollo (x6)", "Plato armado", "unidad", "Receta Canelones Caseros", "$4.500", "14", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Lasagna artesanal bolognesa", "Plato armado", "unidad", "Receta Lasagna Artesanal", "$5.800", "10", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Salsa fileto casera (pote)", "Salsa", "unidad", "Receta Salsa Fileto", "$1.500", "30", "<span class='badge badge-gray'>No</span>", "Activo"],
+          ["Salsa cuatro quesos (pote)", "Salsa", "unidad", "Receta Salsa Cuatro Quesos", "$2.200", "20", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+          ["Queso reggianito rallado 150g", "Seco", "unidad", "Receta Queso Reggianito", "$1.350", "45", "<span class='badge badge-gray'>No</span>", "Activo"],
         ],
         fields: [
           { l: "Nombre", col: "Nombre", t: "text", span: 2, required: true },
@@ -1789,7 +1884,16 @@
         rows: [
           ["Receta Tallarín clásico", "Tallarines frescos 500g", "20 u.", "Harina 000"],
           ["Receta Sorrentino J. y Q.", "Sorrentinos jamón y queso", "15 u.", "Harina 000"],
-          ["Receta Salsa Bolognesa", "Salsa bolognesa (pote)", "12 u.", "Tomate"]
+          ["Receta Salsa Bolognesa", "Salsa bolognesa (pote)", "12 u.", "Tomate"],
+          ["Receta Raviol Ricota y Nuez", "Ravioles de ricota y nuez", "18 u.", "Harina 000, Queso"],
+          ["Receta Ñoquis de Papa", "Ñoquis de papa caseros 500g", "25 u.", "Harina 000, Huevo"],
+          ["Receta Fetuccini Espinaca", "Fetuccini de espinaca 500g", "20 u.", "Harina 000, Huevo"],
+          ["Receta Agnolotti Calabaza", "Agnolottis de calabaza y parmesano", "14 u.", "Harina 000, Queso"],
+          ["Receta Canelones Caseros", "Canelones de verdura y pollo (x6)", "10 u.", "Harina 000, Queso"],
+          ["Receta Lasagna Artesanal", "Lasagna artesanal bolognesa", "8 u.", "Harina 000, Jamón, Queso, Tomate"],
+          ["Receta Salsa Fileto", "Salsa fileto casera (pote)", "15 u.", "Tomate, Cebolla, Aceite"],
+          ["Receta Salsa Cuatro Quesos", "Salsa cuatro quesos (pote)", "12 u.", "Queso"],
+          ["Receta Queso Reggianito", "Queso reggianito rallado 150g", "30 u.", "Queso"]
         ],
         fields: [
           { l: "nombre", t: "text", span: 2 },
@@ -2035,6 +2139,156 @@
       return "Sin domicilio registrado";
     }
 
+    function getLocalityOptionsHtml(selectedCity = "", selectedProvince = "") {
+      const allRows = E.find(entity => entity.id === "localidades")?.rows || [];
+      const provinceFiltered = selectedProvince
+        ? allRows.filter(row => normalizeLabel(row[1] || "") === normalizeLabel(selectedProvince))
+        : allRows;
+      const sourceRows = provinceFiltered.length ? provinceFiltered : allRows;
+      const names = [...new Set(sourceRows.map(row => String(row[0] || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const cleanSelected = String(selectedCity || "").trim();
+      if (cleanSelected && !names.some(item => normalizeLabel(item) === normalizeLabel(cleanSelected))) {
+        names.push(cleanSelected);
+        names.sort((a, b) => a.localeCompare(b, "es"));
+      }
+      return `<option value="">Seleccionar localidad</option>` + names.map(name => `<option${normalizeLabel(name) === normalizeLabel(cleanSelected) ? " selected" : ""}>${escapeHTML(name)}</option>`).join("");
+    }
+
+    function getStreetOptionsHtml(selectedStreet = "", selectedCity = "", selectedProvince = "") {
+      const allRows = E.find(entity => entity.id === "calles")?.rows || [];
+      const names = [...new Set(allRows.map(row => String(row[0] || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es"));
+      const cleanSelected = String(selectedStreet || "").trim();
+      if (cleanSelected && cleanSelected !== "__add_new_street__" && !names.some(item => normalizeLabel(item) === normalizeLabel(cleanSelected))) {
+        names.push(cleanSelected);
+        names.sort((a, b) => a.localeCompare(b, "es"));
+      }
+      return `<option value="">Seleccionar calle</option>`
+        + names.map(name => `<option${normalizeLabel(name) === normalizeLabel(cleanSelected) ? " selected" : ""}>${escapeHTML(name)}</option>`).join("")
+        + `<option value="__add_new_street__">+ Agregar nueva calle...</option>`;
+    }
+
+    function setSelectValueOrAddOption(selectEl, value) {
+      if (!selectEl) return;
+      const clean = String(value || "").trim();
+      if (!clean) {
+        selectEl.value = "";
+        return;
+      }
+      if (selectEl.tagName !== "SELECT") {
+        selectEl.value = clean;
+        return;
+      }
+      const existing = [...selectEl.options].find(opt => opt.value !== "__add_new_street__" && normalizeLabel(opt.value || opt.textContent) === normalizeLabel(clean));
+      if (existing) {
+        selectEl.value = existing.value || existing.textContent;
+        return;
+      }
+      const newOpt = new Option(clean, clean, true, true);
+      const addNewOpt = [...selectEl.options].find(opt => opt.value === "__add_new_street__");
+      if (addNewOpt) selectEl.insertBefore(newOpt, addNewOpt);
+      else selectEl.add(newOpt);
+      selectEl.value = clean;
+    }
+
+    function handleProvinceSelectChange(provinceSelect) {
+      const fields = readCustomerAddressFields(provinceSelect);
+      if (fields?.city && fields.city.tagName === "SELECT") {
+        const currentCity = fields.city.value;
+        const allRows = E.find(entity => entity.id === "localidades")?.rows || [];
+        const belongsToProvince = !provinceSelect.value || allRows.some(r => normalizeLabel(r[0]) === normalizeLabel(currentCity) && normalizeLabel(r[1]) === normalizeLabel(provinceSelect.value));
+        fields.city.innerHTML = getLocalityOptionsHtml(belongsToProvince ? currentCity : "", provinceSelect.value);
+      }
+    }
+
+    function handleLocalitySelectChange(citySelect) {
+      const fields = readCustomerAddressFields(citySelect);
+      const selectedCity = citySelect?.value || "";
+      if (!selectedCity) return;
+      const match = (E.find(entity => entity.id === "localidades")?.rows || []).find(row => normalizeLabel(row[0]) === normalizeLabel(selectedCity));
+      if (match) {
+        if (fields?.province && (!fields.province.value || normalizeLabel(fields.province.value) !== normalizeLabel(match[1]))) {
+          setSelectValueOrAddOption(fields.province, match[1]);
+        }
+        if (fields?.postalCode && !fields.postalCode.value.trim() && match[2]) {
+          fields.postalCode.value = match[2];
+        }
+      }
+    }
+
+    function handleStreetSelectChange(streetSelect) {
+      if (streetSelect?.value === "__add_new_street__") {
+        streetSelect.value = "";
+        openAddStreetBox(streetSelect);
+      }
+    }
+
+    function openAddStreetBox(triggerEl) {
+      const container = triggerEl?.closest(".detail-field, .client-address-inline-field, label");
+      const box = container?.querySelector(".add-street-inline-box");
+      if (!box) return;
+      box.hidden = false;
+      const input = box.querySelector("[data-new-street-input]");
+      if (input) {
+        if (!input.dataset.keyBound) {
+          input.dataset.keyBound = "true";
+          input.addEventListener("keydown", ev => {
+            if (ev.key === "Enter") {
+              ev.preventDefault();
+              confirmAddNewStreet(input);
+            } else if (ev.key === "Escape") {
+              ev.preventDefault();
+              cancelAddNewStreet(input);
+            }
+          });
+        }
+        input.focus();
+      }
+    }
+
+    function cancelAddNewStreet(el) {
+      const box = el?.closest(".add-street-inline-box");
+      if (!box) return;
+      const input = box.querySelector("[data-new-street-input]");
+      if (input) input.value = "";
+      box.hidden = true;
+    }
+
+    function confirmAddNewStreet(el) {
+      const box = el?.closest(".add-street-inline-box");
+      const container = el?.closest(".detail-field, .client-address-inline-field, label");
+      const input = box?.querySelector("[data-new-street-input]");
+      const streetName = input?.value.trim() || "";
+      if (streetName.length < 2) {
+        showNotify("Ingresá un nombre de calle válido (al menos 2 caracteres).");
+        input?.focus();
+        return;
+      }
+      const fields = readCustomerAddressFields(el);
+      const city = fields?.city?.value?.trim() || "Morón";
+      const province = fields?.province?.value?.trim() || "Buenos Aires";
+      const streetsEntity = E.find(entity => entity.id === "calles");
+      if (streetsEntity) {
+        const exists = streetsEntity.rows.some(row => normalizeLabel(row[0]) === normalizeLabel(streetName));
+        if (!exists) {
+          streetsEntity.rows.push([streetName, city, province, "Activa"]);
+          streetsEntity.rows.sort((a, b) => String(a[0]).localeCompare(String(b[0]), "es"));
+        }
+      }
+      persistBusinessData();
+      document.querySelectorAll('select[data-addr-field="street"], #inline-addr-street, #register-street').forEach(sel => {
+        const currentVal = sel.value;
+        sel.innerHTML = getStreetOptionsHtml(currentVal);
+      });
+      const targetSelect = container?.querySelector("select");
+      if (targetSelect) {
+        setSelectValueOrAddOption(targetSelect, streetName);
+        targetSelect.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      if (input) input.value = "";
+      if (box) box.hidden = true;
+      showNotify(`Calle "${streetName}" agregada y seleccionada.`);
+    }
+
     function clientAddressRowHtml(containerId, index, addr = {}) {
       const street = escapeHTML(String(addr.street || ""));
       const height = escapeHTML(String(addr.height || ""));
@@ -2055,15 +2309,15 @@
           </div>
           <div class="detail-field">
             <label>Provincia</label>
-            <select class="form-select" data-addr-field="province" required onchange="invalidateRowAddressVerification(this)"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option${row[0] === addr.province ? " selected" : ""}>${escapeHTML(row[0])}</option>`).join("")}</select>
+            <select class="form-select" data-addr-field="province" required onchange="handleProvinceSelectChange(this); invalidateRowAddressVerification(this)"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option${row[0] === addr.province ? " selected" : ""}>${escapeHTML(row[0])}</option>`).join("")}</select>
           </div>
           <div class="detail-field">
             <label>Localidad</label>
-            <input class="form-input" data-addr-field="city" type="text" required maxlength="80" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ .'-]{2,80}" list="customer-locality-options" placeholder="Localidad" value="${city}" oninput="invalidateRowAddressVerification(this)">
+            <select class="form-select" data-addr-field="city" required onchange="handleLocalitySelectChange(this); invalidateRowAddressVerification(this)">${getLocalityOptionsHtml(addr.city, addr.province)}</select>
           </div>
           <div class="detail-field">
             <label>Calle</label>
-            <input class="form-input" data-addr-field="street" type="text" required maxlength="100" pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .'-]{2,100}" list="customer-street-options" placeholder="Ej.: San Martín" value="${street}" oninput="invalidateRowAddressVerification(this)">
+            <select class="form-select" data-addr-field="street" required onchange="handleStreetSelectChange(this); invalidateRowAddressVerification(this)">${getStreetOptionsHtml(addr.street, addr.city, addr.province)}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div>
           </div>
           <div class="detail-field">
             <label>Altura</label>
@@ -2182,9 +2436,9 @@
         ${selectorHtml}
         <div id="inline-client-address-editor" class="client-address-inline-editor" hidden>
           <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" list="customer-postal-options" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" required placeholder="Ej.: 1708" oninput="invalidateAddressVerification()" onchange="handlePostalCodeLookup(this)"></div>
-          <div class="client-address-inline-field"><label for="inline-addr-province">Provincia</label><select class="form-select" id="inline-addr-province" required onchange="invalidateAddressVerification()"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option>${escapeHTML(row[0])}</option>`).join("")}</select></div>
-          <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><input class="form-input" id="inline-addr-city" list="customer-locality-options" required placeholder="Ej.: Morón" oninput="invalidateAddressVerification()"></div>
-          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><input class="form-input" id="inline-addr-street" list="customer-street-options" required placeholder="Ej.: San Martín" oninput="invalidateAddressVerification()"></div>
+          <div class="client-address-inline-field"><label for="inline-addr-province">Provincia</label><select class="form-select" id="inline-addr-province" required onchange="handleProvinceSelectChange(this); invalidateAddressVerification()"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option>${escapeHTML(row[0])}</option>`).join("")}</select></div>
+          <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><select class="form-select" id="inline-addr-city" required onchange="handleLocalitySelectChange(this); invalidateAddressVerification()">${getLocalityOptionsHtml(selectedAddr?.city, selectedAddr?.province)}</select></div>
+          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><select class="form-select" id="inline-addr-street" required onchange="handleStreetSelectChange(this); invalidateAddressVerification()">${getStreetOptionsHtml(selectedAddr?.street, selectedAddr?.city, selectedAddr?.province)}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div></div>
           <div class="client-address-inline-field"><label for="inline-addr-height">Altura</label><input class="form-input" id="inline-addr-height" type="number" min="1" max="99999" step="1" required placeholder="Ej.: 450" oninput="invalidateAddressVerification()"></div>
           <div class="span2" style="display:flex;gap:6px;justify-content:flex-end;margin-top:2px;">
             <button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button>
@@ -2215,9 +2469,11 @@
       const client = findClientByName(getActiveFormClientSelect()?.value || "");
       const addresses = getClientAddresses(client);
       const current = mode === "edit" ? (addresses[currentSelectedAddressIndex] || {}) : {};
-      document.getElementById("inline-addr-street").value = current.street || "";
+      document.getElementById("inline-addr-street").innerHTML = getStreetOptionsHtml(current.street || "", current.city || "", current.province || "");
+      setSelectValueOrAddOption(document.getElementById("inline-addr-street"), current.street || "");
       document.getElementById("inline-addr-height").value = current.height || "";
-      document.getElementById("inline-addr-city").value = current.city || "";
+      document.getElementById("inline-addr-city").innerHTML = getLocalityOptionsHtml(current.city || "", current.province || "");
+      setSelectValueOrAddOption(document.getElementById("inline-addr-city"), current.city || "");
       document.getElementById("inline-addr-province").value = current.province || "";
       document.getElementById("inline-addr-postal").value = current.postalCode || "";
       verifiedCustomerAddress = "";
@@ -2381,8 +2637,8 @@
         </div>
       </div>
       <table>
-        <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}<th></th></tr></thead>
-        <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}<td class="td-actions">
+        <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? "<th>Total</th>" : ""}<th></th></tr></thead>
+        <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? `<td><strong>${escapeHTML(formatAmountDisplay(calculateEntityVoucherTotal(e.id, r)))}</strong></td>` : ""}<td class="td-actions">
           <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>${["presupuestos", "pedidos", "comprobantesVenta"].includes(e.id) ? `<button class="btn btn-ghost btn-sm" onclick="printEntityVoucher('${e.id}',${e.rows.indexOf(r)})">Imprimir</button>` : ""}
           ${customerViewOnly ? "" : e.id === "productos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('productos',${e.rows.indexOf(r)})">Editar</button>
           <button class="btn btn-ghost btn-sm" onclick="toggleProductStatus(${e.rows.indexOf(r)})">${normalizeLabel(r[7] || "Activo") === "activo" ? "Desactivar" : "Activar"}</button>
@@ -2399,13 +2655,477 @@
   </div>`;
     }
 
+    const PRODUCT_CATALOG_META = {
+      "tallarinesfrescos500g": {
+        image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=640&q=80",
+        badge: "Clásico del día",
+        portions: "3 porciones (500g)",
+        cookTime: "3-4 min",
+        desc: "Cintas al huevo elaboradas diariamente con semolín seleccionado y huevos de granja."
+      },
+      "sorrentinosjamonyqueso": {
+        image: "https://images.unsplash.com/photo-1587740908075-9e245070dfaa?auto=format&fit=crop&w=640&q=80",
+        badge: "⭐ Más vendido",
+        portions: "12 u. (2-3 porciones)",
+        cookTime: "5-6 min",
+        desc: "Relleno abundante de muzzarella seleccionada, jamón cocido natural y toque de nuez moscada."
+      },
+      "salsabolognesapote": {
+        image: "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?auto=format&fit=crop&w=640&q=80",
+        badge: "Cocción lenta",
+        portions: "Pote 400g (3 porc.)",
+        cookTime: "Calentar 4 min",
+        desc: "Ragú tradicional de ternera seleccionada, tomates perita maduros y hierbas frescas."
+      },
+      "raviolesdericotaynuez": {
+        image: "https://images.unsplash.com/photo-1608897013039-887f21d8c804?auto=format&fit=crop&w=640&q=80",
+        badge: "Receta de la Nonna",
+        portions: "2 planchas (48 u.)",
+        cookTime: "4-5 min",
+        desc: "Masa fina al huevo con relleno cremoso de ricota entera, queso parmesano y nueces mariposa."
+      },
+      "noquisdepapacaseros500g": {
+        image: "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=640&q=80",
+        badge: "Tradición del 29",
+        portions: "3 porciones (500g)",
+        cookTime: "2-3 min",
+        desc: "Amasados artesanalmente con papa horneada para lograr una textura suave y aireada."
+      },
+      "fetuccinideespinaca500g": {
+        image: "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=640&q=80",
+        badge: "Masa verde natural",
+        portions: "3 porciones (500g)",
+        cookTime: "3-4 min",
+        desc: "Cintas anchas laminadas con hojas de espinaca fresca seleccionada y huevo de campo."
+      },
+      "agnolottisdecalabazayparmesano": {
+        image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?auto=format&fit=crop&w=640&q=80",
+        badge: "Especialidad Gourmet",
+        portions: "16 u. (2-3 porciones)",
+        cookTime: "5-6 min",
+        desc: "Calabaza cabutia asada al horno combinada con queso reggianito estacionado y salvia."
+      },
+      "canelonesdeverduraypollox6": {
+        image: "https://images.unsplash.com/photo-1619895092538-128341789043?auto=format&fit=crop&w=640&q=80",
+        badge: "Listo para horno",
+        portions: "Bandeja x 6 u.",
+        cookTime: "Horno 15 min",
+        desc: "Crepes artesanales rellenos de espinaca fresca, suprema de pollo, ricota y especias."
+      },
+      "lasagnaartesanalbolognesa": {
+        image: "https://images.unsplash.com/photo-1574894709920-11b28e7367e3?auto=format&fit=crop&w=640&q=80",
+        badge: "Bandeja familiar",
+        portions: "850g (3-4 porciones)",
+        cookTime: "Horno 20 min",
+        desc: "Capas de masa fresca al huevo, jamón, muzzarella, salsa bechamel y ragú bolognesa."
+      },
+      "salsafiletocaserapote": {
+        image: "https://images.unsplash.com/photo-1572441713132-c542fc4fe282?auto=format&fit=crop&w=640&q=80",
+        badge: "100% Natural",
+        portions: "Pote 400g (3 porc.)",
+        cookTime: "Calentar 3 min",
+        desc: "Tomates perita triturados con albahaca fresca, ajo suave y aceite de oliva extra virgen."
+      },
+      "salsacuatroquesospote": {
+        image: "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=640&q=80",
+        badge: "Extra cremosa",
+        portions: "Pote 350g (3 porc.)",
+        cookTime: "Calentar 3 min",
+        desc: "Reducción sedosa de crema con quesos roquefort, parmesano, fontina y gruyère."
+      },
+      "quesoreggianitorallado150g": {
+        image: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=640&q=80",
+        badge: "12 meses maduración",
+        portions: "Sobre 150g",
+        cookTime: "Listo para servir",
+        desc: "Hebras finas de queso reggianito estacionado, el toque final ideal para tus pastas."
+      }
+    };
+
+    let activeCatalogCategory = "Todos";
+    let activeCatalogSearch = "";
+    let cartSelectedOrderType = "Mostrador";
+    let cartSelectedAddressIdx = 0;
+
+    function getProductFallbackSvgDataUri(name, category) {
+      const normCat = normalizeLabel(category || "");
+      const bg1 = normCat.includes("salsa") ? "#7c2d23" : normCat.includes("plato") ? "#6b442a" : normCat.includes("seco") ? "#70592d" : "#354939";
+      const bg2 = normCat.includes("salsa") ? "#b84a39" : normCat.includes("plato") ? "#9c6b43" : normCat.includes("seco") ? "#a88948" : "#556b58";
+      const label = String(name || "Pasta Artesanal").slice(0, 26);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="380" viewBox="0 0 600 380"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${bg1}"/><stop offset="100%" stop-color="${bg2}"/></linearGradient></defs><rect width="600" height="380" fill="url(#g)"/><circle cx="300" cy="175" r="105" fill="rgba(255,248,231,0.14)" stroke="rgba(243,223,182,0.45)" stroke-width="3"/><circle cx="300" cy="175" r="76" fill="rgba(255,248,231,0.2)"/><path d="M245 165 Q300 120 355 165 Q300 210 245 165 Z" fill="#f3dfb6" opacity="0.85"/><path d="M235 185 Q300 145 365 185" stroke="#f7e7c4" stroke-width="6" fill="none" stroke-linecap="round"/><text x="300" y="328" text-anchor="middle" fill="#fff8e7" font-family="Georgia,serif" font-size="22" font-weight="bold">${label.replace(/[<>&"']/g, "")}</text></svg>`;
+      return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+    }
+
+    function getProductMeta(name, category) {
+      const key = normalizeLabel(name || "");
+      const meta = PRODUCT_CATALOG_META[key];
+      const fallback = getProductFallbackSvgDataUri(name, category);
+      return {
+        image: meta?.image || fallback,
+        fallback,
+        badge: meta?.badge || "Elaboración artesanal",
+        portions: meta?.portions || "Presentación familiar",
+        cookTime: meta?.cookTime || "4-5 min",
+        desc: meta?.desc || "Producto fresco elaborado artesanalmente en nuestra fábrica con materias primas seleccionadas."
+      };
+    }
+
+    function initializeCatalogProductsAndRecipes() {
+      const productsEntity = E.find(entity => entity.id === "productos");
+      const recipesEntity = E.find(entity => entity.id === "recetas");
+      if (!productsEntity || !recipesEntity) return;
+      const defaultProducts = [
+        ["Tallarines frescos 500g", "Pasta fresca", "unidad", "Receta Tallarín clásico", "$1.200", "42", "<span class='badge badge-gray'>No</span>", "Activo"],
+        ["Sorrentinos jamón y queso", "Pasta fresca", "unidad", "Receta Sorrentino J. y Q.", "$3.200", "18", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Salsa bolognesa (pote)", "Salsa", "unidad", "Receta Salsa Bolognesa", "$1.800", "25", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Ravioles de ricota y nuez", "Pasta fresca", "unidad", "Receta Raviol Ricota y Nuez", "$2.900", "28", "<span class='badge badge-gray'>No</span>", "Activo"],
+        ["Ñoquis de papa caseros 500g", "Pasta fresca", "unidad", "Receta Ñoquis de Papa", "$1.650", "36", "<span class='badge badge-gray'>No</span>", "Activo"],
+        ["Fetuccini de espinaca 500g", "Pasta fresca", "unidad", "Receta Fetuccini Espinaca", "$1.450", "24", "<span class='badge badge-gray'>No</span>", "Activo"],
+        ["Agnolottis de calabaza y parmesano", "Pasta fresca", "unidad", "Receta Agnolotti Calabaza", "$3.400", "16", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Canelones de verdura y pollo (x6)", "Plato armado", "unidad", "Receta Canelones Caseros", "$4.500", "14", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Lasagna artesanal bolognesa", "Plato armado", "unidad", "Receta Lasagna Artesanal", "$5.800", "10", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Salsa fileto casera (pote)", "Salsa", "unidad", "Receta Salsa Fileto", "$1.500", "30", "<span class='badge badge-gray'>No</span>", "Activo"],
+        ["Salsa cuatro quesos (pote)", "Salsa", "unidad", "Receta Salsa Cuatro Quesos", "$2.200", "20", "<span class='badge badge-blue'>Sí</span>", "Activo"],
+        ["Queso reggianito rallado 150g", "Seco", "unidad", "Receta Queso Reggianito", "$1.350", "45", "<span class='badge badge-gray'>No</span>", "Activo"]
+      ];
+      const defaultRecipes = [
+        ["Receta Tallarín clásico", "Tallarines frescos 500g", "20 u.", "Harina 000"],
+        ["Receta Sorrentino J. y Q.", "Sorrentinos jamón y queso", "15 u.", "Harina 000"],
+        ["Receta Salsa Bolognesa", "Salsa bolognesa (pote)", "12 u.", "Tomate"],
+        ["Receta Raviol Ricota y Nuez", "Ravioles de ricota y nuez", "18 u.", "Harina 000, Queso"],
+        ["Receta Ñoquis de Papa", "Ñoquis de papa caseros 500g", "25 u.", "Harina 000, Huevo"],
+        ["Receta Fetuccini Espinaca", "Fetuccini de espinaca 500g", "20 u.", "Harina 000, Huevo"],
+        ["Receta Agnolotti Calabaza", "Agnolottis de calabaza y parmesano", "14 u.", "Harina 000, Queso"],
+        ["Receta Canelones Caseros", "Canelones de verdura y pollo (x6)", "10 u.", "Harina 000, Queso"],
+        ["Receta Lasagna Artesanal", "Lasagna artesanal bolognesa", "8 u.", "Harina 000, Jamón, Queso, Tomate"],
+        ["Receta Salsa Fileto", "Salsa fileto casera (pote)", "15 u.", "Tomate, Cebolla, Aceite"],
+        ["Receta Salsa Cuatro Quesos", "Salsa cuatro quesos (pote)", "12 u.", "Queso"],
+        ["Receta Queso Reggianito", "Queso reggianito rallado 150g", "30 u.", "Queso"]
+      ];
+      let added = false;
+      defaultProducts.forEach(item => {
+        if (!productsEntity.rows.some(r => normalizeLabel(r[0]) === normalizeLabel(item[0]))) {
+          productsEntity.rows.push(item);
+          added = true;
+        }
+      });
+      defaultRecipes.forEach(item => {
+        if (!recipesEntity.rows.some(r => normalizeLabel(r[0]) === normalizeLabel(item[0]))) {
+          recipesEntity.rows.push(item);
+          added = true;
+        }
+      });
+      if (added) persistBusinessData();
+    }
+
+    function getCartTotals() {
+      const products = E.find(entity => entity.id === "productos")?.rows || [];
+      let count = 0;
+      let total = 0;
+      const lines = shoppingCart.map(item => {
+        const prod = products.find(r => normalizeLabel(r[0]) === normalizeLabel(item.product));
+        const unitPrice = parseProductPrice(prod?.[4]) || 0;
+        const qty = Math.max(1, Number(item.quantity) || 1);
+        const subtotal = qty * unitPrice;
+        count += qty;
+        total += subtotal;
+        return { product: item.product, category: prod?.[1] || "Producto", unit: prod?.[2] || "unidad", qty, unitPrice, subtotal };
+      });
+      return { count, total, lines };
+    }
+
+    function syncTopbarCartIndicator() {
+      const btn = document.getElementById("topbar-cart-btn");
+      if (!btn) return;
+      const { count, total } = getCartTotals();
+      const showCart = ["visitante", "cliente"].includes(currentRole) || count > 0;
+      btn.hidden = !showCart;
+      const countEl = document.getElementById("topbar-cart-count");
+      const totalEl = document.getElementById("topbar-cart-total");
+      if (countEl) countEl.textContent = String(count);
+      if (totalEl) totalEl.textContent = `$${total.toLocaleString("es-AR", { maximumFractionDigits: 0 })}`;
+    }
+
+    function renderCatalogCardHtml(row, entity) {
+      const name = String(row[0] || "").replace(/<[^>]+>/g, "");
+      const category = String(row[1] || "Producto").replace(/<[^>]+>/g, "");
+      const unit = String(row[2] || "unidad").replace(/<[^>]+>/g, "");
+      const stock = String(row[5] || "0").replace(/<[^>]+>/g, "");
+      const isFrozen = normalizeLabel(String(row[6] || "No").replace(/<[^>]+>/g, "")) === "si";
+      const priceVal = parseProductPrice(row[4]) || 0;
+      const meta = getProductMeta(name, category);
+      const inCartItem = shoppingCart.find(item => normalizeLabel(item.product) === normalizeLabel(name));
+      const inCartQty = inCartItem ? inCartItem.quantity : 0;
+      const cardId = `qty-${normalizeLabel(name)}`;
+      return `<article class="catalog-card${inCartQty > 0 ? " in-cart" : ""}">
+        <div class="catalog-card-media">
+          <img src="${escapeHTML(meta.image)}" data-fallback="${escapeHTML(meta.fallback)}" onerror="this.onerror=null;this.src=this.dataset.fallback" alt="${escapeHTML(name)}" loading="lazy">
+          <div class="catalog-card-badges">
+            <span class="catalog-badge-tag">${escapeHTML(meta.badge)}</span>
+            <span class="catalog-badge-temp">${isFrozen ? "❄️ Congelado" : "🌿 Fresco del día"}</span>
+          </div>
+          <div class="catalog-card-meta-strip">
+            <span>🍽 ${escapeHTML(meta.portions)}</span>
+            <span>⏱ ${escapeHTML(meta.cookTime)}</span>
+          </div>
+        </div>
+        <div class="catalog-card-body">
+          <div class="catalog-card-category">
+            <span>${escapeHTML(category)}</span>
+            <span style="color:var(--text-muted);font-weight:600;text-transform:none;">Stock: ${escapeHTML(stock)} ${escapeHTML(unit)}</span>
+          </div>
+          <h3 class="catalog-card-title">${escapeHTML(name)}</h3>
+          <p class="catalog-card-desc">${escapeHTML(meta.desc)}</p>
+        </div>
+        <div class="catalog-card-footer">
+          <div class="catalog-card-price">
+            <strong>$${priceVal.toLocaleString("es-AR", { maximumFractionDigits: 2 })}</strong>
+            <small>por ${escapeHTML(unit)}${inCartQty > 0 ? ` · <b style="color:var(--green-dark);">En pedido: ${inCartQty} ($${(inCartQty * priceVal).toLocaleString("es-AR")})</b>` : ""}</small>
+          </div>
+          <div class="catalog-card-controls">
+            <div class="catalog-qty-stepper" title="Cantidad a agregar">
+              <button type="button" onclick="stepCardQty('${cardId}', -1)">−</button>
+              <input type="number" id="${cardId}" value="1" min="1" max="99" aria-label="Cantidad">
+              <button type="button" onclick="stepCardQty('${cardId}', 1)">+</button>
+            </div>
+            <button class="btn btn-primary btn-sm" type="button" onclick="addCatalogProductWithQty('${escapeHTML(name)}', '${cardId}')">${inCartQty > 0 ? "+ Sumar" : "+ Agregar"}</button>
+          </div>
+        </div>
+      </article>`;
+    }
+
+    function stepCardQty(inputId, delta) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const next = Math.max(1, Math.min(99, (Number(input.value) || 1) + delta));
+      input.value = String(next);
+    }
+
+    function addCatalogProductWithQty(name, inputId) {
+      const input = inputId ? document.getElementById(inputId) : null;
+      const qtyToAdd = Math.max(1, Number(input?.value) || 1);
+      addCatalogProduct(name, qtyToAdd);
+    }
+
+    function setCatalogCategory(category) {
+      activeCatalogCategory = category;
+      renderContent();
+      showScreen("productos", document.querySelector('[data-screen="productos"]'), "Catálogo");
+    }
+
+    function setCatalogSearch(query) {
+      activeCatalogSearch = query;
+      const grid = document.getElementById("catalog-products-grid");
+      if (!grid) return;
+      const entity = E.find(e => e.id === "productos");
+      const filtered = getFilteredCatalogItems(entity);
+      grid.innerHTML = filtered.map(row => renderCatalogCardHtml(row, entity)).join("") || `<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text-muted);">No encontramos productos que coincidan con tu búsqueda.</div>`;
+    }
+
+    function getFilteredCatalogItems(entity) {
+      const items = visibleRows(entity);
+      return items.filter(row => {
+        const name = String(row[0] || "").replace(/<[^>]+>/g, "");
+        const cat = String(row[1] || "").replace(/<[^>]+>/g, "");
+        const meta = getProductMeta(name, cat);
+        const matchCat = activeCatalogCategory === "Todos" || normalizeLabel(cat) === normalizeLabel(activeCatalogCategory);
+        const q = normalizeLabel(activeCatalogSearch || "");
+        const matchSearch = !q || normalizeLabel(name).includes(q) || normalizeLabel(cat).includes(q) || normalizeLabel(meta.desc).includes(q);
+        return matchCat && matchSearch;
+      });
+    }
+
     function publicCatalogScreen(entity) {
+      const allItems = visibleRows(entity);
+      const filteredItems = getFilteredCatalogItems(entity);
+      const categories = ["Todos", ...new Set(allItems.map(r => String(r[1] || "Producto").replace(/<[^>]+>/g, "")))];
+      const { count, total } = getCartTotals();
+      return `<div id="screen-productos" class="screen">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-header" style="background:linear-gradient(125deg, #233025 0%, #354939 60%, #4b3d2e 100%);color:#fff;padding:20px 22px;">
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#f3dfb6;margin-bottom:4px;">Elaboración artesanal diaria</div>
+              <div class="card-title" style="color:#fff;font-size:22px;">Catálogo de Pastas, Salsas y Especialidades</div>
+              <div style="color:rgba(255,255,255,.82);font-size:12.5px;margin-top:2px;">Elegí las cantidades de cada producto y revisá tu presupuesto en el carrito superior</div>
+            </div>
+            <div class="card-actions" style="gap:10px;">
+              <button class="client-hero-btn-secondary" type="button" onclick="openCartModal()">🛒 Ver mi carrito (${count} u. · $${total.toLocaleString("es-AR")})</button>
+              <button class="client-hero-btn-primary" type="button" onclick="startCheckout()">Confirmar pedido →</button>
+            </div>
+          </div>
+          <div class="catalog-toolbar">
+            <div class="catalog-filter-pills">
+              ${categories.map(cat => {
+                const catCount = cat === "Todos" ? allItems.length : allItems.filter(r => normalizeLabel(r[1]) === normalizeLabel(cat)).length;
+                return `<button type="button" class="catalog-pill${activeCatalogCategory === cat ? " active" : ""}" onclick="setCatalogCategory('${escapeHTML(cat)}')">${escapeHTML(cat)} (${catCount})</button>`;
+              }).join("")}
+            </div>
+            <input class="search-input" type="search" placeholder="Buscar pasta, relleno o salsa..." value="${escapeHTML(activeCatalogSearch)}" oninput="setCatalogSearch(this.value)" style="min-width:240px;background:var(--white);">
+          </div>
+          <div class="catalog-grid" id="catalog-products-grid">
+            ${filteredItems.map(row => renderCatalogCardHtml(row, entity)).join("") || `<div style="grid-column:1/-1;text-align:center;padding:36px;color:var(--text-muted);">Por el momento no hay productos disponibles en esta categoría.</div>`}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function openCartModal() {
+      renderCartModalBody();
+      openModal("modal-cart");
+    }
+
+    function renderCartModalBody() {
+      const host = document.getElementById("cart-modal-body");
+      if (!host) return;
+      const { count, total, lines } = getCartTotals();
+      const customer = findClientByName(currentCustomer);
+      const addresses = getClientAddresses(customer);
+      if (cartSelectedAddressIdx >= addresses.length) cartSelectedAddressIdx = 0;
+      const budgets = currentRole === "cliente" ? visibleRows(E.find(e => e.id === "presupuestos")) : [];
+      const orders = currentRole === "cliente" ? visibleRows(E.find(e => e.id === "pedidos")) : [];
+
+      const cartItemsHtml = lines.length ? `<div style="display:grid;gap:8px;">
+        ${lines.map(item => {
+          const meta = getProductMeta(item.product, item.category);
+          return `<div class="cart-item-row">
+            <img src="${escapeHTML(meta.image)}" data-fallback="${escapeHTML(meta.fallback)}" onerror="this.onerror=null;this.src=this.dataset.fallback" alt="${escapeHTML(item.product)}">
+            <div>
+              <div style="font-weight:700;font-size:13.5px;color:var(--text);">${escapeHTML(item.product)}</div>
+              <div style="font-size:11.5px;color:var(--text-muted);">${escapeHTML(item.category)} · Precio unitario: <strong>$${item.unitPrice.toLocaleString("es-AR")}</strong></div>
+            </div>
+            <div class="catalog-qty-stepper">
+              <button type="button" onclick="updateCartItemQty('${escapeHTML(item.product)}', -1)">−</button>
+              <input type="number" value="${item.qty}" readonly aria-label="Cantidad">
+              <button type="button" onclick="updateCartItemQty('${escapeHTML(item.product)}', 1)">+</button>
+            </div>
+            <div style="text-align:right;min-width:115px;">
+              <div style="font-size:11px;color:var(--text-muted);">${item.qty} × $${item.unitPrice.toLocaleString("es-AR")}</div>
+              <div style="font-size:14px;font-weight:800;color:var(--green-dark);">$${item.subtotal.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+            </div>
+            <button type="button" class="rm-detail-btn" onclick="removeCartItem('${escapeHTML(item.product)}')" title="Quitar del pedido">✕</button>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="cart-summary-Banner">
+        <div>
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#f3dfb6;font-weight:700;">Resumen de tu solicitud</div>
+          <div style="font-size:13px;color:rgba(255,255,255,.9);">${lines.length} producto${lines.length === 1 ? "" : "s"} distinto${lines.length === 1 ? "" : "s"} · <strong>${count} unidad${count === 1 ? "" : "es"}</strong> en total</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:#f3dfb6;">Total estimado del comprobante</div>
+          <div style="font-size:22px;font-weight:800;color:#fff;">$${total.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+        </div>
+      </div>
+      ${currentRole === "cliente" && customer ? `<div style="margin-top:14px;padding:12px 14px;border:1.5px solid var(--cream-dark);border-left:4px solid var(--wheat);border-radius:var(--radius-sm);background:var(--cream);display:grid;grid-template-columns:1fr 1.6fr;gap:12px;">
+        <div>
+          <label class="form-label" style="display:block;margin-bottom:4px;">Tipo de pedido</label>
+          <select class="form-select" style="width:100%;background:var(--white);" onchange="cartSelectedOrderType = this.value">
+            ${["Mostrador", "Evento / fiesta", "Fijo semanal"].map(opt => `<option${cartSelectedOrderType === opt ? " selected" : ""}>${escapeHTML(opt)}</option>`).join("")}
+          </select>
+        </div>
+        <div>
+          <label class="form-label" style="display:block;margin-bottom:4px;">Domicilio de entrega (${addresses.length} cargado${addresses.length === 1 ? "" : "s"})</label>
+          <select class="form-select" style="width:100%;background:var(--white);" onchange="cartSelectedAddressIdx = Number(this.value) || 0">
+            ${addresses.map((a, idx) => `<option value="${idx}"${idx === cartSelectedAddressIdx ? " selected" : ""}>Domicilio ${idx + 1}: ${escapeHTML(formatAddressObject(a))}</option>`).join("")}
+          </select>
+        </div>
+      </div>` : ""}`
+      : `<div style="text-align:center;padding:28px 16px;background:var(--cream);border-radius:var(--radius-sm);border:1px dashed var(--cream-dark);">
+        <div style="font-size:28px;margin-bottom:6px;">🍝</div>
+        <div style="font-weight:700;color:var(--text);font-size:14.5px;">Tu carrito está vacío por ahora</div>
+        <div style="font-size:12.5px;color:var(--text-muted);margin:4px 0 12px;">Explorá nuestro catálogo de pastas frescas, rellenas y salsas artesanales para armar tu presupuesto.</div>
+        <button type="button" class="btn btn-primary btn-sm" onclick="closeModal('modal-cart');showScreen('productos',document.querySelector('[data-screen=\\'productos\\']'),'Catálogo')">Ir al Catálogo</button>
+      </div>`;
+
+      const historyHtml = currentRole === "cliente" ? `<div style="margin-top:18px;padding-top:14px;border-top:1px dashed var(--cream-dark);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <strong style="font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--brown);">Mis Presupuestos y Pedidos Recientes</strong>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');showScreen('presupuestos',document.querySelector('[data-screen=\\'presupuestos\\']'),'Ventas')">Ver todos mis presupuestos (${budgets.length})</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');showScreen('pedidos',document.querySelector('[data-screen=\\'pedidos\\']'),'Ventas')">Ver mis pedidos (${orders.length})</button>
+          </div>
+        </div>
+        ${budgets.length || orders.length ? `<div style="display:grid;gap:6px;max-height:190px;overflow-y:auto;">
+          ${budgets.slice(0, 3).map(b => {
+            const idx = E.find(e => e.id === "presupuestos").rows.indexOf(b);
+            const tot = calculateEntityVoucherTotal("presupuestos", b);
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
+              <div><strong>Presupuesto ${escapeHTML(b[0])}</strong> · <span style="color:var(--text-muted);">Validez: ${escapeHTML(formatDateForDisplay(b[2]))} · ${escapeHTML(b.orderType || "Mostrador")}</span></div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                ${b[4]}
+                <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');openView('presupuestos', ${idx})">Ver comprobante</button>
+              </div>
+            </div>`;
+          }).join("")}
+          ${orders.slice(0, 3).map(o => {
+            const idx = E.find(e => e.id === "pedidos").rows.indexOf(o);
+            const tot = calculateEntityVoucherTotal("pedidos", o);
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
+              <div><strong>Orden ${escapeHTML(o[0])}</strong> · <span style="color:var(--text-muted);">Entrega: ${escapeHTML(o[3])}</span></div>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                ${o[5]}
+                <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');openView('pedidos', ${idx})">Ver comprobante</button>
+              </div>
+            </div>`;
+          }).join("")}
+        </div>` : `<div style="font-size:12px;color:var(--text-muted);">Aún no tenés presupuestos ni pedidos registrados en esta cuenta.</div>`}
+      </div>` : "";
+
+      host.innerHTML = cartItemsHtml + historyHtml;
+    }
+
+    function updateCartItemQty(productName, delta) {
+      const idx = shoppingCart.findIndex(item => normalizeLabel(item.product) === normalizeLabel(productName));
+      if (idx < 0) return;
+      shoppingCart[idx].quantity += delta;
+      if (shoppingCart[idx].quantity <= 0) shoppingCart.splice(idx, 1);
+      syncTopbarCartIndicator();
+      renderCartModalBody();
+      renderContent();
+    }
+
+    function removeCartItem(productName) {
+      const idx = shoppingCart.findIndex(item => normalizeLabel(item.product) === normalizeLabel(productName));
+      if (idx >= 0) shoppingCart.splice(idx, 1);
+      syncTopbarCartIndicator();
+      renderCartModalBody();
+      renderContent();
+    }
+
+    function clearShoppingCart() {
+      if (!shoppingCart.length) return;
+      shoppingCart = [];
+      syncTopbarCartIndicator();
+      renderCartModalBody();
+      renderContent();
+      showNotify("Se vació el carrito.");
+    }
+
+    function startCheckoutFromCart() {
+      if (!shoppingCart.length) { showNotify("Agregá al menos un producto al carrito para continuar."); return; }
+      closeModal("modal-cart");
+      startCheckout();
+    }
+
+    function _unusedOldPublicCatalogScreen(entity) {
       const items = visibleRows(entity);
       const count = shoppingCart.reduce((sum, item) => sum + item.quantity, 0);
       return `<div id="screen-productos" class="screen"><div class="card"><div class="card-header"><div><div class="card-title">Catálogo</div><div>Productos disponibles y precios de fábrica</div></div><div class="card-actions"><strong>${count} producto${count === 1 ? "" : "s"} en el pedido</strong><button class="btn btn-primary" type="button" onclick="startCheckout()">Continuar con la compra</button></div></div><div class="dash-grid">${items.map(row => { const name = row[0].replace(/<[^>]+>/g, ""); return `<article class="dash-card"><div class="dash-card-title">${escapeHTML(name)}</div><div class="activity-time">${escapeHTML(row[1] || "Producto")}${row[2] ? ` · ${escapeHTML(row[2])}` : ""}</div><div class="value" style="font-size:22px;margin:12px 0">${escapeHTML(formatCellValue(entity,row,4))}</div><button class="btn btn-ghost btn-sm" type="button" onclick="addCatalogProduct('${escapeHTML(name)}')">Agregar al pedido</button></article>`; }).join("") || `<p>Por el momento no hay productos disponibles.</p>`}</div></div></div>`;
     }
 
-    function addCatalogProduct(name) {
+    function addCatalogProduct(name, qtyToAdd = 1) {
+      const product = E.find(entity => entity.id === "productos").rows.find(row => row[0] === name && normalizeLabel(row[7] || "Activo") === "activo");
+      if (!product) return;
+      const qty = Math.max(1, Number(qtyToAdd) || 1);
+      const line = shoppingCart.find(item => item.product === name);
+      if (line) line.quantity += qty; else shoppingCart.push({ product: name, quantity: qty });
+      syncTopbarCartIndicator();
+      renderContent();
+      showNotify(`${qty} u. de ${name} agregada${qty === 1 ? "" : "s"} al pedido.`);
+    }
+    function _unusedOldAddCatalogProduct(name) {
       const product = E.find(entity => entity.id === "productos").rows.find(row => row[0] === name && normalizeLabel(row[7] || "Activo") === "activo");
       if (!product) return;
       const line = shoppingCart.find(item => item.product === name);
@@ -2430,11 +3150,13 @@
       const next = budgets.rows.reduce((highest,row) => Math.max(highest,Number(row[0]?.match(/(\d+)$/)?.[1])||0),208)+1;
       const row = [`#PR-${String(next).padStart(4,"0")}`, currentCustomer, date, "0%", "<span class='badge badge-amber'>Pendiente</span>"];
       row.customerDocument = currentCustomerDocument;
-      row.orderType = "Mostrador";
+      row.orderType = cartSelectedOrderType || "Mostrador";
       row.detailData = { detPresupuesto: shoppingCart.map(item => { const product = products.rows.find(entry => entry[0] === item.product); return { selected:item.product, extraSelects:[], inputs:[String(item.quantity),String(parseProductPrice(product?.[4]))] }; }) };
       const customer = findClientByName(currentCustomer);
-      const customerAddress = getClientAddresses(customer)[0];
-      if (customerAddress) { row.customerAddress = { ...customerAddress }; row.customerAddressIndex = 0; }
+      const allAddresses = getClientAddresses(customer);
+      const addrIdx = allAddresses[cartSelectedAddressIdx] ? cartSelectedAddressIdx : 0;
+      const customerAddress = allAddresses[addrIdx] || allAddresses[0];
+      if (customerAddress) { row.customerAddress = { ...customerAddress }; row.customerAddressIndex = addrIdx; }
       row.checkoutRequest = true;
       budgets.rows.unshift(row); shoppingCart = []; persistBusinessData();
       renderSidebar(); renderContent(); renderCustomerIndicator();
@@ -2444,6 +3166,126 @@
     }
 
     function dashboardScreen() {
+      if (["cliente", "visitante"].includes(currentRole)) {
+        const productsEntity = E.find(entity => entity.id === "productos");
+        const activeProducts = visibleRows(productsEntity);
+        const featuredProducts = activeProducts.slice(0, 4);
+        const budgets = currentRole === "cliente" ? visibleRows(E.find(entity => entity.id === "presupuestos")) : [];
+        const orders = currentRole === "cliente" ? visibleRows(E.find(entity => entity.id === "pedidos")) : [];
+        const { count: cartCount, total: cartTotal } = getCartTotals();
+        const customer = findClientByName(currentCustomer);
+        const addresses = getClientAddresses(customer);
+        const primaryAddr = addresses[0] ? formatAddressObject(addresses[0]) : "Sin domicilio registrado";
+        return `<div id="screen-dashboard" class="screen active">
+          <div class="client-hero">
+            <div>
+              <div class="client-hero-kicker">🌾 Fábrica de Pastas Artesanales · Calidad de Tradición</div>
+              <h2>${currentRole === "cliente" && currentCustomer ? `¡Hola, ${escapeHTML(currentCustomer)}!` : "Pastas frescas elaboradas cada mañana"}</h2>
+              <p>Seleccioná tus pastas frescas, rellenas y salsas caseras directo de fábrica. Armá tu presupuesto en el carrito o consultá el estado de tus pedidos en tiempo real.</p>
+              <div class="client-hero-actions">
+                <button type="button" class="client-hero-btn-primary" onclick="showScreen('productos',document.querySelector('[data-screen=\\'productos\\']'),'Catálogo')">🍝 Explorar Catálogo (${activeProducts.length} productos)</button>
+                <button type="button" class="client-hero-btn-secondary" onclick="openCartModal()">🛒 Mi Carrito (${cartCount} u. · $${cartTotal.toLocaleString("es-AR")})</button>
+                ${currentRole === "cliente" ? `<button type="button" class="client-hero-btn-secondary" onclick="showScreen('presupuestos',document.querySelector('[data-screen=\\'presupuestos\\']'),'Ventas');openForm('presupuestos')">+ Nuevo presupuesto a medida</button>` : `<button type="button" class="client-hero-btn-secondary" onclick="openAccountAccess()">Ingresar / Crear cuenta</button>`}
+              </div>
+            </div>
+            <div class="client-hero-perks">
+              <div class="client-hero-perk"><strong>🥚 100% Huevo de Campo</strong><span>Semolín puro y materias primas frescas seleccionadas.</span></div>
+              <div class="client-hero-perk"><strong>⏱ Cocción en Minutos</strong><span>Pastas tiernas listas en 3 a 5 minutos de hervor.</span></div>
+              <div class="client-hero-perk"><strong>🚚 Envío o Mostrador</strong><span>Retiro en fábrica o entrega en tus domicilios registrados.</span></div>
+              <div class="client-hero-perk"><strong>🧾 Comprobantes Digitales</strong><span>Presupuestos y pedidos con detalle e impresión inmediata.</span></div>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-card v" style="cursor:pointer" onclick="openCartModal()">
+              <div class="label">Mi Carrito Actual</div>
+              <div class="value">${cartCount} u.</div>
+              <div class="sub">Total acumulado: <strong>$${cartTotal.toLocaleString("es-AR")}</strong> · Ver carrito →</div>
+            </div>
+            ${currentRole === "cliente" ? `
+            <div class="stat-card p" style="cursor:pointer" onclick="showScreen('presupuestos',document.querySelector('[data-screen=\\'presupuestos\\']'),'Ventas')">
+              <div class="label">Mis Presupuestos</div>
+              <div class="value">${budgets.length}</div>
+              <div class="sub">Solicitudes y cotizaciones de tu cuenta →</div>
+            </div>
+            <div class="stat-card c" style="cursor:pointer" onclick="showScreen('pedidos',document.querySelector('[data-screen=\\'pedidos\\']'),'Ventas')">
+              <div class="label">Mis Pedidos</div>
+              <div class="value">${orders.length}</div>
+              <div class="sub">Seguimiento de entregas y estados →</div>
+            </div>
+            <div class="stat-card a">
+              <div class="label">Mis Domicilios (${addresses.length})</div>
+              <div class="value" style="font-size:15px;line-height:1.3;margin-top:4px;">${escapeHTML(primaryAddr)}</div>
+              <div class="sub">Podés elegir o agregar domicilios en tu presupuesto</div>
+            </div>` : `
+            <div class="stat-card p" style="cursor:pointer" onclick="showScreen('productos',document.querySelector('[data-screen=\\'productos\\']'),'Catálogo')">
+              <div class="label">Especialidades del Día</div>
+              <div class="value">${activeProducts.length}</div>
+              <div class="sub">Pastas frescas, rellenas, salsas y horneados</div>
+            </div>
+            <div class="stat-card c" style="cursor:pointer" onclick="openAccountAccess()">
+              <div class="label">Atención a Clientes</div>
+              <div class="value">Minorista y Mayorista</div>
+              <div class="sub">Particulares, restaurantes, hoteles y eventos</div>
+            </div>`}
+          </div>
+          <div class="card" style="margin-top:20px;overflow:hidden;">
+            <div class="card-header">
+              <div>
+                <div class="card-title">✨ Especialidades Destacadas del Día</div>
+                <div style="font-size:12.5px;color:var(--text-muted);">Agregá tus pastas favoritas directamente a tu pedido</div>
+              </div>
+              <div class="card-actions">
+                <button type="button" class="btn btn-ghost btn-sm" onclick="showScreen('productos',document.querySelector('[data-screen=\\'productos\\']'),'Catálogo')">Ver los ${activeProducts.length} productos →</button>
+              </div>
+            </div>
+            <div class="catalog-grid">
+              ${featuredProducts.map(row => renderCatalogCardHtml(row, productsEntity)).join("")}
+            </div>
+          </div>
+          ${currentRole === "cliente" ? `<div class="dash-grid" style="margin-top:20px;">
+            <div class="dash-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div class="dash-card-title" style="margin:0;">📄 Mis Últimos Presupuestos</div>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="showScreen('presupuestos',document.querySelector('[data-screen=\\'presupuestos\\']'),'Ventas')">Ver todos</button>
+              </div>
+              ${budgets.length ? budgets.slice(0, 4).map(b => {
+                const idx = E.find(e => e.id === "presupuestos").rows.indexOf(b);
+                const tot = calculateEntityVoucherTotal("presupuestos", b);
+                return `<div class="activity-item" style="justify-content:space-between;align-items:center;">
+                  <div>
+                    <div class="activity-text"><strong>${escapeHTML(b[0])}</strong> · ${escapeHTML(b.orderType || "Mostrador")} · <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+                    <div class="activity-time">Válido hasta: ${escapeHTML(formatDateForDisplay(b[2]))} · ${escapeHTML(getRecordAddressDisplay("presupuestos", b))}</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    ${b[4]}
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="openView('presupuestos', ${idx})">Ver</button>
+                  </div>
+                </div>`;
+              }).join("") : `<div style="font-size:12.5px;color:var(--text-muted);padding:12px 0;">Todavía no registraste presupuestos. Agregá productos del catálogo para comenzar.</div>`}
+            </div>
+            <div class="dash-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                <div class="dash-card-title" style="margin:0;">🚚 Mis Órdenes de Pedido</div>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="showScreen('pedidos',document.querySelector('[data-screen=\\'pedidos\\']'),'Ventas')">Ver todas</button>
+              </div>
+              ${orders.length ? orders.slice(0, 4).map(o => {
+                const idx = E.find(e => e.id === "pedidos").rows.indexOf(o);
+                const tot = calculateEntityVoucherTotal("pedidos", o);
+                return `<div class="activity-item" style="justify-content:space-between;align-items:center;">
+                  <div>
+                    <div class="activity-text"><strong>${escapeHTML(o[0])}</strong> · Total: <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></div>
+                    <div class="activity-time">Entrega: ${escapeHTML(o[3])} · ${escapeHTML(getRecordAddressDisplay("pedidos", o))}</div>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    ${o[5]}
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="openView('pedidos', ${idx})">Ver</button>
+                  </div>
+                </div>`;
+              }).join("") : `<div style="font-size:12.5px;color:var(--text-muted);padding:12px 0;">Todavía no tenés órdenes de pedido en curso.</div>`}
+            </div>
+          </div>` : ""}
+        </div>`;
+      }
       const role = ROLES.find(item => item.id === currentRole);
       const dashboard = DASHBOARDS[currentRole];
       if (dashboard) {
@@ -2493,6 +3335,7 @@
       const content = document.getElementById("content");
       const activeScreen = content.querySelector(".screen.active")?.id?.replace("screen-", "");
       content.innerHTML = dashboardScreen() + E.filter(e => e.id !== "cuentaCliente" && roleCanAccess(e.id)).map(entityScreen).join("");
+      syncTopbarCartIndicator();
       if (activeScreen && activeScreen !== "dashboard") {
         content.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
         document.getElementById(`screen-${activeScreen}`)?.classList.add("active");
@@ -2509,6 +3352,11 @@
     }
 
     function formatCellValue(entity, row, columnIndex) {
+      if (entity.id === "productos" && columnIndex === 0) {
+        const cleanName = String(row[0] || "").replace(/<[^>]+>/g, "");
+        const meta = getProductMeta(cleanName, row[1]);
+        return `<div class="prod-table-cell"><img class="prod-table-thumb" src="${escapeHTML(meta.image)}" data-fallback="${escapeHTML(meta.fallback)}" onerror="this.onerror=null;this.src=this.dataset.fallback" alt="${escapeHTML(cleanName)}"><div><strong>${escapeHTML(cleanName)}</strong><div style="font-size:11px;color:var(--text-muted);">${escapeHTML(meta.portions)} · ${escapeHTML(meta.badge)}</div></div></div>`;
+      }
       if (entity.id === "productos" && columnIndex === 5) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
       if (entity.id === "repuestos" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
       if (entity.id === "materias" && columnIndex === 2) return `<span class="stock-readonly" title="El stock se actualiza por movimientos">${escapeHTML(row[columnIndex] || "0")}</span>`;
@@ -2647,6 +3495,7 @@
       document.getElementById("customer-name").textContent = currentCustomer || "Sin cuenta";
       document.getElementById("account-entry-btn").hidden = !!currentUser;
       document.getElementById("logout-btn").hidden = !currentUser;
+      syncTopbarCartIndicator();
     }
 
     function hideLogin() {
@@ -2772,15 +3621,35 @@
     let currentFormEntity = null;
     let formState = {};
 
+    function hasQuantityAndUnitPrice(g) {
+      return Boolean(g?.extra?.some(x => x.l === "Cantidad") && g?.extra?.some(x => x.l === "PrecioUnitario"));
+    }
+
+    function getDefaultItemBasePrice(ref, itemName) {
+      if (!itemName) return "";
+      if (ref === "productos") return getDefaultProductBasePrice(itemName);
+      if (ref === "materias") {
+        const mat = E.find(entity => entity.id === "materias")?.rows.find(r => normalizeLabel(r[0]) === normalizeLabel(itemName));
+        const price = parseProductPrice(mat?.[4]);
+        return Number.isFinite(price) && price > 0 ? String(price) : "";
+      }
+      if (ref === "repuestos") {
+        const rep = E.find(entity => entity.id === "repuestos")?.rows.find(r => normalizeLabel(r[0]) === normalizeLabel(itemName));
+        const price = parseProductPrice(rep?.[1]);
+        return Number.isFinite(price) && price > 0 ? String(price) : "";
+      }
+      return "";
+    }
+
     function detailRowHtml(g, rowIdx) {
       return `<div class="detail-row">
     <div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</label><select class="form-select" onchange="handleDetailProductChange(this, '${g.key}')">${["detOPprod", "detCV"].includes(g.key) ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(g.refLabel).toLocaleLowerCase("es-AR"))}</option>` : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select></div>
       ${g.extra.map(x => `<div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(x.l))}</label>${x.t === "select"
         ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
-        : x.t === "number" ? `<input class="form-input" type="number" min="${x.min ?? 0.01}" step="${x.step ?? "0.01"}" value="${x.defaultValue ?? (x.l === "PrecioUnitario" && g.ref === "productos" && g.key !== "detCV" ? (getDefaultProductBasePrice(refOptions(g.ref)[0]) || "1") : "1")}"${currentRole === "cliente" && x.l === "PrecioUnitario" ? " readonly disabled" : ""}>`
+        : x.t === "number" ? `<input class="form-input" type="number" min="${x.min ?? 0.01}" step="${x.step ?? "0.01"}" value="${x.defaultValue ?? (x.l === "PrecioUnitario" && g.ref && g.key !== "detCV" ? (getDefaultItemBasePrice(g.ref, refOptions(g.ref)[0]) || "1") : "1")}" oninput="handleDetailRowInput(this, '${g.key}')"${currentRole === "cliente" && x.l === "PrecioUnitario" ? " readonly disabled" : ""}>`
           : x.t === "date" ? `<input class="form-input" type="date" lang="es-AR">`
           : `<input class="form-input" type="text">`}</div>`).join("")}
-    ${g.key === "detCV" ? '<div class="invoice-line-total">$0,00</div>' : ""}<button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
+    ${hasQuantityAndUnitPrice(g) ? `<div class="detail-field detail-subtotal-field"><label>Subtotal (Cant. × Precio)</label><div class="detail-line-subtotal${g.key === "detCV" ? " invoice-line-total" : ""}" data-line-subtotal><span class="detail-line-formula" data-line-formula>1 × $0</span><strong class="detail-line-amount" data-line-amount>$0,00</strong></div></div>` : ""}<button type="button" class="rm-detail-btn" onclick="removeDetailRow('${g.key}',${rowIdx})" title="Quitar">✕</button>
   </div>`;
     }
 
@@ -2790,6 +3659,7 @@
     <div class="detail-label">${g.label || `${g.refLabel}s`}</div>
     <div class="detail-rows">${rows.map((_, i) => detailRowHtml(g, i)).join("")}</div>
     <button type="button" class="add-detail-btn" onclick="addDetailRow('${g.key}')">+ Agregar ${g.refLabel.toLowerCase()}</button>
+    ${hasQuantityAndUnitPrice(g) ? `<div class="detail-voucher-summary" data-group-summary="${g.key}"></div>` : ""}
   </div>`;
     }
 
@@ -2798,6 +3668,7 @@
       const g = e.details.find(d => d.key === key);
       const block = document.querySelector(`.detail-block[data-group="${key}"]`);
       if (block) block.outerHTML = detailGroupHtml(g);
+      syncDetailGroupCalculations(key);
     }
 
     function readDetailRows(key) {
@@ -2821,6 +3692,13 @@
         });
         row.querySelectorAll(".form-input").forEach((input, inputIndex) => {
           input.value = values[index].inputs[inputIndex] ?? input.value;
+        });
+      });
+      syncDetailGroupCalculations(key);
+    }
+
+    function _unusedOldRestoreTail() {
+      ({ forEach: () => {} }).forEach(() => { ({ forEach: () => {} }).forEach(() => {
         });
       });
     }
@@ -2851,6 +3729,117 @@
     }
 
     function handleDetailProductChange(selectEl, groupKey) {
+      const e = E.find(x => x.id === currentFormEntity);
+      const g = e?.details?.find(d => d.key === groupKey);
+      const row = selectEl.closest(".detail-row");
+      if (row && hasQuantityAndUnitPrice(g)) {
+        const inputs = row.querySelectorAll(".form-input");
+        const priceInput = inputs[1];
+        const basePrice = getDefaultItemBasePrice(g.ref, selectEl.value);
+        if (priceInput && basePrice) {
+          priceInput.value = basePrice;
+        }
+      }
+      syncDetailGroupCalculations(groupKey);
+      if (groupKey === "detCV") syncInvoicePreview();
+    }
+
+    function handleDetailRowInput(inputEl, groupKey) {
+      syncDetailGroupCalculations(groupKey);
+      if (groupKey === "detCV") syncInvoicePreview();
+    }
+
+    function syncDetailGroupCalculations(groupKey) {
+      const block = document.querySelector(`.detail-block[data-group="${groupKey}"]`);
+      if (!block) return;
+      const e = E.find(x => x.id === currentFormEntity);
+      const g = e?.details?.find(d => d.key === groupKey);
+      if (!hasQuantityAndUnitPrice(g)) return;
+      const lines = [];
+      block.querySelectorAll(".detail-row").forEach(row => {
+        const selectVal = row.querySelector(".form-select")?.value || "";
+        const inputs = row.querySelectorAll(".form-input");
+        const qty = Math.max(0, Number(String(inputs[0]?.value ?? "0").replace(",", ".")) || 0);
+        const unitPrice = Math.max(0, parseProductPrice(inputs[1]?.value) || 0);
+        const lineSubtotal = qty * unitPrice;
+        const formulaEl = row.querySelector("[data-line-formula]");
+        const amountEl = row.querySelector("[data-line-amount]");
+        if (formulaEl) formulaEl.textContent = `${qty} × $${unitPrice.toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+        if (amountEl) amountEl.textContent = `$${lineSubtotal.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        lines.push({ name: selectVal, qty, unitPrice, lineSubtotal });
+      });
+      const summaryEl = block.querySelector(`[data-group-summary="${groupKey}"]`);
+      if (!summaryEl) return;
+      const subtotal = lines.reduce((sum, item) => sum + item.lineSubtotal, 0);
+      const totalUnits = lines.reduce((sum, item) => sum + item.qty, 0);
+      let discountPct = 0;
+      if (currentFormEntity === "presupuestos") {
+        const discountCtrl = getFormControl("descuento");
+        discountPct = Math.max(0, Math.min(100, Number(String(discountCtrl?.value || "0").replace(/[^\d.,-]/g, "").replace(",", ".")) || 0));
+      }
+      const discountAmount = subtotal * (discountPct / 100);
+      const finalTotal = subtotal - discountAmount;
+      const fmtMoney = val => `$${Number(val || 0).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      const fmtCompact = val => `$${Number(val || 0).toLocaleString("es-AR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+      summaryEl.innerHTML = `<div class="detail-voucher-breakdown">
+        <div class="detail-voucher-breakdown-title">Cuenta del pedido (${lines.length} ítem${lines.length === 1 ? "" : "s"} · ${totalUnits} u.)</div>
+        ${lines.map(item => `<div class="detail-voucher-breakdown-item"><span><strong>${escapeHTML(item.name || "Sin seleccionar")}</strong> · ${item.qty} × ${fmtCompact(item.unitPrice)}</span><strong>${fmtMoney(item.lineSubtotal)}</strong></div>`).join("")}
+      </div>
+      <div class="detail-voucher-totals">
+        <div class="detail-voucher-subrow"><span>Subtotal:</span><strong>${fmtMoney(subtotal)}</strong></div>
+        ${discountPct > 0 ? `<div class="detail-voucher-subrow"><span>Descuento (${discountPct}%):</span><strong>-${fmtMoney(discountAmount)}</strong></div>` : ""}
+        <div class="detail-voucher-grand"><span>Total del comprobante:</span><span>${fmtMoney(finalTotal)}</span></div>
+      </div>`;
+    }
+
+    function syncAllDetailGroupCalculations() {
+      const e = E.find(x => x.id === currentFormEntity);
+      (e?.details || []).forEach(g => {
+        if (hasQuantityAndUnitPrice(g)) syncDetailGroupCalculations(g.key);
+      });
+    }
+
+    function calculateEntityVoucherTotal(entityId, row) {
+      if (!row) return 0;
+      const stripTags = val => String(val ?? "").replace(/<[^>]+>/g, "").trim();
+      const groupMap = {
+        presupuestos: "detPresupuesto",
+        pedidos: "detPedido",
+        comprobantesVenta: "detCV",
+        remitos: "detRemito",
+        presupuestosProv: "detPP",
+        ordenesCompra: "detOC",
+        remitosProv: "detRP",
+        comprobantesProv: "detCVP",
+        mantenimiento: "detMant"
+      };
+      const detailKey = groupMap[entityId];
+      if (!detailKey) return 0;
+      let lines = row.detailData?.[detailKey] || [];
+      if (!lines.length && entityId === "pedidos" && row[2] && row[2] !== "—") {
+        const linkedBudget = E.find(x => x.id === "presupuestos")?.rows.find(b => b[0] === row[2]);
+        if (linkedBudget?.detailData?.detPresupuesto?.length) lines = linkedBudget.detailData.detPresupuesto;
+      }
+      if (!lines.length && (entityId === "comprobantesVenta" || entityId === "remitos") && row[1]) {
+        const linkedOrder = E.find(x => x.id === "pedidos")?.rows.find(o => o[0] === row[1]);
+        if (linkedOrder?.detailData?.detPedido?.length) lines = linkedOrder.detailData.detPedido;
+      }
+      if (!lines.length && entityId === "comprobantesVenta" && row[5]) {
+        const parsed = parseProductPrice(stripTags(row[5]));
+        if (Number.isFinite(parsed) && parsed > 0) return parsed;
+      }
+      const subtotal = lines.reduce((sum, line) => {
+        const qty = Math.max(0, Number(String(line.inputs?.[0] ?? "0").replace(",", ".")) || 0);
+        const unitPrice = Math.max(0, parseProductPrice(line.inputs?.[1]) || 0);
+        return sum + qty * unitPrice;
+      }, 0);
+      if (entityId === "presupuestos") {
+        const discountPct = Math.max(0, Math.min(100, Number(String(stripTags(row[3] || "0")).replace(/[^\d.,-]/g, "").replace(",", ".")) || 0));
+        return subtotal * (1 - discountPct / 100);
+      }
+      return subtotal;
+    }
+    function _unusedOldHandleDetailProductChange(selectEl, groupKey) {
       if (!["detPresupuesto", "detPedido", "detCV", "detRemito"].includes(groupKey)) return;
       const row = selectEl.closest(".detail-row");
       if (!row) return;
@@ -3115,8 +4104,10 @@
           })) : opts.slice(0, Math.min(2, opts.length)).map(selected => ({ selected, values: [] }));
           h += `<div class="detail-block">
         <div class="detail-label">${g.label || `${g.refLabel}s`}</div>
-        <table><thead><tr><th>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</th>${g.extra.map(x => `<th>${escapeHTML(friendlyAttributeLabel(x.l))}</th>`).join("")}</tr></thead>
-        <tbody>${displayRows.map(item => `<tr><td>${escapeHTML(item.selected || "—")}</td>${g.extra.map((_, index) => `<td>${escapeHTML(item.values[index] || "—")}</td>`).join("")}</tr>`).join("")}</tbody></table>
+        <table><thead><tr><th>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</th>${g.extra.map(x => `<th>${escapeHTML(friendlyAttributeLabel(x.l))}</th>`).join("")}${hasQuantityAndUnitPrice(g) ? "<th>Subtotal (Cant. × Precio)</th>" : ""}</tr></thead>
+        <tbody>${displayRows.map(item => { const q = Math.max(0, Number(String(item.values[0] ?? "0").replace(",", ".")) || 0); const p = Math.max(0, parseProductPrice(item.values[1]) || 0); const sub = q * p; return `<tr><td>${escapeHTML(item.selected || "—")}</td>${g.extra.map((_, index) => `<td>${escapeHTML(item.values[index] || "—")}</td>`).join("")}${hasQuantityAndUnitPrice(g) ? `<td><strong>$${sub.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> <span style="color:var(--text-muted);font-size:11px;">(${q} × $${p.toLocaleString("es-AR", { maximumFractionDigits: 2 })})</span></td>` : ""}</tr>`; }).join("")}</tbody></table>
+        ${hasQuantityAndUnitPrice(g) ? `<div style="display:flex;justify-content:flex-end;margin-top:8px;"><div class="detail-voucher-grand" style="width:auto;"><span>Total del comprobante:</span><span>$${calculateEntityVoucherTotal(entityId, row).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span></div></div>` : ""}
+
         ${savedDetails.length ? "" : `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Sin detalle cargado.</div>`}
       </div>`;
         });
@@ -3271,6 +4262,12 @@
           if (selectedBudget) {
             setFormSelect("Id_Cliente", selectedBudget[1]);
             syncClientAddressWidget(selectedBudget.customerAddress || null, selectedBudget.customerAddressIndex ?? null);
+            const budgetDetails = selectedBudget.detailData?.detPresupuesto || [];
+            if (budgetDetails.length) {
+              formState.detPedido = budgetDetails.map((_, index) => index);
+              rerenderGroup("detPedido");
+              restoreDetailRows("detPedido", budgetDetails);
+            }
           }
         });
         const orderClientSelect = getActiveFormClientSelect();
@@ -3282,6 +4279,7 @@
           orderClientSelect.value = currentCustomer;
         }
         syncClientAddressWidget(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
+        getFormControl("descuento")?.addEventListener("input", () => syncDetailGroupCalculations("detPresupuesto"));
       }
       if (entityId === "presupuestos") {
         const budgetClientSelect = getActiveFormClientSelect();
@@ -3293,6 +4291,7 @@
           budgetClientSelect.value = currentCustomer;
         }
         syncClientAddressWidget(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
+        getFormControl("descuento")?.addEventListener("input", () => syncDetailGroupCalculations("detPresupuesto"));
       }
       if (entityId === "pedidos") {
         syncOrderScheduleFields();
@@ -3535,7 +4534,7 @@
             return;
           }
           const subtotal = (detailData.detCV || []).reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * parseAmount(line.inputs[1]), 0);
-          const total = subtotal * 1.21;
+          const total = subtotal;
           updatedRow = [
             editing ? e.rows[rowIndex][0] : nextCode("CV", e.rows), orderId || "—", order?.[1] || "—",
             escapeHTML(getValue("FechaEmision") || "—"), escapeHTML(getValue("TipoVenta") || "Minorista"), formatAmount(total)
@@ -3636,6 +4635,12 @@
             if (order) {
               setFormSelect("Id_Cliente (heredado)", order[1]);
               syncClientAddressWidget(order.customerAddress || null, order.customerAddressIndex ?? null);
+              const orderDetails = order.detailData?.detPedido || [];
+              if (orderDetails.length) {
+                formState.detCV = orderDetails.map((_, index) => index);
+                rerenderGroup("detCV");
+                restoreDetailRows("detCV", orderDetails);
+              }
             }
           } else if (changedKey === "Id_Cliente (heredado)") {
             currentSelectedAddressIndex = 0;
@@ -3650,6 +4655,7 @@
         syncInvoicePreview();
         syncInvoiceCustomer(editing ? e.rows[rowIndex].customerAddress : null, editing ? e.rows[rowIndex].customerAddressIndex : null);
       }
+      syncAllDetailGroupCalculations();
       openModal("modal-form");
     }
 
@@ -3658,6 +4664,16 @@
     }
 
     function syncInvoicePreview() {
+      syncDetailGroupCalculations("detCV");
+      const totals = document.querySelectorAll("#invoice-subtotal, #invoice-iva, #invoice-total");
+      if (totals.length !== 3) return;
+      const subtotal = readDetailRows("detCV").reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * (Number(line.inputs[1]) || 0), 0);
+      const money = value => `$${value.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      totals[0].textContent = money(subtotal);
+      totals[1].textContent = money(0);
+      totals[2].textContent = money(subtotal);
+    }
+    function _unusedOldSyncInvoicePreview() {
       const totals = document.querySelectorAll("#invoice-subtotal, #invoice-iva, #invoice-total");
       if (totals.length !== 3) return;
       const subtotal = readDetailRows("detCV").reduce((sum, line) => sum + (Number(line.inputs[0]) || 0) * (Number(line.inputs[1]) || 0), 0);
@@ -3829,10 +4845,10 @@
       const result = addressCandidates[index];
       if (!result) return;
       const fields = readCustomerAddressFields(verifyButton);
-      fields.street.value = result.calle?.nombre || fields.street.value;
+      setSelectValueOrAddOption(fields.street, result.calle?.nombre || fields.street.value);
       fields.height.value = result.altura?.valor || fields.height.value;
       const locality = result.localidad_censal?.nombre || result.localidad?.nombre;
-      if (locality) fields.city.value = locality;
+      if (locality) setSelectValueOrAddOption(fields.city, locality);
       if (result.provincia?.nombre && fields.province) fields.province.value = result.provincia.nombre;
       const postal = result.codigo_postal || result.codigoPostal || result.cod_postal;
       if (postal && fields.postalCode) fields.postalCode.value = postal;
@@ -4325,6 +5341,10 @@
         province.innerHTML = '<option value="">Seleccionar provincia</option>' + provinces.map(item => `<option>${escapeHTML(item)}</option>`).join("");
         if (value) province.value = value;
       }
+      const citySelect = document.getElementById("register-city");
+      if (citySelect) citySelect.innerHTML = getLocalityOptionsHtml(citySelect.value, province?.value || "");
+      const streetSelect = document.getElementById("register-street");
+      if (streetSelect) streetSelect.innerHTML = getStreetOptionsHtml(streetSelect.value);
       const localities = [...new Set(E.find(entity => entity.id === "localidades").rows.map(row => row[0]))].sort((a,b) => a.localeCompare(b,"es"));
       const streets = [...new Set(E.find(entity => entity.id === "calles").rows.map(row => row[0]))].sort((a,b) => a.localeCompare(b,"es"));
       const postals = [...new Set(E.find(entity => entity.id === "localidades").rows.map(row => row[2]).filter(Boolean))].sort();
@@ -4363,7 +5383,9 @@
       const [locality, province] = uniquePlaces[0];
       const provinceOption = [...(fields.province?.options || [])].find(option => normalizeLabel(option.value || option.textContent) === normalizeLabel(province));
       if (!fields.city || !fields.province || !provinceOption) return;
-      fields.city.value = locality;
+      fields.province.value = provinceOption.value || provinceOption.textContent;
+      handleProvinceSelectChange(fields.province);
+      setSelectValueOrAddOption(fields.city, locality);
       fields.province.value = provinceOption.value || provinceOption.textContent;
       if (rowItem) invalidateRowAddressVerification(postalInput);
       else invalidateAddressVerification();
@@ -4639,6 +5661,7 @@
       const migratedPaymentLines = migrateLegacyPaymentLines();
       const migratedReceiptRows = migratePaymentReceiptRows();
       if (migratedReceiptRows || migratedPaymentLines) persistBusinessData();
+      initializeCatalogProductsAndRecipes();
       initializeBudgetTypes();
       updateOrderPaidTotals();
       initializeCustomerOwnership();
