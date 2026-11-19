@@ -425,7 +425,34 @@
     .btn-sm {
       padding: 5px 10px;
       font-size: 11.5px;
+      min-height: 30px;
+      justify-content: center;
+      white-space: nowrap;
     }
+
+    .action-icon { width:16px; height:16px; display:block; flex:0 0 16px; }
+    .icon-action { width:32px; min-width:32px; height:30px; min-height:30px; padding:0; justify-content:center; gap:0; }
+    .td-actions .icon-action { width:29px; min-width:29px; height:28px; min-height:28px; padding:0; }
+    .row-more { position:relative; display:inline-flex; }
+    .row-more > summary { list-style:none; cursor:pointer; }
+    .row-more > summary::-webkit-details-marker { display:none; }
+    .row-more-menu { position:absolute; z-index:20; top:calc(100% + 5px); right:0; display:grid; gap:3px; min-width:158px; padding:5px; border:1px solid var(--cream-dark); border-radius:10px; background:var(--white); box-shadow:var(--shadow-lg); }
+    .row-more-menu button { width:100%; padding:8px 10px; border:0; border-radius:7px; background:transparent; color:var(--text); text-align:left; font:500 12px 'DM Sans',sans-serif; cursor:pointer; }
+    .row-more-menu button:hover, .row-more-menu button:focus-visible { background:var(--cream); outline:none; }
+
+    .btn-plus, .add-detail-btn, .street-add-btn, .catalog-qty-stepper button {
+      background:var(--wheat-light);
+      border-color:var(--wheat);
+      color:var(--green-dark);
+      box-shadow:0 1px 3px rgba(45,58,47,.08);
+      transition:background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+    }
+    .btn-plus:hover, .add-detail-btn:hover, .street-add-btn:hover, .catalog-qty-stepper button:hover {
+      background:var(--butter);
+      border-color:var(--wheat-dark);
+      box-shadow:0 3px 8px rgba(45,58,47,.13);
+    }
+    .btn-plus:active, .add-detail-btn:active, .street-add-btn:active { transform:translateY(1px); }
 
     .content {
       padding: 22px 30px 36px;
@@ -502,6 +529,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      min-width: 0;
       margin-bottom: 22px;
       border: 1px solid rgba(41, 71, 62, .06);
     }
@@ -516,6 +544,8 @@
       gap: 12px;
       flex-wrap: wrap;
     }
+
+    .card-header > div:first-child { min-width:0; }
 
     .card-title {
       font-family: 'Playfair Display', serif;
@@ -560,6 +590,8 @@
       display: flex;
       gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
     table {
@@ -572,6 +604,23 @@
       width: 100%;
       overflow-x: auto;
     }
+
+    .table-wrap {
+      width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+    }
+
+    .entity-list-table { min-width: 760px; }
+    .entity-list-table:not(.product-management-table) th:last-child,
+    .entity-list-table:not(.product-management-table) td.td-actions { width: 260px; }
+    #screen-empleados .entity-list-table th:last-child,
+    #screen-empleados .entity-list-table td.td-actions { width: 150px; }
+    #screen-remitos .entity-list-table th:last-child,
+    #screen-remitos .entity-list-table td.td-actions { width: 150px; }
+    #screen-pedidos .entity-list-table th:last-child,
+    #screen-pedidos .entity-list-table td.td-actions { width: 330px; }
 
     .product-management-table {
       width: 100%;
@@ -608,7 +657,7 @@
       text-transform: uppercase;
       color: var(--text-muted);
       border-bottom: 1px solid var(--cream-dark);
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
     }
 
     tbody tr {
@@ -628,22 +677,26 @@
       font-size: 13px;
       color: var(--text);
       vertical-align: middle;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      word-break: normal;
     }
 
     .td-actions {
       display: flex;
-      gap: 6px;
+      gap: 4px;
       flex-wrap: wrap;
+      align-items: center;
+      align-content: center;
+      min-width: 0;
+      padding: 5px 4px;
     }
 
     .td-actions .btn {
       white-space: nowrap;
-      padding: 5px 8px;
-      font-size: 10.5px;
+      min-height: 28px;
+      padding: 4px 7px;
+      font-size: 10px;
     }
-
-    #screen-pedidos th:last-child, #screen-pedidos td.td-actions { width:270px; }
 
     .badge {
       display: inline-block;
@@ -651,6 +704,8 @@
       border-radius: 20px;
       font-size: 10.5px;
       font-weight: 600;
+      white-space: nowrap;
+      max-width: 100%;
     }
 
     .badge-green {
@@ -697,6 +752,10 @@
     .contextual-overlay {
       z-index: 220;
     }
+
+    .quick-create-overlay { z-index: 230; background: rgba(44, 24, 16, .28); }
+    .quick-create-overlay .modal { width: min(900px, 95vw); }
+    #modal-action-confirm { z-index: 250; }
 
     .contextual-modal {
       width: min(720px, 95vw);
@@ -746,6 +805,7 @@
     .modal-body {
       padding: 20px 24px;
       overflow-y: auto;
+      min-width: 0;
     }
 
     .modal-footer {
@@ -760,6 +820,7 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
       gap: 12px 16px;
+      align-items: end;
     }
 
     .form-group {
@@ -786,6 +847,8 @@
       min-width: 0;
     }
 
+    .field-control-row .btn { flex: 0 0 auto; }
+
     .field-icon-btn {
       width: 38px;
       min-width: 38px;
@@ -793,6 +856,7 @@
       justify-content: center;
       font-size: 17px;
     }
+    .field-icon-btn[aria-label^="Crear"], .field-icon-btn[aria-label^="Agregar"] { background:var(--wheat-light); border-color:var(--wheat); color:var(--green-dark); }
 
     .context-help {
       color: var(--text-muted);
@@ -848,6 +912,8 @@
     .form-select,
     .form-textarea {
       padding: 9px 12px;
+      min-height: 38px;
+      box-sizing: border-box;
       border: 1.5px solid var(--cream-dark);
       border-radius: var(--radius-sm);
       font-family: 'DM Sans', sans-serif;
@@ -886,13 +952,17 @@
 
     .detail-row {
       display: grid;
-      grid-template-columns: minmax(190px, 1.35fr) repeat(3, minmax(125px, 1fr)) auto;
+      grid-template-columns: minmax(170px, 1.25fr) repeat(var(--detail-extra-count, 2), minmax(88px, .7fr)) auto;
       align-items: end;
-      gap: 10px;
-      padding: 10px;
+      gap: 8px;
+      padding: 9px;
       border: 1px solid var(--cream-dark);
       border-radius: var(--radius-sm);
       background: var(--cream);
+    }
+
+    .detail-row:has(.detail-subtotal-field) {
+      grid-template-columns: minmax(165px, 1.25fr) minmax(86px, .65fr) minmax(100px, .75fr) minmax(145px, .9fr) 30px;
     }
 
     .detail-field {
@@ -906,6 +976,7 @@
       font-size: 11.5px;
       font-weight: 600;
       color: var(--text-muted);
+      line-height: 1.25;
     }
 
     .detail-row .form-select,
@@ -913,6 +984,8 @@
       width: 100%;
       min-width: 0;
     }
+
+    .detail-row .rm-detail-btn { align-self: center; justify-self: center; width:30px; height:34px; }
 
     .detail-label {
       font-size: 12.5px;
@@ -964,18 +1037,40 @@
     .client-address-card-title { font-size:11px; font-weight:700; letter-spacing:0.4px; text-transform:uppercase; color:var(--brown); }
     .client-address-value { color:var(--text); font-weight:500; line-height:1.4; }
     .client-address-actions { display:flex; gap:6px; flex-wrap:wrap; margin-top:2px; }
-    .client-address-inline-editor { display:grid; grid-template-columns:.9fr 1.2fr 1.2fr 1.4fr .8fr; gap:10px; padding:12px; margin-top:4px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); box-sizing:border-box; width:100%; }
+    .client-address-inline-editor { display:grid; grid-template-columns:.85fr 1.1fr 1.1fr 1.5fr .65fr; gap:10px; padding:12px; margin-top:4px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--white); box-sizing:border-box; width:100%; align-items:end; }
     .client-address-inline-field { display:flex; flex-direction:column; gap:4px; min-width:0; }
     .client-address-inline-field label { font-size:11px; font-weight:600; color:var(--text-muted); }
     .client-address-inline-editor[hidden] { display:none; }
     .client-address-inline-editor .span2 { grid-column:1 / -1; }
     .client-address-row-item { padding:12px; border:1px solid var(--cream-dark); border-radius:var(--radius-sm); background:var(--cream); display:grid; gap:8px; }
     .client-address-row-head { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:12px; font-weight:600; color:var(--brown); }
-    .client-address-row-grid { display:grid; grid-template-columns:.9fr 1.2fr 1.2fr 1.4fr .8fr; gap:8px; }
+    .client-address-row-grid { display:grid; grid-template-columns:.8fr 1.1fr 1.1fr 1.5fr .65fr; gap:8px; align-items:end; }
+    .client-address-row-item .form-input, .client-address-row-item .form-select,
+    .client-address-inline-editor .form-input, .client-address-inline-editor .form-select { min-width:0; width:100%; }
+    .street-field-control { display:flex; align-items:stretch; gap:5px; min-width:0; }
+    .street-field-control .form-select { flex:1; min-width:0; }
+    .street-add-btn { flex:0 0 34px; width:34px; min-width:34px; height:38px; min-height:38px; padding:0; justify-content:center; font-size:17px; }
+    .client-address-row-grid .detail-field, .client-address-inline-editor .client-address-inline-field { min-width:0; }
     .add-street-inline-box { display:flex; align-items:center; gap:6px; margin-top:6px; padding:6px; border:1px dashed var(--wheat); border-radius:var(--radius-sm); background:var(--cream); width:100%; box-sizing:border-box; }
     .add-street-inline-box[hidden] { display:none; }
     .add-street-inline-box .form-input { flex:1; min-width:0; padding:6px 8px; font-size:12px; background:var(--white); }
-    @media (max-width: 720px) { .client-address-row-grid, .client-address-inline-editor { grid-template-columns:1fr; } }
+    .address-verify-tools { display:flex; align-items:center; flex-wrap:wrap; gap:6px 9px; }
+    .address-verify-tools .btn { flex:0 0 auto; }
+    .client-address-actions { align-items:center; }
+    @media (max-width: 900px) {
+      .client-address-row-grid, .client-address-inline-editor { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .client-address-row-grid .detail-field:nth-child(4) { grid-column:span 2; }
+    }
+    @media (max-width: 600px) {
+      .client-address-row-grid, .client-address-inline-editor { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .client-address-row-grid .detail-field:nth-child(4), .client-address-inline-editor .span2 { grid-column:1 / -1; }
+      .detail-row, .detail-row:has(.detail-subtotal-field) { grid-template-columns:minmax(0,1fr) minmax(84px,.7fr); gap:8px; }
+      .detail-row .detail-field:first-child { grid-column:1 / -1; }
+      .detail-row .detail-subtotal-field { grid-column:1; }
+      .detail-row .rm-detail-btn { grid-column:2; grid-row:auto; justify-self:end; }
+      .invoice-items-heading { display:none; }
+      .entity-list-table { min-width:760px; }
+    }
     #modal-view .modal.voucher-modal { width: 820px; max-width: 96vw; }
     .afip-doc { background: #fff; color: #111; font-family: Arial, Helvetica, sans-serif; border: 1.5px solid #111; padding: 0; font-size: 12px; line-height: 1.45; box-shadow: 0 4px 18px rgba(0,0,0,.08); }
     .afip-doc-original { text-align: center; font-weight: 700; font-size: 14px; padding: 6px 10px; border-bottom: 1.5px solid #111; letter-spacing: 0.5px; text-transform: uppercase; }
@@ -1169,8 +1264,8 @@
     @media (max-width: 1200px) {
       .content { padding-left: 22px; padding-right: 22px; }
       .form-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
-      .detail-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .detail-row .detail-field:first-child { grid-column: 1 / -1; }
+      .detail-row { grid-template-columns: minmax(145px,1.2fr) repeat(var(--detail-extra-count,2),minmax(78px,.7fr)) auto; gap:7px; }
+      .detail-row:has(.detail-subtotal-field) { grid-template-columns:minmax(145px,1.15fr) minmax(78px,.6fr) minmax(90px,.7fr) minmax(130px,.85fr) 30px; }
     }
 
     .dash-card-title {
@@ -1192,6 +1287,17 @@
     .activity-item:last-child {
       border-bottom: none;
     }
+
+    .activity-item > div:first-child { min-width:0; flex:1 1 240px; }
+    .activity-item > div:last-child { min-width:0; flex-wrap:wrap; justify-content:flex-end; gap:6px; }
+
+    .cart-history-row { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; min-width:0; }
+    .cart-history-row > div:first-child { flex:1 1 260px; min-width:0; }
+    .cart-history-row > div:last-child { display:flex; align-items:center; justify-content:flex-end; gap:7px; flex-wrap:wrap; min-width:0; }
+
+    .card-actions > * { max-width:100%; }
+    .catalog-card-footer { flex-wrap:wrap; }
+    .detail-voucher-summary > * { min-width:0; }
 
     .activity-dot {
       width: 8px;
@@ -1498,19 +1604,24 @@
       .invoice-parties { grid-template-columns:1fr; }
       .invoice-items-heading { display:none; }
       .detail-row:has(.invoice-line-total) { grid-template-columns:minmax(0,1fr) auto; }
-      .detail-row:has(.invoice-line-total) .detail-field { grid-column:1 / -1; }
+      .detail-row:has(.invoice-line-total) .detail-field { grid-column:auto; }
+      .detail-row:has(.invoice-line-total) .detail-field:first-child { grid-column:1 / -1; }
       .invoice-line-total { grid-column:1; }
-      .detail-row:has(.invoice-line-total) .rm-detail-btn { grid-column:2; grid-row:4; }
+      .detail-row:has(.invoice-line-total) .rm-detail-btn { grid-column:2; grid-row:auto; }
       .form-grid,
-      .detail-row,
       .dash-grid {
         grid-template-columns: minmax(0, 1fr);
       }
 
-      .detail-row .detail-field:first-child,
       .form-group.span2 {
         grid-column: auto;
       }
+
+      .detail-row,
+      .detail-row:has(.detail-subtotal-field) { grid-template-columns:minmax(0,1fr) minmax(84px,.7fr); }
+      .detail-row .detail-field:first-child { grid-column:1 / -1; }
+      .detail-row .detail-subtotal-field { grid-column:1; }
+      .detail-row .rm-detail-btn { grid-column:2; grid-row:auto; justify-self:end; }
 
       .stats-row {
         gap: 8px;
@@ -1720,7 +1831,7 @@
           <label>Código postal<input type="text" id="register-postal" autocomplete="postal-code" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" placeholder="1234 o B1234ABC" required onchange="handlePostalCodeLookup(this)"></label>
           <label>Provincia<select id="register-province" autocomplete="address-level1" required onchange="handleProvinceSelectChange(this)"></select></label>
           <label>Localidad<select id="register-city" autocomplete="address-level2" required onchange="handleLocalitySelectChange(this)"></select></label>
-          <label>Calle<select id="register-street" autocomplete="address-line1" required onchange="handleStreetSelectChange(this)"></select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div></label>
+          <label>Calle<div class="street-field-control"><select id="register-street" autocomplete="address-line1" required onchange="handleStreetSelectChange(this)"></select><button type="button" class="btn btn-ghost street-add-btn" onclick="openAddStreetBox(this)" title="Agregar calle" aria-label="Agregar calle">+</button></div><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)" aria-label="Cancelar">×</button></div></label>
           <label>Altura<input type="number" id="register-height" min="1" max="99999" step="1" autocomplete="address-line2" required></label>
           <label>Usuario<input type="text" id="register-username" autocomplete="username" required></label>
           <label>Contraseña<input type="password" id="register-password" minlength="8" autocomplete="new-password" required></label>
@@ -1781,6 +1892,24 @@
     function menuIcon(name) {
       const path = MENU_ICON_PATHS[ENTITY_MENU_ICONS[name] || name] || MENU_ICON_PATHS.document;
       return `<svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+    }
+
+    const ACTION_ICON_PATHS = {
+      view: '<path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/>',
+      print: '<path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7zM17 11h.01"/>',
+      edit: '<path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"/>',
+      delete: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/>',
+      status: '<path d="M12 3v9M6.2 5.8a8 8 0 1 0 11.6 0"/>',
+      repeat: '<path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4M21 13v2a3 3 0 0 1-3 3H3"/>',
+      more: '<circle cx="5" cy="12" r="1" fill="currentColor"/><circle cx="12" cy="12" r="1" fill="currentColor"/><circle cx="19" cy="12" r="1" fill="currentColor"/>',
+    };
+
+    function actionIcon(name) {
+      return `<svg class="action-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ACTION_ICON_PATHS[name] || ACTION_ICON_PATHS.view}</svg>`;
+    }
+
+    function iconActionButton(icon, label, handler, tone = "btn-ghost") {
+      return `<button type="button" class="btn ${tone} btn-sm icon-action" title="${escapeHTML(label)}" aria-label="${escapeHTML(label)}" onclick="${handler}">${actionIcon(icon)}</button>`;
     }
 
     const ROLES = [
@@ -2002,7 +2131,7 @@
         ],
         fields: [
           { l: "Orden asociada", col: "Orden asociada", t: "select", ref: "pedidos", required: true },
-          { l: "Id_Cliente (heredado)", col: "Cliente", t: "text", required: true, readonly: true, placeholder: "Se completa al seleccionar una orden" },
+          { l: "Id_Cliente (heredado)", col: "Cliente", t: "select", key: "clientFromOrder", ref: "clientes", required: true },
           { l: "Responsable", col: "Responsable", t: "select", ref: "empleados", required: true },
           { l: "fechaEmision", col: "Fecha de emisión", t: "date", required: true, defaultToday: true },
           { l: "estado (heredado)", t: "select", o: ["Confirmado", "Anulado"], required: true },
@@ -2015,13 +2144,15 @@
       },
       {
         id: "remitos", section: "ventas", label: "Remitos", singular: "remito", cls: "Remito",
-        cols: ["IdRemito", "NroPedido", "Estado", "Observaciones", "Fecha de entrega", "Empleado a cargo"],
+        cols: ["IdRemito", "NroPedido", "Estado", "Observaciones", "Fecha de entrega", "Empleado a cargo", "Cliente", "Presupuesto asociado"],
         rows: [
-          ["#R-0441", "#OP-0886", "<span class='badge badge-amber'>Pendiente</span>", "Entregar en horario de mañana, tocar timbre de servicio.", "Pendiente"],
-          ["#R-0438", "#OP-0879", "<span class='badge badge-green'>Entregado</span>", "Retira encargado de la institución.", "Sin registrar"],
+          ["#R-0441", "#OP-0886", "<span class='badge badge-amber'>Pendiente</span>", "Entregar en horario de mañana, tocar timbre de servicio.", "Pendiente", "María Gómez", "Restó La Nonna", "#PR-0208"],
+          ["#R-0438", "#OP-0879", "<span class='badge badge-green'>Entregado</span>", "Retira encargado de la institución.", "Sin registrar", "María Gómez", "Iglesia San José", "—"],
         ],
         fields: [
           { l: "NroPedido", t: "select", ref: "pedidos" },
+          { l: "Cliente (heredado)", col: "Cliente", t: "select", key: "clientFromOrder", ref: "clientes", required: true },
+          { l: "Presupuesto asociado", col: "Presupuesto asociado", t: "select", ref: "presupuestos", optional: true },
           { l: "Empleado a cargo", t: "select", ref: "empleados", required: true },
           { l: "estado", t: "select", o: ["Pendiente", "Entregado"] },
           { l: "Observaciones", t: "textarea", span: 2 },
@@ -2096,7 +2227,7 @@
       },
       {
         id: "recetas", section: "produccion", label: "Recetas", singular: "receta", cls: "Receta",
-        cols: ["nombre", "idProducto", "rendimiento", "Materia prima (Detalle_Receta)"],
+        cols: ["nombre", "idProducto", "rendimiento", "Materia prima (Detalle_Receta)", "Empleado responsable"],
         rows: [
           ["Receta Tallarín clásico", "Tallarines frescos 500g", "20 u.", "Harina 000"],
           ["Receta Sorrentino J. y Q.", "Sorrentinos jamón y queso", "15 u.", "Harina 000"],
@@ -2116,6 +2247,7 @@
           { l: "idProducto", t: "select", ref: "productos" },
           { l: "rendimiento", t: "number" },
           { l: "Pasos", t: "textarea", span: 2 },
+          { l: "Empleado responsable", col: "Empleado responsable", t: "select", ref: "empleados", required: true },
         ],
         details: [{ key: "detReceta", cls: "Detalle_Receta", ref: "materias", refLabel: "Materia prima", extra: [{ l: "Cantidad", t: "number" }] }]
       },
@@ -2567,7 +2699,7 @@
           </div>
           <div class="detail-field">
             <label>Calle</label>
-            <select class="form-select" data-addr-field="street" required onchange="handleStreetSelectChange(this); invalidateRowAddressVerification(this)">${getStreetOptionsHtml(addr.street, addr.city, addr.province)}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div>
+            <div class="street-field-control"><select class="form-select" data-addr-field="street" required onchange="handleStreetSelectChange(this); invalidateRowAddressVerification(this)">${getStreetOptionsHtml(addr.street, addr.city, addr.province)}</select><button type="button" class="btn btn-ghost street-add-btn" onclick="openAddStreetBox(this)" title="Agregar calle" aria-label="Agregar calle">+</button></div><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)" aria-label="Cancelar">×</button></div>
           </div>
           <div class="detail-field">
             <label>Altura</label>
@@ -2680,7 +2812,7 @@
           <span class="client-address-card-title">${addresses.length > 1 ? `Domicilios cargados (${addresses.length})` : "Domicilio del cliente"}</span>
           <div class="client-address-actions">
             ${addresses.length ? `<button type="button" class="btn btn-ghost btn-sm" onclick="openInlineClientAddressEditor('edit')">Actualizar domicilio</button>` : ""}
-            <button type="button" class="btn btn-ghost btn-sm" onclick="openInlineClientAddressEditor('add')">+ Agregar domicilio</button>
+            <button type="button" class="btn btn-ghost btn-sm add-detail-btn" onclick="openInlineClientAddressEditor('add')">+ Agregar domicilio</button>
           </div>
         </div>
         ${selectorHtml}
@@ -2688,7 +2820,7 @@
           <div class="client-address-inline-field"><label for="inline-addr-postal">Código postal</label><input class="form-input" id="inline-addr-postal" list="customer-postal-options" pattern="([0-9]{4}|[A-Za-z][0-9]{4}[A-Za-z]{3})" required placeholder="Ej.: 1708" oninput="invalidateAddressVerification()" onchange="handlePostalCodeLookup(this)"></div>
           <div class="client-address-inline-field"><label for="inline-addr-province">Provincia</label><select class="form-select" id="inline-addr-province" required onchange="handleProvinceSelectChange(this); invalidateAddressVerification()"><option value="">Seleccionar provincia</option>${E.find(entity => entity.id === "provincias").rows.map(row => `<option>${escapeHTML(row[0])}</option>`).join("")}</select></div>
           <div class="client-address-inline-field"><label for="inline-addr-city">Localidad</label><select class="form-select" id="inline-addr-city" required onchange="handleLocalitySelectChange(this); invalidateAddressVerification()">${getLocalityOptionsHtml(selectedAddr?.city, selectedAddr?.province)}</select></div>
-          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><select class="form-select" id="inline-addr-street" required onchange="handleStreetSelectChange(this); invalidateAddressVerification()">${getStreetOptionsHtml(selectedAddr?.street, selectedAddr?.city, selectedAddr?.province)}</select><button type="button" class="btn btn-ghost btn-sm" style="margin-top:4px;width:fit-content;padding:3px 8px;font-size:11px;" onclick="openAddStreetBox(this)">+ Agregar calle</button><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)">✕</button></div></div>
+          <div class="client-address-inline-field"><label for="inline-addr-street">Calle</label><div class="street-field-control"><select class="form-select" id="inline-addr-street" required onchange="handleStreetSelectChange(this); invalidateAddressVerification()">${getStreetOptionsHtml(selectedAddr?.street, selectedAddr?.city, selectedAddr?.province)}</select><button type="button" class="btn btn-ghost street-add-btn" onclick="openAddStreetBox(this)" title="Agregar calle" aria-label="Agregar calle">+</button></div><div class="add-street-inline-box" hidden><input type="text" class="form-input" data-new-street-input placeholder="Nombre de la calle"><button type="button" class="btn btn-primary btn-sm" onclick="confirmAddNewStreet(this)">Agregar</button><button type="button" class="btn btn-ghost btn-sm" onclick="cancelAddNewStreet(this)" aria-label="Cancelar">×</button></div></div>
           <div class="client-address-inline-field"><label for="inline-addr-height">Altura</label><input class="form-input" id="inline-addr-height" type="number" min="1" max="99999" step="1" required placeholder="Ej.: 450" oninput="invalidateAddressVerification()"></div>
           <div class="span2" style="display:flex;gap:6px;justify-content:flex-end;margin-top:2px;">
             <button type="button" class="btn btn-ghost btn-sm" onclick="verifyCustomerAddress(this)">Verificar domicilio</button>
@@ -2930,39 +3062,32 @@
       if (e.id === "cajaDiaria") return cashReportScreen(e);
       if (e.id === "productos" && ["visitante", "cliente"].includes(currentRole)) return publicCatalogScreen(e);
       const rows = visibleRows(e);
-      const customerViewOnly = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(e.id);
       const paymentReceiptViewOnly = e.id === "comprobantesPago";
       return `<div id="screen-${e.id}" class="screen">
-    <div class="card">
-      <div class="card-header">
-        <div>
-          <div class="card-title">${e.label}</div>${["productos", "materias", "repuestos", "lotes"].includes(e.id) ? `<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Las existencias son de solo lectura y se actualizan mediante producción, ventas, compras y mantenimiento.</div>` : ""}
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">${e.label}</div>${["productos", "materias", "repuestos", "lotes"].includes(e.id) ? `<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Las existencias son de solo lectura y se actualizan mediante producción, ventas, compras y mantenimiento.</div>` : ""}
+            </div>
+            <div class="card-actions">
+              <input class="search-input" placeholder="Buscar...">
+              ${paymentReceiptViewOnly ? `<button type="button" class="btn btn-primary btn-plus" onclick="openPaymentReceiptForm()">+ Nuevo</button>` : (currentRole === "cliente" && e.id === "pedidos") ? "" : e.id === "ordenesPago" ? `<button class="btn btn-primary" onclick="openPaymentOrderWizard()">Generar nueva orden de pago</button>` : `<button class="btn btn-primary btn-plus" onclick="openForm('${e.id}')">+ Nuevo</button>`}
+            </div>
+          </div>
+          <div class="table-wrap"><table class="entity-list-table${e.id === "productos" ? " product-management-table" : ""}">
+            ${e.id === "productos"
+              ? `<colgroup><col style="width:22%"><col style="width:10%"><col style="width:7%"><col style="width:13%"><col style="width:8%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:6%"><col style="width:13%"></colgroup>`
+              : e.id === "empleados"
+              ? `<colgroup><col style="width:11%"><col style="width:18%"><col style="width:10%"><col style="width:10%"><col style="width:10%"><col style="width:7%"><col style="width:10%"><col style="width:8%"><col style="width:7%"><col style="width:9%"></colgroup>`
+              : e.id === "remitos"
+              ? `<colgroup><col style="width:8%"><col style="width:9%"><col style="width:8%"><col style="width:20%"><col style="width:10%"><col style="width:10%"><col style="width:11%"><col style="width:9%"><col style="width:7%"><col style="width:8%"></colgroup>`
+              : ""}
+            <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? "<th>Total</th>" : ""}<th></th></tr></thead>
+            <tbody>${rows.length ? rows.map(row => `<tr>${row.map((_, index) => `<td>${formatCellValue(e, row, index)}</td>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? `<td><strong>${escapeHTML(formatAmountDisplay(calculateEntityVoucherTotal(e.id, row)))}</strong></td>` : ""}<td class="td-actions">${renderEntityRowActions(e, row)}</td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
+          </table></div>
         </div>
-        <div class="card-actions">
-          <input class="search-input" placeholder="Buscar...">
-          ${paymentReceiptViewOnly ? `<button class="btn btn-primary" onclick="openPaymentReceiptForm()">+ Nuevo</button>` : (currentRole === "cliente" && e.id === "pedidos") ? "" : e.id === "ordenesPago" ? `<button class="btn btn-primary" onclick="openPaymentOrderWizard()">Generar nueva orden de pago</button>` : `<button class="btn btn-primary" onclick="openForm('${e.id}')">+ Nuevo</button>`}
-        </div>
-      </div>
-      <div class="${e.id === "productos" ? "product-table-wrap" : ""}"><table class="${e.id === "productos" ? "product-management-table" : ""}">
-        ${e.id === "productos" ? `<colgroup><col style="width:22%"><col style="width:10%"><col style="width:7%"><col style="width:13%"><col style="width:8%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:6%"><col style="width:13%"></colgroup>` : ""}
-        <thead><tr>${e.cols.map(c => `<th>${escapeHTML(friendlyAttributeLabel(c))}</th>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? "<th>Total</th>" : ""}<th></th></tr></thead>
-        <tbody>${rows.length ? rows.map(r => `<tr>${r.map((_, index) => `<td>${formatCellValue(e, r, index)}</td>`).join("")}${["presupuestos", "pedidos", "remitos", "presupuestosProv", "ordenesCompra", "remitosProv"].includes(e.id) ? `<td><strong>${escapeHTML(formatAmountDisplay(calculateEntityVoucherTotal(e.id, r)))}</strong></td>` : ""}<td class="td-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openView('${e.id}',${e.rows.indexOf(r)})">Ver</button>${isVoucherEntity(e.id) ? `<button class="btn btn-ghost btn-sm" onclick="printEntityVoucher('${e.id}',${e.rows.indexOf(r)})">Imprimir</button>` : ""}
-          ${["presupuestos", "pedidos"].includes(e.id) ? renderTransactionalActions(e, r) : customerViewOnly ? "" : e.id === "ordenesProduccion" ? `<button class="btn btn-ghost btn-sm" onclick="repeatProductionOrder(${e.rows.indexOf(r)})">Repetir orden</button>` : e.id === "lotes" ? `${r.productionOrderId ? `<button class="btn btn-ghost btn-sm" onclick="openProductionOrderFromLot('${escapeHTML(r.productionOrderId)}')">Ver orden de producción</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('lotes',${e.rows.indexOf(r)})">Editar</button><button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "") }')">Eliminar</button>`}` : e.id === "productos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('productos',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-ghost btn-sm" onclick="toggleProductStatus(${e.rows.indexOf(r)})">${normalizeLabel(r[7] || "Activo") === "activo" ? "Desactivar" : "Activar"}</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "clientes" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('clientes',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-ghost btn-sm" onclick="toggleClientStatus(${e.rows.indexOf(r)})">${normalizeLabel((r[5] || "Activo").replace(/<[^>]+>/g, "")) === "activo" ? "Deshabilitar" : "Habilitar"}</button>` : e.id === "pedidos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('pedidos',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${e.rows.indexOf(r)})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${e.rows.indexOf(r)})">Registrar pago</button><button class="btn btn-primary btn-sm" onclick="prefillRemitoFromOrder(${e.rows.indexOf(r)})">Generar remito</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : e.id === "presupuestos" ? `<button class="btn btn-ghost btn-sm" onclick="openForm('presupuestos',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${e.rows.indexOf(r)})">Generar orden</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>` : paymentReceiptViewOnly ? `<button class="btn btn-ghost btn-sm" onclick="togglePaymentReceiptStatus(${e.rows.indexOf(r)})">${r.paymentStatus === "Anulado" ? "Reactivar" : "Anular"}</button>` : `<button class="btn btn-ghost btn-sm" onclick="openForm('${e.id}',${e.rows.indexOf(r)})">Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="openDelete('${r[0].replace(/<[^>]+>/g, "")}')">Eliminar</button>`}
-        </td></tr>`).join("") : `<tr><td colspan="${e.cols.length + 1}" style="text-align:center;color:var(--text-muted);padding:24px">Todavía no hay registros. Seleccioná “+ Nuevo” para crear uno.</td></tr>`}</tbody>
-      </table></div>
-    </div>
-  </div>`;
+      </div>`;
     }
-
     const PRODUCT_CATALOG_META = {
       "tallarinesfrescos500g": {
         image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=640&q=80",
@@ -3196,7 +3321,7 @@
               <input type="number" id="${cardId}" value="1" min="1" max="99" aria-label="Cantidad">
               <button type="button" onclick="stepCardQty('${cardId}', 1)">+</button>
             </div>
-            <button class="btn btn-primary btn-sm" type="button" onclick="addCatalogProductWithQty('${escapeHTML(name)}', '${cardId}')">${inCartQty > 0 ? "+ Sumar" : "+ Agregar"}</button>
+            <button class="btn btn-primary btn-sm btn-plus" type="button" onclick="addCatalogProductWithQty('${escapeHTML(name)}', '${cardId}')">${inCartQty > 0 ? "+ Sumar" : "+ Agregar"}</button>
           </div>
         </div>
       </article>`;
@@ -3293,13 +3418,50 @@
     function renderTransactionalActions(entity, row) {
       const index = entity.rows.indexOf(row);
       const canEdit = canEditTransactionalRecord(entity.id, row);
-      let actions = canEdit ? `<button class="btn btn-ghost btn-sm" onclick="openForm('${entity.id}',${index})">Editar</button>` : currentUser?.role === "cliente" ? `<span class="badge badge-gray" title="El estado actual bloquea cambios">Bloqueado</span>` : "";
-      if (entity.id === "pedidos" && currentRole !== "cliente") actions += `<button class="btn btn-primary btn-sm" onclick="prefillInvoiceFromOrder(${index})">Facturar</button><button class="btn btn-primary btn-sm" onclick="prefillPaymentFromOrder(${index})">Registrar pago</button><button class="btn btn-primary btn-sm" onclick="prefillRemitoFromOrder(${index})">Generar remito</button>`;
-      if (entity.id === "pedidos" && currentUser?.role === "cliente") actions += `<button class="btn btn-ghost btn-sm" onclick="repeatCustomerOrder(${index})">Repetir pedido</button>`;
+      let actions = canEdit ? iconActionButton("edit", "Editar", `openForm('${entity.id}',${index})`) : currentUser?.role === "cliente" ? `<span class="badge badge-gray" title="El estado actual bloquea cambios">Bloqueado</span>` : "";
+      if (entity.id === "pedidos" && currentRole !== "cliente") actions += `<details class="row-more"><summary class="btn btn-ghost btn-sm icon-action" title="Más acciones" aria-label="Más acciones">${actionIcon("more")}</summary><div class="row-more-menu"><button type="button" onclick="this.closest('details').open=false;prefillInvoiceFromOrder(${index})">Facturar</button><button type="button" onclick="this.closest('details').open=false;prefillPaymentFromOrder(${index})">Registrar pago</button><button type="button" onclick="this.closest('details').open=false;prefillRemitoFromOrder(${index})">Generar remito</button></div></details>`;
+      if (entity.id === "pedidos" && currentUser?.role === "cliente") actions += iconActionButton("repeat", "Repetir pedido", `repeatCustomerOrder(${index})`);
       if (entity.id === "presupuestos" && currentRole !== "cliente") actions += `<button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${index})">Generar orden</button>`;
       if (entity.id === "presupuestos" && currentUser?.role === "cliente" && canEdit) actions += `<button class="btn btn-primary btn-sm" onclick="generateOrderFromBudget(${index})">Realizar pedido</button>`;
-      if (canEdit && currentUser?.role === "dueno") actions += `<button class="btn btn-danger btn-sm" onclick="openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')">Eliminar</button>`;
+      if (canEdit && currentUser?.role === "dueno") actions += iconActionButton("delete", "Eliminar", `openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')`, "btn-danger");
       return actions;
+    }
+
+    function renderEntityRowActions(entity, row) {
+      const index = entity.rows.indexOf(row);
+      const actions = [iconActionButton("view", `Ver ${entity.singular}`, `openView('${entity.id}',${index})`)];
+      if (isVoucherEntity(entity.id)) actions.push(iconActionButton("print", `Imprimir ${entity.singular}`, `printEntityVoucher('${entity.id}',${index})`));
+      if (["presupuestos", "pedidos"].includes(entity.id)) return actions.join("") + renderTransactionalActions(entity, row);
+      if (currentRole === "cliente" && ["presupuestos", "pedidos"].includes(entity.id)) return actions.join("");
+      if (entity.id === "ordenesProduccion") actions.push(iconActionButton("repeat", "Repetir orden de producción", `repeatProductionOrder(${index})`));
+      else if (entity.id === "lotes") {
+        if (row.productionOrderId) actions.push(iconActionButton("view", "Ver orden de producción", `openProductionOrderFromLot('${escapeHTML(row.productionOrderId)}')`));
+        else {
+          actions.push(iconActionButton("edit", "Editar", `openForm('lotes',${index})`));
+          actions.push(iconActionButton("delete", "Eliminar", `openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')`, "btn-danger"));
+        }
+      } else if (entity.id === "productos") {
+        actions.push(iconActionButton("edit", "Editar", `openForm('productos',${index})`));
+        const active = normalizeLabel(row[7] || "Activo") === "activo";
+        actions.push(iconActionButton("status", active ? "Desactivar producto" : "Activar producto", `toggleProductStatus(${index})`));
+        actions.push(iconActionButton("delete", "Eliminar", `openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')`, "btn-danger"));
+      } else if (entity.id === "clientes") {
+        actions.push(iconActionButton("edit", "Editar", `openForm('clientes',${index})`));
+        const active = normalizeLabel(String(row[5] || "Activo").replace(/<[^>]*>/g, "")) === "activo";
+        actions.push(iconActionButton("status", active ? "Deshabilitar cliente" : "Habilitar cliente", `toggleClientStatus(${index})`));
+      } else if (entity.id === "comprobantesPago") {
+        actions.push(iconActionButton("status", row.paymentStatus === "Anulado" ? "Reactivar comprobante" : "Anular comprobante", `togglePaymentReceiptStatus(${index})`));
+      } else if (["empleados", "proveedores"].includes(entity.id)) {
+        actions.push(iconActionButton("edit", "Editar", `openForm('${entity.id}',${index})`));
+        const statusIndex = entity.cols.findIndex(column => normalizeLabel(column).includes("estado"));
+        const active = normalizeLabel(String(row[statusIndex] || "Activo").replace(/<[^>]*>/g, "")) === "activo";
+        actions.push(iconActionButton("status", active ? `Desactivar ${entity.singular}` : `Activar ${entity.singular}`, `toggleEntityActiveStatus('${entity.id}',${index})`));
+        actions.push(iconActionButton("delete", "Eliminar", `openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')`, "btn-danger"));
+      } else {
+        actions.push(iconActionButton("edit", "Editar", `openForm('${entity.id}',${index})`));
+        actions.push(iconActionButton("delete", "Eliminar", `openDelete('${String(row[0]).replace(/<[^>]*>/g, "")}')`, "btn-danger"));
+      }
+      return actions.join("");
     }
 
     function openCartModal() {
@@ -3382,25 +3544,25 @@
           ${budgets.slice(0, 3).map(b => {
             const idx = E.find(e => e.id === "presupuestos").rows.indexOf(b);
             const tot = calculateEntityVoucherTotal("presupuestos", b);
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
+            return `<div class="cart-history-row" style="padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
               <div><strong>Presupuesto ${escapeHTML(b[0])}</strong> · <span style="color:var(--text-muted);">Validez: ${escapeHTML(formatDateForDisplay(b[2]))} · ${escapeHTML(b.orderType || "Mostrador")}</span></div>
               <div style="display:flex;align-items:center;gap:10px;">
                 <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
                 ${b[4]}
-                <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');openView('presupuestos', ${idx})">Ver comprobante</button>
+                ${iconActionButton("view", "Ver presupuesto", `closeModal('modal-cart');openView('presupuestos',${idx})`)}
               </div>
             </div>`;
           }).join("")}
           ${orders.slice(0, 3).map(o => {
             const idx = E.find(e => e.id === "pedidos").rows.indexOf(o);
             const tot = calculateEntityVoucherTotal("pedidos", o);
-            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
+            return `<div class="cart-history-row" style="padding:8px 12px;border:1px solid var(--cream-dark);border-radius:var(--radius-sm);background:var(--white);font-size:12.5px;">
               <div><strong>Orden ${escapeHTML(o[0])}</strong> · <span style="color:var(--text-muted);">Entrega: ${escapeHTML(o[3])}</span></div>
               <div style="display:flex;align-items:center;gap:10px;">
                 <strong>$${tot.toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
                 ${o[5]}
-                <button type="button" class="btn btn-ghost btn-sm" onclick="repeatCustomerOrder(${idx})">Repetir pedido</button>
-                <button type="button" class="btn btn-ghost btn-sm" onclick="closeModal('modal-cart');openView('pedidos', ${idx})">Ver comprobante</button>
+                ${iconActionButton("repeat", "Repetir pedido", `repeatCustomerOrder(${idx})`)}
+                ${iconActionButton("view", "Ver pedido", `closeModal('modal-cart');openView('pedidos',${idx})`)}
               </div>
             </div>`;
           }).join("")}
@@ -3737,7 +3899,7 @@
                   </div>
                   <div style="display:flex;align-items:center;gap:8px;">
                     ${b[4]}
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="openView('presupuestos', ${idx})">Ver</button>
+                    ${iconActionButton("view", "Ver presupuesto", `openView('presupuestos',${idx})`)}
                   </div>
                 </div>`;
               }).join("") : `<div style="font-size:12.5px;color:var(--text-muted);padding:12px 0;">Todavía no registraste presupuestos. Agregá productos del catálogo para comenzar.</div>`}
@@ -3757,7 +3919,7 @@
                   </div>
                   <div style="display:flex;align-items:center;gap:8px;">
                     ${o[5]}
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="openView('pedidos', ${idx})">Ver</button>
+                    ${iconActionButton("view", "Ver pedido", `openView('pedidos',${idx})`)}
                   </div>
                 </div>`;
               }).join("") : `<div style="font-size:12.5px;color:var(--text-muted);padding:12px 0;">Todavía no tenés órdenes de pedido en curso.</div>`}
@@ -4498,6 +4660,28 @@
         .map(row => `<option value="${escapeHTML(row[0])}"${row[0] === selectedName ? " selected" : ""}>${escapeHTML(row[0])} — ${escapeHTML(row[4] || "Sin cargo")}</option>`).join("") || "";
     }
 
+    function contextualQuickCreateEntity(entityId, field) {
+      if (field.ref === "empleados") return "empleados";
+      if (field.ref === "clientes") return "clientes";
+      if (entityId === "pedidos" && field.l === "id_Presupuesto") return "presupuestos";
+      if (entityId === "remitos" && field.l === "Presupuesto asociado") return "presupuestos";
+      if (entityId === "comprobantesVenta" && field.l === "nroPedido") return "pedidos";
+      if (entityId === "comprobantesPago" && field.l === "Orden asociada") return "pedidos";
+      if (entityId === "mantenimiento" && field.l === "idMaquina") return "maquinas";
+      if (entityId === "presupuestosProv" && field.ref === "proveedores") return "proveedores";
+      if (entityId === "ordenesCompra" && field.ref === "presupuestosProv") return "presupuestosProv";
+      if (entityId === "remitosProv" && field.l === "IdOrdenCompraProv") return "ordenesCompra";
+      if (["remitosProv", "comprobantesProv"].includes(entityId) && field.ref === "proveedores") return "proveedores";
+      return null;
+    }
+
+    function quickCreateButton(parentEntity, field) {
+      const child = contextualQuickCreateEntity(parentEntity, field);
+      if (!child || currentRole === "cliente") return "";
+      const label = E.find(entity => entity.id === child)?.singular || "registro";
+      return `<button type="button" class="btn btn-ghost field-icon-btn" onclick="openQuickRelatedForm('${child}','${escapeHTML(field.l)}')" title="Crear ${escapeHTML(label)}" aria-label="Crear ${escapeHTML(label)}">+</button>`;
+    }
+
     function fieldHtml(f) {
       const span = f.span === 2 ? " span2" : "";
       const required = f.required ? " required" : "";
@@ -4509,13 +4693,13 @@
       const fieldOptions = f.optionsSource === "productTypes" ? productTypes : f.o || [];
       const isClientRole = currentRole === "cliente" && ["presupuestos", "pedidos"].includes(currentFormEntity);
       const clientLockedField = isClientRole && ["Id_Cliente", "estado", "descuento", "validohasta"].includes(f.l);
-      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<select class="form-select" id="budget-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>${isClientRole ? "" : '<button type="button" class="btn btn-ghost btn-sm" style="margin-top:6px;width:fit-content;" onclick="toggleBudgetClientForm()">+ Crear cliente</button>'}`;
-      else if (f.ref && currentFormEntity === "pedidos" && f.ref === "clientes") input = `<select class="form-select" id="order-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
+      if (f.ref && currentFormEntity === "presupuestos" && f.ref === "clientes") input = `<div class="field-control-row"><select class="form-select" id="budget-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${o}</option>`).join("")}</select>${quickCreateButton(currentFormEntity, f)}</div>`;
+      else if (f.ref && currentFormEntity === "pedidos" && f.ref === "clientes") input = `<div class="field-control-row"><select class="form-select" id="order-client-select"${required}${isClientRole ? " disabled" : ""}>${isClientRole ? "" : '<option value="">Seleccionar cliente</option>'}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>${quickCreateButton(currentFormEntity, f)}</div>`;
       else if (f.key === "supplierType" && currentFormEntity === "proveedores") input = `<div class="field-control-row"><select class="form-select" data-supplier-field="type"${required}>${supplierTypes.map(type => `<option>${escapeHTML(type)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openSupplierTypeDialog()" title="Agregar tipo de proveedor" aria-label="Agregar tipo de proveedor">+</button></div>`;
-      else if (f.ref === "empleados") input = `<select class="form-select"${required}><option value="">Seleccionar empleado</option>${employeeOptionsHtml()}</select>`;
+      else if (f.ref === "empleados") input = `<div class="field-control-row"><select class="form-select"${required}><option value="">Seleccionar empleado</option>${employeeOptionsHtml()}</select>${quickCreateButton(currentFormEntity, f)}</div>`;
       else if (f.key === "productType" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="type"${required}>${productTypes.map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('add')" title="Agregar tipo de producto" aria-label="Agregar tipo de producto">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductTypeDialog('edit')" title="Editar tipo de producto" aria-label="Editar tipo de producto">✎</button></div>`;
       else if (f.key === "productRecipe" && currentFormEntity === "productos") input = `<div class="field-control-row"><select class="form-select" data-product-field="recipe"><option value="">Sin receta asignada</option>${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('add')" title="Crear receta" aria-label="Crear receta">+</button><button type="button" class="btn btn-ghost field-icon-btn" onclick="openProductRecipeDialog('edit')" title="Editar receta" aria-label="Editar receta">✎</button></div>`;
-      else if (f.ref) input = `<select class="form-select"${required}>${f.optional ? '<option value="">Sin presupuesto</option>' : f.required ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(f.l).toLocaleLowerCase("es-AR"))}</option>` : ""}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
+      else if (f.ref) input = `<div class="field-control-row"><select class="form-select"${required}>${f.optional ? `<option value="">${f.ref === "presupuestos" ? "Sin presupuesto" : "Seleccionar"}</option>` : f.required ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(f.l).toLocaleLowerCase("es-AR"))}</option>` : ""}${refOptions(f.ref).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>${quickCreateButton(currentFormEntity, f)}</div>`;
       else if (f.t === "multiselect") input = `<select class="form-select" multiple size="${f.o.length}"${required}>${f.o.map(o => `<option>${o}</option>`).join("")}</select>`;
       else if (f.t === "select") input = `<select class="form-select"${required}${clientLockedField ? " disabled" : ""}>${(isClientRole && f.l === "estado" ? ["Pendiente"] : fieldOptions).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>`;
       else if (f.t === "textarea") input = `<textarea class="form-textarea"${required}></textarea>`;
@@ -4527,7 +4711,10 @@
 
     /* ---- Líneas de detalle (Detalle_X): 1 a muchos, sin límite de filas ---- */
     let currentFormEntity = null;
+    let currentFormRowIndex = null;
     let formState = {};
+    let quickFormContext = null;
+    let quickFormModalState = null;
 
     function todayDateInputValue() {
       const now = new Date();
@@ -4555,7 +4742,7 @@
     }
 
     function detailRowHtml(g, rowIdx) {
-      return `<div class="detail-row">
+      return `<div class="detail-row" style="--detail-extra-count:${g.extra.length}">
     <div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(g.refLabel))}</label><select class="form-select" onchange="handleDetailProductChange(this, '${g.key}')">${["detOPprod", "detCV"].includes(g.key) ? `<option value="">Seleccionar ${escapeHTML(friendlyAttributeLabel(g.refLabel).toLocaleLowerCase("es-AR"))}</option>` : ""}${(g.ref ? refOptions(g.ref) : g.options || []).map(o => `<option>${escapeHTML(o)}</option>`).join("")}</select>${g.key === "detMant" ? `<small data-spare-stock style="display:block;margin-top:4px;color:var(--text-muted)">Existencia disponible: ${getSpareRow(refOptions(g.ref)[0])?.[2] || "—"} u.</small>` : ""}</div>
       ${g.extra.map(x => `<div class="detail-field"><label>${escapeHTML(friendlyAttributeLabel(x.l))}</label>${x.t === "select"
         ? `<select class="form-select">${x.o.map(option => `<option>${option}</option>`).join("")}</select>`
@@ -5125,6 +5312,7 @@
         return;
       }
       currentFormEntity = entityId;
+      currentFormRowIndex = rowIndex;
       formSaveConfirmed = false;
       formState = {};
       (e.details || []).forEach(g => { formState[g.key] = [1]; }); // arranca con 1 fila, se pueden agregar todas las que hagan falta
@@ -5134,7 +5322,13 @@
         const savedDetails = editing.detailData?.[group.key];
         if (savedDetails?.length) formState[group.key] = savedDetails.map((_, index) => index);
       });
-      document.getElementById("mf-title").textContent = `${editing ? "Editar " : "Nuevo "}${e.singular}`;
+      const quickCreateMode = Boolean(quickFormContext && quickFormContext.childEntity === entityId && !editing);
+      document.getElementById("mf-title").textContent = quickCreateMode ? `Crear ${e.singular}` : `${editing ? "Editar " : "Nuevo "}${e.singular}`;
+      const formOverlay = document.getElementById("modal-form");
+      const formCloseButton = formOverlay?.querySelector(".modal-header .modal-close");
+      const formCancelButton = formOverlay?.querySelector(".modal-footer .btn-ghost");
+      if (formCloseButton) formCloseButton.setAttribute("aria-label", quickCreateMode ? `Volver al formulario principal sin crear ${e.singular}` : "Cerrar formulario");
+      if (formCancelButton) formCancelButton.textContent = quickCreateMode ? "Volver al formulario" : "Cancelar";
       let body = entityId === "comprobantesVenta"
         ? `<div class="invoice-paper"><div class="invoice-head"><div><span class="invoice-kicker">Fábrica de Pastas</span><strong>Gestión de ventas</strong></div><div class="invoice-title"><span>COMPROBANTE DE VENTA</span><small>Original · A</small></div></div><div class="invoice-parties"><section><span>EMISOR</span><strong>Fábrica de Pastas</strong><small>Comprobante generado desde el sistema de gestión</small></section><section><span>CLIENTE Y EMISIÓN</span><div class="form-grid">${e.fields.map(fieldHtml).join("")}</div><div id="invoice-client-summary" class="invoice-client-summary"><strong>Seleccioná un cliente</strong><span>Sus datos y domicilio aparecerán en el comprobante.</span></div></section></div>`
         : `<div class="form-grid">${e.fields.map(fieldHtml).join("")}</div>${["presupuestos", "pedidos"].includes(entityId) ? '<div id="entity-client-address-widget"></div>' : ""}${entityId === "presupuestos" && currentRole !== "cliente" ? '<div id="budget-client-form" class="budget-client-fields" hidden><div style="font-size:11.5px;font-weight:700;text-transform:uppercase;color:var(--brown);letter-spacing:0.4px;">Nuevo cliente rápido</div><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;"><input class="form-input" id="budget-client-name" placeholder="Nombre y apellido" aria-label="Nombre y apellido" required><input class="form-input" id="budget-client-document" placeholder="Documento (DNI / CUIT)" aria-label="Documento" required><select class="form-select" id="budget-client-type" aria-label="Tipo de cliente"><option>Consumidor final</option><option>Restaurante</option><option>Hotel</option><option>Supermercado</option><option>Comercio de barrio</option></select></div><div id="budget-client-addresses-rows" class="detail-rows"></div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><button type="button" class="add-detail-btn" onclick="addClientAddressRow(\'budget-client-addresses-rows\')">+ Agregar otro domicilio</button><div style="display:flex;gap:8px;"><button type="button" class="btn btn-ghost btn-sm" onclick="toggleBudgetClientForm()">Cancelar</button><button type="button" class="btn btn-primary btn-sm" onclick="createBudgetClient()">Guardar cliente</button></div></div></div>' : ""}`;
@@ -5158,6 +5352,25 @@
           const order = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[0] === orderSelect.value);
           if (clientInput) clientInput.value = order?.[1] || "";
         });
+      }
+      if (entityId === "remitos") {
+        const orderSelect = getFormControl("NroPedido");
+        const budgetSelect = getFormControl("Presupuesto asociado");
+        const syncRemitoLinksFromOrder = () => {
+          const order = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[0] === orderSelect?.value);
+          if (!order) return;
+          setFormSelect("Cliente (heredado)", order[1]);
+          setFormSelect("Presupuesto asociado", order[2] && order[2] !== "—" ? order[2] : "");
+        };
+        orderSelect?.addEventListener("change", syncRemitoLinksFromOrder);
+        budgetSelect?.addEventListener("change", () => {
+          if (!budgetSelect.value) return;
+          const linkedOrder = E.find(entity => entity.id === "pedidos")?.rows.find(row => row[2] === budgetSelect.value);
+          if (!linkedOrder) { showNotify("Ese presupuesto todavía no tiene una orden de pedido asociada."); return; }
+          setFormSelect("NroPedido", linkedOrder[0]);
+          syncRemitoLinksFromOrder();
+        });
+        if (editing) syncRemitoLinksFromOrder();
       }
       if (paymentOnly) {
         document.querySelectorAll("#mf-fields .form-grid, #mf-fields .detail-block").forEach(block => {
@@ -5711,6 +5924,10 @@
             showNotify("Seleccioná la orden de pedido asociada al remito.");
             return;
           }
+          const remitoClient = getValue("Cliente (heredado)");
+          const selectedBudget = getValue("Presupuesto asociado");
+          if (!remitoClient || normalizeLabel(remitoClient) !== normalizeLabel(order[1])) { showNotify("El cliente del remito debe coincidir con el cliente de la orden."); return; }
+          if (selectedBudget && order[2] !== selectedBudget) { showNotify("El presupuesto seleccionado debe coincidir con el asociado a la orden."); return; }
           const status = currentRole === "cliente" ? "Pendiente" : (getValue("estado") || "Pendiente");
           if (currentRole === "cliente" && detailData.detPedido) {
             detailData.detPedido.forEach(line => { line.inputs[1] = getDefaultProductBasePrice(line.selected) || line.inputs[1]; });
@@ -5721,6 +5938,8 @@
           ];
           updatedRow[4] = escapeHTML(getValue("Fecha de entrega"));
           updatedRow[5] = escapeHTML(getValue("Empleado a cargo"));
+          updatedRow[6] = escapeHTML(remitoClient);
+          updatedRow[7] = escapeHTML(selectedBudget || (order[2] !== "—" ? order[2] : "—"));
           updatedRow.orderId = orderId;
           if (order.customerDocument) updatedRow.customerDocument = order.customerDocument;
         }
@@ -5785,6 +6004,12 @@
         }
         updateOrderPaidTotals();
         persistBusinessData();
+        if (quickFormContext && quickFormContext.childEntity === entityId && !editing) {
+          const context = quickFormContext;
+          quickFormContext = null;
+          resumeParentFormAfterQuickCreate(context, updatedRow);
+          return;
+        }
         renderContent();
         closeModal("modal-form");
         if (["presupuestos", "pedidos", "comprobantesVenta"].includes(entityId)) {
@@ -6135,6 +6360,10 @@
     }
 
     function closeModal(id) {
+      if (id === "modal-form" && quickFormContext) {
+        cancelQuickRelatedForm();
+        return;
+      }
       document.getElementById(id).classList.remove("open");
     }
 
@@ -6283,7 +6512,7 @@
           <div class="form-group"><label class="form-label" for="context-recipe-yield">Rendimiento (unidades)</label><input id="context-recipe-yield" class="form-input" type="number" min="0.01" step="0.01" value="${initialYield}" required></div>
           <div class="form-group span2"><label class="form-label" for="context-recipe-steps">Preparación</label><textarea id="context-recipe-steps" class="form-textarea">${escapeHTML(recipeRow?.recipeSteps || "")}</textarea></div>
         </div>
-        <div class="detail-block"><div class="detail-label">Materias primas y cantidades</div><div class="context-material-list" id="context-recipe-material-list"></div><button type="button" class="btn btn-ghost btn-sm" onclick="addContextRecipeMaterial()">+ Agregar materia prima</button></div>
+        <div class="detail-block"><div class="detail-label">Materias primas y cantidades</div><div class="context-material-list" id="context-recipe-material-list"></div><button type="button" class="btn btn-ghost btn-sm btn-plus" onclick="addContextRecipeMaterial()">+ Agregar materia prima</button></div>
       `, () => saveContextRecipe(productName));
       renderContextRecipeMaterials();
     }
@@ -6405,6 +6634,19 @@
       showNotify(`Cliente ${nextStatus.toLowerCase()}.`);
     }
 
+    function toggleEntityActiveStatus(entityId, rowIndex) {
+      const entity = E.find(item => item.id === entityId);
+      const row = entity?.rows[rowIndex];
+      const statusIndex = entity?.cols.findIndex(column => normalizeLabel(column).includes("estado"));
+      if (!row || statusIndex < 0) return;
+      const active = normalizeLabel(String(row[statusIndex] || "Activo").replace(/<[^>]*>/g, "")) === "activo";
+      const nextStatus = active ? "Inactivo" : "Activo";
+      row[statusIndex] = `<span class='badge badge-${active ? "gray" : "green"}'>${nextStatus}</span>`;
+      persistBusinessData();
+      renderContent();
+      showNotify(`${entity.singular} ${nextStatus.toLowerCase()}.`);
+    }
+
     function prefillInvoiceFromOrder(rowIndex) {
       const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
       if (!order) return;
@@ -6458,6 +6700,8 @@
       if (!order) return;
       openForm("remitos");
       setFormSelect("NroPedido", order[0]);
+      setFormSelect("Cliente (heredado)", order[1]);
+      setFormSelect("Presupuesto asociado", order[2] && order[2] !== "—" ? order[2] : "");
       setFormSelect("Empleado a cargo", order[6] || "");
       const orderDetails = order.detailData?.detPedido || [];
       if (orderDetails.length) {
@@ -6483,6 +6727,114 @@
         control.value = value;
         control.dispatchEvent(new Event("change", { bubbles: true }));
       }
+    }
+
+    function captureCurrentFormContext() {
+      const fields = {};
+      document.querySelectorAll("#mf-fields .form-grid .form-group").forEach(group => {
+        const control = group.querySelector("input,select,textarea");
+        if (!control) return;
+        fields[fieldKey(group)] = control.multiple ? [...control.selectedOptions].map(option => option.value) : control.value;
+      });
+      const details = Object.fromEntries([...document.querySelectorAll("#mf-fields .detail-block[data-group]")]
+        .map(block => [block.dataset.group, readDetailRows(block.dataset.group)]));
+      return {
+        parentEntity: currentFormEntity,
+        parentRowIndex: currentFormRowIndex,
+        fields,
+        details,
+        addressIndex: currentSelectedAddressIndex,
+        address: document.getElementById("active-client-address-select")?.value,
+      };
+    }
+
+    function openQuickRelatedForm(childEntity, targetField) {
+      if (!currentFormEntity || quickFormContext) return;
+      quickFormContext = { ...captureCurrentFormContext(), childEntity, targetField };
+      mountQuickCreateModal();
+      openForm(childEntity);
+      document.querySelector("#modal-form .modal-body .form-input, #modal-form .modal-body .form-select")?.focus();
+    }
+
+    function mountQuickCreateModal() {
+      const parentOverlay = document.getElementById("modal-form");
+      if (!parentOverlay || quickFormModalState) return;
+      parentOverlay.setAttribute("aria-hidden", "true");
+      parentOverlay.id = "modal-parent-form";
+      parentOverlay.querySelector("#mf-title")?.setAttribute("id", "mf-parent-title");
+      parentOverlay.querySelector("#mf-fields")?.setAttribute("id", "mf-parent-fields");
+      parentOverlay.querySelector("#mf-save")?.setAttribute("id", "mf-parent-save");
+      const childOverlay = document.createElement("div");
+      childOverlay.id = "modal-form";
+      childOverlay.className = "modal-overlay quick-create-overlay open";
+      childOverlay.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mf-title">
+        <div class="modal-header"><div class="modal-title" id="mf-title">Crear registro</div><button type="button" class="modal-close" onclick="closeModal('modal-form')" aria-label="Volver al formulario principal">×</button></div>
+        <div class="modal-body"><div id="mf-fields"></div></div>
+        <div class="modal-footer"><button type="button" class="btn btn-ghost" onclick="closeModal('modal-form')">Volver al formulario</button><button type="button" class="btn btn-primary" id="mf-save">Guardar</button></div>
+      </div>`;
+      childOverlay.addEventListener("click", event => {
+        if (event.target === childOverlay) closeModal("modal-form");
+      });
+      document.body.appendChild(childOverlay);
+      quickFormModalState = { parentOverlay, childOverlay };
+    }
+
+    function restoreQuickCreateModal() {
+      if (!quickFormModalState) return;
+      const { parentOverlay, childOverlay } = quickFormModalState;
+      childOverlay.remove();
+      parentOverlay.id = "modal-form";
+      parentOverlay.removeAttribute("aria-hidden");
+      parentOverlay.querySelector("#mf-parent-title")?.setAttribute("id", "mf-title");
+      parentOverlay.querySelector("#mf-parent-fields")?.setAttribute("id", "mf-fields");
+      parentOverlay.querySelector("#mf-parent-save")?.setAttribute("id", "mf-save");
+      quickFormModalState = null;
+    }
+
+    function cancelQuickRelatedForm() {
+      if (!quickFormContext) return;
+      const context = quickFormContext;
+      quickFormContext = null;
+      closeModal("modal-form");
+      restoreQuickCreateModal();
+      resumeParentFormAfterQuickCreate(context, null);
+    }
+
+    function resumeParentFormAfterQuickCreate(context, createdRecord) {
+      restoreQuickCreateModal();
+      openForm(context.parentEntity, context.parentRowIndex);
+      const defaultDetails = Object.fromEntries([...document.querySelectorAll("#mf-fields .detail-block[data-group]")]
+        .map(block => [block.dataset.group, readDetailRows(block.dataset.group)]));
+      Object.entries(context.fields).forEach(([label, value]) => {
+        const group = [...document.querySelectorAll("#mf-fields .form-grid .form-group")].find(item => fieldKey(item) === label);
+        const control = group?.querySelector("input,select,textarea");
+        if (!control || control.disabled) return;
+        if (control.multiple) [...control.options].forEach(option => { option.selected = value.includes(option.value); });
+        else control.value = value;
+      });
+      const targetGroup = [...document.querySelectorAll("#mf-fields .form-grid .form-group")]
+        .find(group => fieldKey(group) === context.targetField);
+      const targetControl = targetGroup?.querySelector("select,input,textarea");
+      const createdValue = decodeStoredCustomerText(String(createdRecord?.[0] || ""));
+      if (targetControl && createdValue && [...(targetControl.options || [])].some(option => option.value === createdValue)) {
+        targetControl.value = createdValue;
+        targetControl.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+      targetControl?.focus();
+      currentSelectedAddressIndex = context.addressIndex || 0;
+      if (["presupuestos", "pedidos"].includes(context.parentEntity)) syncClientAddressWidget(null, context.addressIndex);
+      const hasCustomDetails = Object.entries(context.details).some(([key, rows]) =>
+        JSON.stringify(rows || []) !== JSON.stringify(defaultDetails[key] || []));
+      if (hasCustomDetails) Object.entries(context.details).forEach(([key, rows]) => {
+        if (!document.querySelector(`.detail-block[data-group="${key}"]`)) return;
+        formState[key] = (rows || []).map((_, index) => index);
+        rerenderGroup(key);
+        restoreDetailRows(key, rows || []);
+      });
+      if (context.parentEntity === "comprobantesVenta") { syncInvoicePreview(); syncInvoiceCustomer(); }
+      showNotify(createdRecord
+        ? "Registro creado y vinculado. Podés continuar con el formulario."
+        : "Volviste al formulario principal. Conservamos los datos que ya habías cargado.");
     }
 
     function toggleBudgetClientForm() {
@@ -6606,7 +6958,8 @@
       migrateLegacy("proveedores", row => row.length >= 7 ? row : [row[0], "", row[1] || "", row[2] || "", row[3] || "Habitual", row[4] || "Activo", row[5] || ""]);
       migrateLegacy("presupuestos", row => { while (row.length < 7) row.push(row.length === 5 ? "María Gómez" : ""); return row; });
       migrateLegacy("pedidos", row => { if (row.length < 7) row[6] = "María Gómez"; return row; });
-      migrateLegacy("remitos", row => { if (row.length < 6) row[5] = "María Gómez"; return row; });
+      migrateLegacy("remitos", row => { if (row.length < 6) row[5] = "María Gómez"; if (row.length < 7) row[6] = "—"; if (row.length < 8) row[7] = "—"; return row; });
+      migrateLegacy("recetas", row => { if (row.length < 5) row[4] = "Carlos López"; return row; });
       migrateLegacy("mantenimiento", row => { if (row.length < 7) row[6] = "Ana Torres"; return row; });
       migrateLegacy("devoluciones", row => { if (row.length < 7) { row[5] = "Restó La Nonna"; row[6] = "María Gómez"; } return row; });
       migrateLegacy("productos", row => { if (row.length < 9) row[8] = "0"; return row; });
