@@ -1434,6 +1434,37 @@
       color: var(--text);
       background: var(--cream);
     }
+
+    .login-password-field {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .login-password-field input {
+      width: 100%;
+      padding-right: 44px;
+    }
+
+    .login-password-toggle {
+      position: absolute;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      background: transparent;
+      padding: 4px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .login-password-toggle:hover {
+      color: var(--text);
+    }
+
     .login-card select { padding:10px 12px; border:1.5px solid var(--cream-dark); border-radius:var(--radius-sm); font:14px 'DM Sans',sans-serif; color:var(--text); background:var(--cream); }
 
     .login-card input:focus {
@@ -1809,7 +1840,10 @@
         </label>
         <label>
           Contraseña
-          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+          <span class="login-password-field">
+            <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+            <button type="button" class="login-password-toggle" id="toggle-login-password" aria-label="Mostrar contraseña" title="Mostrar contraseña"></button>
+          </span>
         </label>
         <button type="submit" class="btn btn-primary" style="justify-content:center;width:100%">Ingresar</button>
         <div class="hint">Ingresá con tu cuenta o completá el registro para comenzar a comprar.</div>
@@ -1896,6 +1930,7 @@
 
     const ACTION_ICON_PATHS = {
       view: '<path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/>',
+      visibilityOff: '<path d="m3 3 18 18M10.6 6.2A10.8 10.8 0 0 1 12 6c6.1 0 9.5 6 9.5 6a16.7 16.7 0 0 1-3.1 3.7M6.2 6.3C3.9 7.8 2.5 12 2.5 12s3.4 6 9.5 6c1 0 1.9-.2 2.7-.5"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
       print: '<path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v4a2 2 0 0 1-2 2h-2"/><path d="M7 14h10v7H7zM17 11h.01"/>',
       edit: '<path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"/>',
       delete: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3"/>',
@@ -2162,10 +2197,10 @@
       },
       {
         id: "devoluciones", section: "ventas", label: "Devoluciones", singular: "devolución", cls: "Devolucion",
-        cols: ["N°", "Fecha retiro", "Tipo pedido", "Producto devuelto", "Estado", "Cliente", "Empleado a cargo"],
-        rows: [["#DV-0031", "19/09/2026", "Parcial", "Sorrentinos jamón y queso", "<span class='badge badge-amber'>Pendiente</span>", "Restó La Nonna", "María Gómez"]],
+        cols: ["N°", "Fecha retiro", "Tipo pedido", "Producto devuelto", "Estado", "Orden asociada", "Empleado a cargo"],
+        rows: [["#DV-0031", "19/09/2026", "Parcial", "Sorrentinos jamón y queso", "<span class='badge badge-amber'>Pendiente</span>", "#OP-0886", "María Gómez"]],
         fields: [
-          { l: "Cliente", t: "select", ref: "clientes", required: true },
+          { l: "Orden asociada", t: "select", ref: "pedidos", required: true },
           { l: "Empleado a cargo", t: "select", ref: "empleados", required: true },
           { l: "tipopedido", t: "select", o: ["Parcial", "Total"] },
           { l: "descripcion", t: "textarea", span: 2 },
@@ -3613,11 +3648,24 @@
         const addresses = getClientAddresses(customer);
         if (cartSelectedAddressIdx >= addresses.length) cartSelectedAddressIdx = 0;
         const isRepeat = Boolean(pendingCustomerOrderRepeat);
-        document.getElementById("order-preview-title").textContent = isRepeat ? `Repetir pedido ${pendingCustomerOrderRepeat.row[0]}` : "Confirmar pedido";
-        document.getElementById("order-preview-confirm").textContent = isRepeat ? "Continuar con nuevo pedido" : currentRole === "cliente" ? "Confirmar pedido" : "Confirmar y crear cuenta";
+        document.getElementById("order-preview-title").textContent = isRepeat ? `Repetir pedido ${pendingCustomerOrderRepeat.row[0]}` : currentRole === "cliente" ? "Revisá y confirmá tu pedido" : "Confirmar pedido";
+        document.getElementById("order-preview-confirm").textContent = isRepeat ? "Continuar con nuevo pedido" : currentRole === "cliente" ? "Confirmar mi pedido" : "Confirmar y crear cuenta";
         document.getElementById("order-preview-body").innerHTML = `<div class="invoice-paper"><div class="invoice-head"><div><span class="invoice-kicker">Fábrica de Pastas</span><strong>${isRepeat ? "Resumen del nuevo pedido" : "Resumen de compra"}</strong></div><div class="invoice-title"><span>VISTA PREVIA DEL PEDIDO</span><small>Sin confirmar</small></div></div><div class="detail-block" style="margin-top:0;padding-top:14px;"><table><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="num">Precio unitario</th><th class="num">Subtotal</th></tr></thead><tbody>${lines.map(line => `<tr><td>${escapeHTML(line.product)}</td><td class="num">${line.qty}</td><td class="num">${escapeHTML(formatAmountDisplay(line.unitPrice))}</td><td class="num"><strong>${escapeHTML(formatAmountDisplay(line.subtotal))}</strong></td></tr>`).join("")}</tbody></table></div>${isRepeat ? `<p style="margin:14px 0;color:var(--text-muted);font-size:13px;">Se preparará una orden nueva basada en el pedido anterior. Podrás revisar y ajustar sus datos antes de guardarla.</p>` : currentRole === "cliente" ? `<div class="form-grid" style="margin-top:14px;"><div class="form-group"><label class="form-label" for="preview-order-type">Tipo de pedido</label><select class="form-select" id="preview-order-type">${["Mostrador", "Evento / fiesta", "Fijo semanal"].map(type => `<option${type === cartSelectedOrderType ? " selected" : ""}>${escapeHTML(type)}</option>`).join("")}</select></div><div class="form-group span2"><label class="form-label" for="preview-order-address">Domicilio de entrega</label><select class="form-select" id="preview-order-address">${addresses.map((address, index) => `<option value="${index}"${index === cartSelectedAddressIdx ? " selected" : ""}>${escapeHTML(formatAddressObject(address))}</option>`).join("")}</select></div></div>` : `<div class="afip-doc-row" style="margin-top:14px;"><b>Cliente:</b> Se completará al crear o ingresar a la cuenta.</div>`}<div class="invoice-totals"><div><span>Productos</span><strong>${count} unidades · ${lines.length} ítems</strong></div><div><span>Subtotal</span><strong>${escapeHTML(formatAmountDisplay(total))}</strong></div><div class="invoice-grand-total"><span>Total estimado</span><strong>${escapeHTML(formatAmountDisplay(total))}</strong></div></div></div>`;
         orderPreviewMode = mode;
-        document.getElementById("order-preview-confirm").onclick = confirmOrderPreview;
+        document.getElementById("order-preview-confirm").onclick = isRepeat ? requestRepeatOrderConfirmation : confirmOrderPreview;
+        const previewConfirm = document.getElementById("order-preview-confirm");
+        const selectedAddress = addresses[cartSelectedAddressIdx] || addresses[0] || null;
+        if (currentRole === "cliente" && customer) {
+          const header = document.querySelector("#order-preview-body .invoice-head");
+          header?.insertAdjacentHTML("afterend", `<div class="invoice-parties" style="margin:12px 0;"><section><span>CLIENTE</span><strong>${escapeHTML(customer[0])}</strong><small>Cuenta de cliente</small></section><section><span>DIRECCIÓN DE ENTREGA</span><strong id="preview-delivery-address">${escapeHTML(selectedAddress ? formatAddressObject(selectedAddress) : "No hay un domicilio registrado")}</strong><small>Verificá el destino antes de confirmar</small></section></div>`);
+          const addressSelect = document.getElementById("preview-order-address");
+          addressSelect?.addEventListener("change", () => {
+            const chosenAddress = addresses[Number(addressSelect.value)];
+            const display = document.getElementById("preview-delivery-address");
+            if (display) display.textContent = chosenAddress ? formatAddressObject(chosenAddress) : "No hay un domicilio registrado";
+          });
+          if (previewConfirm) previewConfirm.disabled = !addresses.length;
+        } else if (previewConfirm) previewConfirm.disabled = false;
       } else if (mode === "production" && pendingProductionRepeat) {
         const production = pendingProductionRepeat;
         const products = production.detailData?.detOPprod || [];
@@ -3633,6 +3681,10 @@
 
     function confirmOrderPreview() {
       if (orderPreviewMode !== "cart" || !shoppingCart.length) return;
+      if (currentRole === "cliente" && !getClientAddresses(findClientByName(currentCustomer)).length) {
+        showNotify("Agregá un domicilio a tu cuenta antes de confirmar el pedido.");
+        return;
+      }
       const type = document.getElementById("preview-order-type");
       const address = document.getElementById("preview-order-address");
       if (type) cartSelectedOrderType = type.value;
@@ -3649,6 +3701,57 @@
       if (currentRole === "cliente" && currentUser) { submitShoppingCartAsBudget(); return; }
       checkoutPending = true;
       openAccountAccess(true);
+    }
+
+    function requestRepeatOrderConfirmation() {
+      if (!pendingCustomerOrderRepeat) return;
+      requestActionConfirmation(
+        "¿Confirmar nuevo pedido?",
+        "¿Estás seguro de que deseas confirmar este pedido? Se generará un nuevo pedido basado en el anterior con los productos y cantidades que aparecen en la vista previa.",
+        "Aceptar",
+        confirmOrderPreview
+      );
+    }
+
+    function openClientOrderFormConfirmationPreview() {
+      const clientSelect = getActiveFormClientSelect();
+      const customerName = clientSelect?.value || currentCustomer || "";
+      const customer = findClientByName(customerName);
+      const addresses = getClientAddresses(customer);
+      const addressSelect = document.getElementById("active-client-address-select");
+      const addressIndex = addressSelect ? Number(addressSelect.value) : currentSelectedAddressIndex;
+      const deliveryAddress = addresses[addressIndex] || null;
+      if (!customer || !deliveryAddress || !formatAddressObject(deliveryAddress)) {
+        showNotify("Antes de confirmar el pedido, seleccioná un domicilio de entrega válido.");
+        return;
+      }
+      const lines = readDetailRows("detPedido").filter(line => line.selected);
+      if (!lines.length) {
+        showNotify("Agregá al menos un producto antes de confirmar el pedido.");
+        return;
+      }
+      const preparedLines = lines.map(line => {
+        const quantity = Number(String(line.inputs?.[0] || "0").replace(",", ".")) || 0;
+        const enteredPrice = parseProductPrice(line.inputs?.[1] || "");
+        const unitPrice = enteredPrice > 0 ? enteredPrice : parseProductPrice(getDefaultProductBasePrice(line.selected));
+        return { product: line.selected, quantity, unitPrice, subtotal: quantity * unitPrice };
+      });
+      const total = preparedLines.reduce((sum, line) => sum + line.subtotal, 0);
+      const scheduleType = repeatedOrderDraftSource?.schedule?.type || budgetOrderDraftSource?.orderType || "Mostrador";
+      const deliveryDate = getFormControl("FechaEntrega")?.value || getFormControl("FechaEvento")?.value || "";
+      document.getElementById("order-preview-title").textContent = "Revisá y confirmá tu pedido";
+      document.getElementById("order-preview-confirm").textContent = "Confirmar y guardar pedido";
+      document.getElementById("order-preview-body").innerHTML = `<div class="invoice-paper"><div class="invoice-head"><div><span class="invoice-kicker">Fábrica de Pastas</span><strong>Resumen del pedido</strong></div><div class="invoice-title"><span>CONFIRMACIÓN</span><small>Revisión final</small></div></div><div class="invoice-parties"><section><span>CLIENTE</span><strong>${escapeHTML(customerName)}</strong><small>Revisá el detalle antes de confirmar</small></section><section><span>ENTREGA</span><strong>${escapeHTML(formatAddressObject(deliveryAddress))}</strong><small>${escapeHTML(scheduleType)}${deliveryDate ? ` · ${escapeHTML(formatDateForDisplay(deliveryDate))}` : ""}</small></section></div><div class="detail-block" style="margin-top:0;padding-top:14px;"><table><thead><tr><th>Producto</th><th class="num">Cantidad</th><th class="num">Precio unitario</th><th class="num">Subtotal</th></tr></thead><tbody>${preparedLines.map(line => `<tr><td>${escapeHTML(line.product)}</td><td class="num">${line.quantity}</td><td class="num">${escapeHTML(formatAmountDisplay(line.unitPrice))}</td><td class="num"><strong>${escapeHTML(formatAmountDisplay(line.subtotal))}</strong></td></tr>`).join("")}</tbody></table></div><div class="invoice-totals"><div><span>Artículos</span><strong>${preparedLines.reduce((sum, line) => sum + line.quantity, 0)} unidades</strong></div><div class="invoice-grand-total"><span>Total del pedido</span><strong>${escapeHTML(formatAmountDisplay(total))}</strong></div></div></div>`;
+      orderPreviewMode = "client-form";
+      document.getElementById("order-preview-confirm").onclick = confirmClientOrderFormPreview;
+      openModal("modal-order-preview");
+    }
+
+    function confirmClientOrderFormPreview() {
+      if (orderPreviewMode !== "client-form") return;
+      closeModal("modal-order-preview");
+      formSaveConfirmed = true;
+      document.getElementById("mf-save")?.click();
     }
 
     function repeatCustomerOrder(rowIndex) {
@@ -4569,6 +4672,21 @@
       const loginOverlay = document.getElementById("login-overlay");
       if (loginOverlay) loginOverlay.classList.remove("hidden");
       document.body.classList.add("logged-out");
+      setLoginPasswordVisibility(false);
+    }
+
+    function setLoginPasswordVisibility(visible) {
+      const password = document.getElementById("login-password");
+      const toggle = document.getElementById("toggle-login-password");
+      password.type = visible ? "text" : "password";
+      toggle.innerHTML = actionIcon(visible ? "visibilityOff" : "view");
+      toggle.setAttribute("aria-label", visible ? "Ocultar contraseña" : "Mostrar contraseña");
+      toggle.title = visible ? "Ocultar contraseña" : "Mostrar contraseña";
+    }
+
+    function toggleLoginPasswordVisibility() {
+      const password = document.getElementById("login-password");
+      setLoginPasswordVisibility(password.type === "password");
     }
 
     function openAccountAccess(forCheckout = false) {
@@ -4667,6 +4785,7 @@
       if (entityId === "remitos" && field.l === "Presupuesto asociado") return "presupuestos";
       if (entityId === "comprobantesVenta" && field.l === "nroPedido") return "pedidos";
       if (entityId === "comprobantesPago" && field.l === "Orden asociada") return "pedidos";
+      if (entityId === "devoluciones" && field.l === "Orden asociada") return "pedidos";
       if (entityId === "mantenimiento" && field.l === "idMaquina") return "maquinas";
       if (entityId === "presupuestosProv" && field.ref === "proveedores") return "proveedores";
       if (entityId === "ordenesCompra" && field.ref === "presupuestosProv") return "presupuestosProv";
@@ -5182,7 +5301,7 @@
       const meta = {
         comprobantesPago: { title: "COMPROBANTE DE PAGO", date: 3, party: 2, detail: null },
       remitos: { title: "REMITO", date: 4, party: 1, detail: "detRemito" },
-        devoluciones: { title: "COMPROBANTE DE DEVOLUCIÓN", date: 1, party: 2, detail: "detDev" },
+        devoluciones: { title: "COMPROBANTE DE DEVOLUCIÓN", date: 1, party: 5, detail: "detDev" },
         presupuestosProv: { title: "PRESUPUESTO DE PROVEEDOR", date: 2, party: 1, detail: "detPP" },
         ordenesCompra: { title: "ORDEN DE COMPRA", date: 2, party: 1, detail: "detOC" },
         remitosProv: { title: "REMITO DE PROVEEDOR", date: 3, party: 2, detail: "detRP" },
@@ -5549,6 +5668,10 @@
       }
       document.getElementById("mf-save").onclick = () => {
         if (!formSaveConfirmed) {
+          if (entityId === "pedidos" && currentRole === "cliente") {
+            openClientOrderFormConfirmationPreview();
+            return;
+          }
           requestActionConfirmation(
             paymentOnly ? "Confirmar registro de pago" : editing ? "Confirmar cambios" : `Confirmar ${e.singular}`,
             paymentOnly ? "Se registrará el pago con la fecha indicada y se actualizarán los importes de la orden." : editing ? `Se guardarán los cambios realizados en ${e.singular}.` : `Se creará un nuevo registro de ${e.singular} con los datos ingresados.`,
@@ -5947,7 +6070,12 @@
           const status = getValue("estado") || "Pendiente";
           const returnedLines = detailData.detDev || [];
           const productSummary = returnedLines.map(line => line.selected).filter(Boolean).join(", ") || getValue("descripcion") || "—";
-          updatedRow = [editing ? e.rows[rowIndex][0] : nextCode("DV", e.rows), escapeHTML(getValue("Fecha_Pedido_Retirado")), escapeHTML(getValue("tipopedido")), escapeHTML(productSummary), formatBadge(status, status === "Procesada" ? "green" : "amber"), escapeHTML(getValue("Cliente")), escapeHTML(getValue("Empleado a cargo"))];
+          const orderId = getValue("Orden asociada");
+          if (!orderId || !E.find(entity => entity.id === "pedidos")?.rows.some(order => order[0] === orderId)) {
+            showNotify("Seleccioná una orden de pedido válida para registrar la devolución.");
+            return;
+          }
+          updatedRow = [editing ? e.rows[rowIndex][0] : nextCode("DV", e.rows), escapeHTML(getValue("Fecha_Pedido_Retirado")), escapeHTML(getValue("tipopedido")), escapeHTML(productSummary), formatBadge(status, status === "Procesada" ? "green" : "amber"), escapeHTML(orderId), escapeHTML(getValue("Empleado a cargo"))];
           updatedRow.description = getValue("descripcion");
         }
         if (entityId === "ordenesPago") {
@@ -6961,7 +7089,14 @@
       migrateLegacy("remitos", row => { if (row.length < 6) row[5] = "María Gómez"; if (row.length < 7) row[6] = "—"; if (row.length < 8) row[7] = "—"; return row; });
       migrateLegacy("recetas", row => { if (row.length < 5) row[4] = "Carlos López"; return row; });
       migrateLegacy("mantenimiento", row => { if (row.length < 7) row[6] = "Ana Torres"; return row; });
-      migrateLegacy("devoluciones", row => { if (row.length < 7) { row[5] = "Restó La Nonna"; row[6] = "María Gómez"; } return row; });
+      migrateLegacy("devoluciones", row => {
+        const orders = E.find(item => item.id === "pedidos")?.rows || [];
+        if (row.length < 7) row[6] = "María Gómez";
+        const linkedOrder = orders.find(order => order[0] === row[5])
+          || orders.find(order => normalizeLabel(order[1]) === normalizeLabel(row[5]));
+        row[5] = linkedOrder?.[0] || (String(row[5] || "").startsWith("#OP-") ? row[5] : "—");
+        return row;
+      });
       migrateLegacy("productos", row => { if (row.length < 9) row[8] = "0"; return row; });
       refreshProductReservations();
       (E.find(entity => entity.id === "maquinas")?.rows || []).forEach(machine => syncMachineLastMaintenance(machine[0]));
@@ -7266,6 +7401,7 @@
     }
 
     function init() {
+      setLoginPasswordVisibility(false);
       const savedUser = localStorage.getItem("pastas-user");
       const matchedUser = getLoginUsers().find(user => user.username === savedUser);
 
@@ -7306,6 +7442,8 @@
         if (checkoutPending && user.role === "cliente") { checkoutPending = false; submitShoppingCartAsBudget(); }
         else showNotify(`Bienvenido, ${user.username}.`);
       });
+
+      document.getElementById("toggle-login-password").addEventListener("click", toggleLoginPasswordVisibility);
 
       document.getElementById("toggle-register-btn").addEventListener("click", () => {
         const panel = document.getElementById("register-panel");
