@@ -1817,7 +1817,7 @@
   </div>
 
   <div class="modal-overlay" id="modal-action-confirm">
-    <div class="modal" style="width:440px;max-width:94vw;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="action-confirm-title" style="width:440px;max-width:94vw;">
       <div class="modal-header"><div class="modal-title" id="action-confirm-title">Confirmar acción</div><button class="modal-close" type="button" onclick="cancelPendingActionConfirmation()" aria-label="Cerrar">×</button></div>
       <div class="modal-body"><p id="action-confirm-message" style="margin:0;color:var(--text-muted);line-height:1.6;"></p></div>
       <div class="modal-footer"><button class="btn btn-ghost" type="button" onclick="cancelPendingActionConfirmation()">Cancelar</button><button class="btn btn-primary" type="button" id="action-confirm-submit" onclick="confirmPendingAction()">Confirmar y guardar</button></div>
@@ -2035,6 +2035,7 @@
     let orderPreviewMode = null;
     let pendingProductionRepeat = null;
     let pendingCustomerOrderRepeat = null;
+    let cartOrderSubmissionConfirmed = false;
     let repeatedOrderDraftSource = null;
     let budgetOrderDraftSource = null;
     let pendingActionConfirmation = null;
@@ -2680,6 +2681,16 @@
         input?.focus();
         return;
       }
+      if (!newStreetSaveConfirmed) {
+        requestActionConfirmation(
+          "Confirmar nueva calle",
+          `Se agregará «${streetName}» a las calles disponibles para esta localidad.`,
+          "Confirmar",
+          () => { newStreetSaveConfirmed = true; confirmAddNewStreet(el); }
+        );
+        return;
+      }
+      newStreetSaveConfirmed = false;
       const fields = readCustomerAddressFields(el);
       const city = fields?.city?.value?.trim() || "Morón";
       const province = fields?.province?.value?.trim() || "Buenos Aires";
@@ -2920,6 +2931,16 @@
         showNotify("Completá código postal, provincia, localidad, calle y altura del domicilio.");
         return;
       }
+      if (!inlineAddressSaveConfirmed) {
+        requestActionConfirmation(
+          currentInlineAddressEditMode === "edit" ? "Confirmar actualización de domicilio" : "Confirmar nuevo domicilio",
+          `Se ${currentInlineAddressEditMode === "edit" ? "actualizará" : "agregará"} el domicilio ${formatAddressObject({ street, height, city, province, postalCode })}.`,
+          "Confirmar",
+          () => { inlineAddressSaveConfirmed = true; saveInlineClientAddress(); }
+        );
+        return;
+      }
+      inlineAddressSaveConfirmed = false;
       const nextAddr = { street, height, city, province, postalCode };
       const addresses = getClientAddresses(client).map(a => ({ ...a }));
       if (currentInlineAddressEditMode === "edit" && addresses[currentSelectedAddressIndex]) {
@@ -3689,6 +3710,20 @@
       const address = document.getElementById("preview-order-address");
       if (type) cartSelectedOrderType = type.value;
       if (address) cartSelectedAddressIdx = Number(address.value) || 0;
+      if (currentRole === "cliente" && currentUser && !pendingCustomerOrderRepeat && !cartOrderSubmissionConfirmed) {
+        const { count, total, lines } = getCartTotals();
+        const customer = findClientByName(currentCustomer);
+        const selectedAddress = getClientAddresses(customer)[cartSelectedAddressIdx];
+        const items = lines.map(line => `${line.product} × ${line.qty}`).join(", ");
+        requestActionConfirmation(
+          "¿Confirmar pedido del carrito?",
+          `Se registrará el pedido con ${items} (${count} unidades), por ${formatAmountDisplay(total)}, para entregar en ${selectedAddress ? formatAddressObject(selectedAddress) : "el domicilio seleccionado"}.`,
+          "Confirmar",
+          () => { cartOrderSubmissionConfirmed = true; confirmOrderPreview(); }
+        );
+        return;
+      }
+      cartOrderSubmissionConfirmed = false;
       if (pendingCustomerOrderRepeat) {
         const repeat = pendingCustomerOrderRepeat;
         pendingCustomerOrderRepeat = null;
@@ -3754,6 +3789,36 @@
       document.getElementById("mf-save")?.click();
     }
 
+    function requestClientBudgetConfirmation() {
+      const customerName = getActiveFormClientSelect()?.value || currentCustomer || "";
+      const customer = findClientByName(customerName);
+      const addresses = getClientAddresses(customer);
+      const addressSelect = document.getElementById("active-client-address-select");
+      const address = addresses[addressSelect ? Number(addressSelect.value) : currentSelectedAddressIndex];
+      const lines = readDetailRows("detPresupuesto").filter(line => line.selected);
+      if (!customer || !address) {
+        showNotify("Seleccioná un domicilio de entrega válido antes de confirmar el presupuesto.");
+        return;
+      }
+      if (!lines.length) {
+        showNotify("Agregá al menos un producto antes de confirmar el presupuesto.");
+        return;
+      }
+      const summary = lines.map(line => {
+        const quantity = Number(String(line.inputs?.[0] || "0").replace(",", ".")) || 0;
+        const unitPrice = parseProductPrice(getDefaultProductBasePrice(line.selected));
+        return { quantity, subtotal: quantity * unitPrice };
+      });
+      const total = summary.reduce((sum, line) => sum + line.subtotal, 0);
+      const quantity = summary.reduce((sum, line) => sum + line.quantity, 0);
+      requestActionConfirmation(
+        "Confirmar presupuesto",
+        `Se enviará el presupuesto de ${lines.length} producto${lines.length === 1 ? "" : "s"} (${quantity} unidades), con un total estimado de ${formatAmountDisplay(total)}, para entregar en ${formatAddressObject(address)}.`,
+        "Confirmar",
+        () => { formSaveConfirmed = true; document.getElementById("mf-save")?.click(); }
+      );
+    }
+
     function repeatCustomerOrder(rowIndex) {
       if (currentUser?.role !== "cliente") return;
       const order = E.find(entity => entity.id === "pedidos")?.rows[rowIndex];
@@ -3774,6 +3839,7 @@
     }
 
     function cancelOrderPreview() {
+      cartOrderSubmissionConfirmed = false;
       if (pendingCustomerOrderRepeat) {
         pendingCustomerOrderRepeat = null;
         shoppingCart = [];
@@ -4834,6 +4900,9 @@
     let formState = {};
     let quickFormContext = null;
     let quickFormModalState = null;
+    let inlineAddressSaveConfirmed = false;
+    let newStreetSaveConfirmed = false;
+    let budgetClientSaveConfirmed = false;
 
     function todayDateInputValue() {
       const now = new Date();
@@ -5672,10 +5741,14 @@
             openClientOrderFormConfirmationPreview();
             return;
           }
+          if (entityId === "presupuestos" && currentRole === "cliente") {
+            requestClientBudgetConfirmation();
+            return;
+          }
           requestActionConfirmation(
             paymentOnly ? "Confirmar registro de pago" : editing ? "Confirmar cambios" : `Confirmar ${e.singular}`,
             paymentOnly ? "Se registrará el pago con la fecha indicada y se actualizarán los importes de la orden." : editing ? `Se guardarán los cambios realizados en ${e.singular}.` : `Se creará un nuevo registro de ${e.singular} con los datos ingresados.`,
-            paymentOnly ? "Confirmar pago" : editing ? "Guardar cambios" : "Confirmar y guardar",
+            "Confirmar",
             () => { formSaveConfirmed = true; document.getElementById("mf-save")?.click(); }
           );
           return;
@@ -6473,6 +6546,7 @@
       document.getElementById("action-confirm-submit").textContent = confirmLabel;
       pendingActionConfirmation = onConfirm;
       openModal("modal-action-confirm");
+      document.getElementById("action-confirm-submit")?.focus();
     }
 
     function confirmPendingAction() {
@@ -6492,6 +6566,7 @@
         cancelQuickRelatedForm();
         return;
       }
+      if (id === "modal-action-confirm") pendingActionConfirmation = null;
       document.getElementById(id).classList.remove("open");
     }
 
@@ -6501,7 +6576,7 @@
       document.getElementById("context-save").onclick = () => requestActionConfirmation(
         "Confirmar cambios",
         `Se guardarán los cambios de «${title.toLowerCase()}».`,
-        "Confirmar y guardar",
+        "Confirmar",
         onSave
       );
       openModal("modal-context");
@@ -7014,6 +7089,16 @@
         showNotify("Ya existe un cliente con ese documento.");
         return;
       }
+      if (!budgetClientSaveConfirmed) {
+        requestActionConfirmation(
+          "Confirmar creación de cliente",
+          `Se registrará a ${name} y se asociará al presupuesto actual.`,
+          "Confirmar",
+          () => { budgetClientSaveConfirmed = true; createBudgetClient(); }
+        );
+        return;
+      }
+      budgetClientSaveConfirmed = false;
       const newClientRow = [
         escapeHTML(name), escapeHTML(documentNumber), escapeHTML(type), "$0",
         "<span class='badge badge-gray'>No</span>", "<span class='badge badge-green'>Activo</span>"
@@ -7459,7 +7544,12 @@
 
       document.getElementById("register-form").addEventListener("submit", (event) => {
         event.preventDefault();
-        completeCustomerRegistration();
+        requestActionConfirmation(
+          "Confirmar creación de cuenta",
+          "Se registrará tu cuenta y los datos del cliente para que puedas continuar con la compra.",
+          "Confirmar",
+          completeCustomerRegistration
+        );
       });
 
       document.getElementById("register-form").querySelectorAll("input,select").forEach(field => field.addEventListener("input", () => {
@@ -7497,7 +7587,13 @@
         if (profile && !profile.contains(event.target)) closeCustomerProfile();
       });
       document.addEventListener("keydown", event => {
-        if (event.key === "Escape") closeCustomerProfile();
+        if (event.key === "Escape") {
+          if (document.getElementById("modal-action-confirm")?.classList.contains("open")) {
+            cancelPendingActionConfirmation();
+            return;
+          }
+          closeCustomerProfile();
+        }
       });
     }
 
